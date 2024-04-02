@@ -29,9 +29,15 @@
 \Bitrix\Main\Loader::includeModule('up.forms');
 ```
 
-6. символические ссылки
+6. Символические ссылки
 
 ```
 ln -s /{pathToProject}/local/modules/up.forms/install/routes/  /{pathToProject}/local/
 ln -s /{pathToProject}/local/modules/up.forms/install/components/up  /{pathToProject}/local/components
+```
+
+7. В корне проекта в файле `${doc_root}/index.php` добавляем
+
+```
+require_once __DIR__ . '/bitrix/routing_index.php'; 
 ```
