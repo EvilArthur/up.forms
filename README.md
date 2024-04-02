@@ -1,29 +1,10 @@
-# Bitrix module example
+# Bitrix module Forms
 
-Clone repository to `${doc_root}/local/modules`
+1. Закидываем содержимое репозитория по пути `/{pathToProject}/local/modules/up.forms`(данную папку предварительно нужно создать)
 
-Install module using admin panel
+2. Переходим в браузере по пути  `/{yourDomainName}/bitrix/admin/partner_modules.php?lang=ru`, там появится список модулей, нужный нам - Forms, нажимаем слева от названия на три полоски, появится пункт установить, устанавливаем
 
-Set `tasks template` as your primary site template
-
-## Setup modern Bitrix routing
-
-Add `tasks.php` in `routing` section of `${doc_root}/bitrix/.settings.php` file:
-
-```php
-'routing' => ['value' => [
-	'config' => ['tasks.php']
-]],
-```
-
-Put following content into your `${doc_root}/index.php` file:
-
-```php
-<?php
-require_once __DIR__ . '/bitrix/routing_index.php';
-```
-
-Replace following lines in your `${doc_root}/.htaccess` file:
+3. В Корне проект меняем содержимое файла `${doc_root}/.htaccess` 
 
 ```
 -RewriteCond %{REQUEST_FILENAME} !/bitrix/urlrewrite.php$
@@ -33,12 +14,24 @@ Replace following lines in your `${doc_root}/.htaccess` file:
 +RewriteRule ^(.*)$ /index.php [L]
 ```
 
-## Symlinks for handy development
+4. Добавляем путь до файл с роутами `forms.php`, переходим в `/{pathToProject}/bitrix/.settings.php` file:
 
-You probably want to make following symlinks:
+```php
+'routing' => ['value' => [
+	'config' => ['forms.php']
+]],
+```
+5. Создаем Файл  `/{pathToProject}/local/php_interface/init.php` c содержимым
+
+```php
+<?php
+
+\Bitrix\Main\Loader::includeModule('up.forms');
+```
+
+6. символические ссылки
 
 ```
-local/components/up -> local/modules/up.tasks/install/components/up
-local/templates/tasks -> local/modules/up.tasks/install/templates/tasks
-local/routes/tasks.php -> local/modules/up.tasks/install/routes/tasks.php
+ln -s /{pathToProject}/local/modules/up.forms/install/routes/  /{pathToProject}/local/
+ln -s /{pathToProject}/local/modules/up.forms/install/components/up  /{pathToProject}/local/components
 ```

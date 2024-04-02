@@ -56,13 +56,6 @@ class up_forms extends CModule
 		);
 
 		CopyDirFiles(
-			$_SERVER['DOCUMENT_ROOT'] . '/local/modules/up.forms/install/templates',
-			$_SERVER['DOCUMENT_ROOT'] . '/local/templates/',
-			true,
-			true
-		);
-
-		CopyDirFiles(
 			$_SERVER['DOCUMENT_ROOT'] . '/local/modules/up.forms/install/routes',
 			$_SERVER['DOCUMENT_ROOT'] . '/local/routes/',
 			true,
