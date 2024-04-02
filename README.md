@@ -41,3 +41,15 @@ ln -s /{pathToProject}/local/modules/up.forms/install/components/up  /{pathToPro
 ```
 require_once __DIR__ . '/bitrix/routing_index.php'; 
 ```
+8. Иницализируем Composer в папке `/{pathToProject}/bitrix/`
+
+``` 
+ COMPOSER=composer-bx.json composer install    
+```
+
+9. Создаем анотации для ORM
+
+```
+   php bitrix.php orm:annotate -m up.forms 
+```
+   

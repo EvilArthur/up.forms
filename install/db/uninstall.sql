@@ -1,0 +1,1 @@
+drop table if exists UP_Field, UP_Question, UP_Form, Up_Answer;
