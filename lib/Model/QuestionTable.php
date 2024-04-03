@@ -53,16 +53,16 @@ class QuestionTable extends DataManager
 				]
 			),
 			new IntegerField(
-				'Form_ID',
+				'Chapter_ID',
 				[
 					'required' => true,
-					'title' => Loc::getMessage('QUESTION_ENTITY_FORM_ID_FIELD'),
+					'title' => Loc::getMessage('QUESTION_ENTITY_CHAPTER_ID_FIELD'),
 				]
 			),
 			new Reference(
-				'QuestionForm',
-				FormTable::class,
-				Join::on('this.Form_ID', 'ref.ID')
+				'QuestionChapter',
+				ChapterTable::class,
+				Join::on('this.Chapter_ID', 'ref.ID')
 			),
 			new IntegerField(
 				'Field_ID',
@@ -73,7 +73,7 @@ class QuestionTable extends DataManager
 			),
 			new Reference(
 				'QuestionField',
-				FormTable::class,
+				FieldTable::class,
 				Join::on('this.Field_ID', 'ref.ID')
 			),
 			new IntegerField(

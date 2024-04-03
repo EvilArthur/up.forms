@@ -34,6 +34,7 @@
 ```
 ln -s /{pathToProject}/local/modules/up.forms/install/routes/  /{pathToProject}/local/
 ln -s /{pathToProject}/local/modules/up.forms/install/components/up  /{pathToProject}/local/components
+ln -s /Users/nascela/server/web/bitrix.dev.bx/local/modules/up.forms/install/js/ /Users/nascela/server/web/bitrix.dev.bx/local/
 ```
 
 7. В корне проекта в файле `${doc_root}/index.php` добавляем

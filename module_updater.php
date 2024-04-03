@@ -26,13 +26,29 @@ function __formsMigrate(int $nextVersion, callable $callback)
 	}
 }
 
-// __formsMigrate(2, function($updater, $DB)
-// {
-// 	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
-// 	{
-// 		$DB->query
-// 		('
-//
-// 		');
-// 	}
-// });
+__formsMigrate(3, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
+	{
+		$DB->query
+		('
+			CREATE TABLE Up_Chapter (
+			ID int not null auto_increment,
+			Form_ID int not null,
+			Title varchar(100),
+			Description text,
+			PRIMARY KEY (ID)
+			);
+		');
+	}
+});
+__formsMigrate(4, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
+	{
+		$DB->query
+		('
+			ALTER TABLE Up_Question CHANGE Form_ID Chapter_ID int not null;
+		');
+	}
+});

@@ -1,10 +1,10 @@
-CREATE TABLE UP_Field (
+CREATE TABLE Up_Field (
 	                      ID int not null auto_increment,
 	                      Title varchar(100),
 	                      PRIMARY KEY (ID)
 );
 
-CREATE TABLE UP_Question (
+CREATE TABLE Up_Question (
 	                         ID int not null auto_increment,
 	                         Form_ID int not null,
 	                         Field_ID int not null,
@@ -13,7 +13,7 @@ CREATE TABLE UP_Question (
 	                         PRIMARY KEY (ID)
 );
 
-CREATE TABLE UP_Form (
+CREATE TABLE Up_Form (
 	                     ID int not null auto_increment,
 	                     Creator_ID int not null,
 	                     Title varchar(100),
@@ -26,4 +26,11 @@ CREATE TABLE Up_Answer (
 	                       User_ID int not null,
 	                       Answer varchar(100),
 	                       PRIMARY KEY (ID)
+);
+CREATE TABLE Up_Chapter (
+	                        ID int not null auto_increment,
+	                        Form_ID int not null,
+	                        Title varchar(100),
+	                        Description text,
+	                        PRIMARY KEY (ID)
 );

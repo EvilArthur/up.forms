@@ -6,22 +6,25 @@ use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
 use Bitrix\Main\ORM\Fields\StringField;
+use Bitrix\Main\ORM\Fields\TextField;
 use Bitrix\Main\ORM\Fields\Validators\LengthValidator;
 use Bitrix\Main\ORM\Query\Join;
 
 /**
- * Class FieldTable
+ * Class ChapterTable
  *
  * Fields:
  * <ul>
  * <li> ID int mandatory
+ * <li> Form_ID int mandatory
  * <li> Title string(100) optional
+ * <li> Description text optional
  * </ul>
  *
  * @package Up\Forms\Model
  **/
 
-class FieldTable extends DataManager
+class ChapterTable extends DataManager
 {
 	/**
 	 * Returns DB table name for entity.
@@ -30,7 +33,7 @@ class FieldTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'UP_Field';
+		return 'Up_Chapter';
 	}
 
 	/**
@@ -46,9 +49,20 @@ class FieldTable extends DataManager
 				[
 					'primary' => true,
 					'autocomplete' => true,
-					'title' => Loc::getMessage('FIELD_ENTITY_ID_FIELD'),
-
+					'title' => Loc::getMessage('CHAPTER_ENTITY_ID_FIELD'),
 				]
+			),
+			new IntegerField(
+				'Form_ID',
+				[
+					'required' => true,
+					'title' => Loc::getMessage('CHAPTER_ENTITY_FORM_ID_FIELD'),
+				]
+			),
+			new Reference(
+				'ChapterForm',
+				FormTable::class,
+				Join::on('this.Form_ID', 'ref.ID')
 			),
 			new StringField(
 				'Title',
@@ -59,7 +73,13 @@ class FieldTable extends DataManager
 							new LengthValidator(null, 100),
 						];
 					},
-					'title' => Loc::getMessage('FIELD_ENTITY_TITLE_FIELD'),
+					'title' => Loc::getMessage('CHAPTER_ENTITY_TITLE_FIELD'),
+				]
+			),
+			new TextField(
+				'Description',
+				[
+					'title' => Loc::getMessage('CHAPTER_ENTITY_DESCRIPTION_FIELD'),
 				]
 			),
 		];
