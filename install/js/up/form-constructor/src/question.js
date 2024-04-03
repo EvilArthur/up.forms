@@ -1,33 +1,32 @@
-import {Tag, Event, Type} from 'main.core';
+import { Event, Tag } from 'main.core';
+import { EditableText } from './editable-text';
 
 export class Question
 {
-	constructor(questionData, questionNumber, questions = [])
+	constructor(questionData)
 	{
-		this.layout = null
-		this.questionData = questionData
-		this.questionNumber = questionNumber
-		this.questions = questions
+		this.layout = null;
 		this.title = null
-		this.id = questionNumber - 1
+		this.questionData = questionData
+		this.isDeleted = false;
 	}
+
 	render(): HTMLElement
 	{
-		if (this.questions[this.id] === null)
+		if (this.isDeleted)
 		{
 			return Tag.render``;
 		}
 		const wrap = Tag.render`
-		<div class="mb-3">
+		<div class="container mb-3">
 			${this.renderEditableTitle()}
-			<div class="container d-flex justify-content-center align-items-center">
-				<input class="form-control me-2" id="question-${this.questionNumber}" type="text"
-				 placeholder="Ответ ${this.questionNumber}" name="answer-${this.questionNumber}">
+			<div class="container d-flex justify-content-center align-items-center ps-0">
+				<input class="form-control me-2" type="text">
 				 ${this.renderAddQuestionButton()}
 			</div>
 		</div>
-		`
-		this.layout = wrap
+		`;
+		this.layout = wrap;
 		return this.layout;
 	}
 
@@ -38,55 +37,32 @@ export class Question
 		`;
 		Event.bind(wrap, 'click', this.onRemoveQuestionButtonClickHandler.bind(this));
 
-
-		return wrap
+		return wrap;
 	}
 
 	onRemoveQuestionButtonClickHandler()
 	{
-		this.questions[this.id] = null
+		this.isDeleted = true
 		this.layout.remove();
 	}
 
 	renderEditableTitle(): HTMLElement
 	{
 		const wrap = Tag.render`
-		<label for="question-${this.questionNumber}" class="form-label">${this.questionData.title}</label>
-		`
-
-		Event.bind(wrap, 'click', this.onEditableTitleClickHandler.bind(this));
-
-		this.title?.replaceWith(wrap);
-		this.title = wrap;
-		return this.title
+		<label class="form-label">${this.questionData.title}</label>
+		`;
+		new EditableText(wrap);
+		this.title = wrap
+		return this.title;
 	}
 
-	onEditableTitleClickHandler()
+	getData()
 	{
-		const wrap = Tag.render`
-		<input type="text" class="form-control form-control-sm w-25" value="${this.questionData.title}">
-		`
-		Event.bind(wrap, 'keypress',
-			(event) => {
-				if (event.key === 'Enter') {
-					this.onEditableTitleEndChangeHandler();
-				}
-			});
-		Event.bind(wrap, 'blur', this.onEditableTitleEndChangeHandler.bind(this))
-
-		this.title?.replaceWith(wrap);
-		this.title = wrap;
-		this.title.focus();
-
+		return {
+			'title': this.title.innerText,
+			'description': this.questionData.description,
+			'position': this.questionData.position,
+			'type': this.questionData.type
+		}
 	}
-
-	onEditableTitleEndChangeHandler()
-	{
-		this.questionData.title = this.title.value;
-		Event.unbindAll(this.title, 'keypress');
-		Event.unbindAll(this.title, 'blur');
-		this.renderEditableTitle();
-	}
-
-
 }

@@ -46,7 +46,7 @@ this.BX.Up = this.BX.Up || {};
 	    babelHelpers.classCallCheck(this, Form);
 	    this.layout = {};
 	    this.layout.wrap = options.container;
-	    this.layout.questions = [];
+	    this.questions = [];
 	    this.formData = {
 	      'title': 'Название формы',
 	      'questions': [{
@@ -83,7 +83,7 @@ this.BX.Up = this.BX.Up || {};
 	        if (questionData.type === 1) {
 	          question = new Question(questionData);
 	        }
-	        _this.layout.questions.push(question);
+	        _this.questions.push(question);
 	        return question.render();
 	      }));
 	      return wrap;
@@ -98,7 +98,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onSubmitButtonClickHandler",
 	    value: function onSubmitButtonClickHandler() {
-	      console.log(this.layout.questions.map(function (question) {
+	      console.log(this.questions.map(function (question) {
 	        return question.getAnswer();
 	      }));
 	    }

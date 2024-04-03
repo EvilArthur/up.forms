@@ -7,7 +7,7 @@ export class Form
 	{
 		this.layout = {};
 		this.layout.wrap = options.container;
-		this.layout.questions = [];
+		this.questions = [];
 		this.formData = {
 			'title': 'Название формы',
 			'questions': [
@@ -56,7 +56,7 @@ export class Form
 				{
 					question = new Question(questionData);
 				}
-				this.layout.questions.push(question);
+				this.questions.push(question);
 				return question.render();
 		})}
 		</form>
@@ -77,7 +77,7 @@ export class Form
 	onSubmitButtonClickHandler()
 	{
 
-		console.log(this.layout.questions.map((question) => {
+		console.log(this.questions.map((question) => {
 			return question.getAnswer();
 		}));
 	}
