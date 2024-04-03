@@ -102,7 +102,7 @@ this.BX.Up = this.BX.Up || {};
 	  }
 	  babelHelpers.createClass(FormManager, null, [{
 	    key: "getFormData",
-	    value: function getFormData(page) {
+	    value: function getFormData() {
 	      return new Promise(function (resolve, reject) {
 	        var formData = {
 	          'title': 'Название формы',
@@ -130,6 +130,21 @@ this.BX.Up = this.BX.Up || {};
 	        setTimeout(function () {
 	          return resolve(formData);
 	        }, 1000);
+	      });
+	    }
+	  }, {
+	    key: "saveFormData",
+	    value: function saveFormData(data) {
+	      return new Promise(function (resolve, reject) {
+	        BX.ajax.runAction('up:forms.FormCreate.saveFormData', {
+	          data: data
+	        }).then(function (response) {
+	          var result = response.data.result;
+	          resolve(result);
+	        })["catch"](function (error) {
+	          console.log(error);
+	          reject(error);
+	        });
 	      });
 	    }
 	  }]);
@@ -263,7 +278,13 @@ this.BX.Up = this.BX.Up || {};
 	        'title': this.title.innerText,
 	        'chapters': [hardCodeChapter]
 	      };
-	      console.log(hardCodeForm);
+	      FormManager.saveFormData({
+	        formData: hardCodeForm
+	      }).then(function (response) {
+	        console.log(response);
+	      })["catch"](function (error) {
+	        console.log(error);
+	      });
 	    }
 	  }, {
 	    key: "renderEditableTitle",

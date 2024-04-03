@@ -1,6 +1,6 @@
 export class FormManager
 {
-	static getFormData(page: number)
+	static getFormData()
 	{
 		return new Promise((resolve, reject) => {
 			let formData = {
@@ -32,8 +32,27 @@ export class FormManager
 					},
 				],
 			};
-			setTimeout(() => resolve(formData), 1000)
+			setTimeout(() => resolve(formData), 1000);
 
 		});
+	}
+
+	static saveFormData(data)
+	{
+		return new Promise((resolve, reject) => {
+			BX.ajax.runAction(
+					'up:forms.FormCreate.saveFormData',
+					{
+						data: data,
+					})
+				.then((response) => {
+					const result = response.data.result;
+					resolve(result);
+				})
+				.catch((error) => {
+					console.log(error);
+					reject(error);
+				});
+	})
 	}
 }

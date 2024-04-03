@@ -148,7 +148,14 @@ export class FormConstructor
 				hardCodeChapter,
 			],
 		};
-		console.log(hardCodeForm);
+
+		FormManager.saveFormData({formData: hardCodeForm})
+			.then((response) => {
+				console.log(response);
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 
 	renderEditableTitle(): HTMLElement

@@ -4,6 +4,7 @@ namespace Up\Forms\Model;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\IntegerField;
+use Bitrix\Main\ORM\Fields\Relations\OneToMany;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
 use Bitrix\Main\ORM\Fields\StringField;
 use Bitrix\Main\ORM\Fields\TextField;
@@ -60,7 +61,7 @@ class ChapterTable extends DataManager
 				]
 			),
 			new Reference(
-				'ChapterForm',
+				'Form',
 				FormTable::class,
 				Join::on('this.Form_ID', 'ref.ID')
 			),
@@ -82,6 +83,9 @@ class ChapterTable extends DataManager
 					'title' => Loc::getMessage('CHAPTER_ENTITY_DESCRIPTION_FIELD'),
 				]
 			),
+			(new OneToMany(
+				'Question', QuestionTable::class, 'Chapter'
+			)),
 		];
 	}
 }

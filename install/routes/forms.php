@@ -16,4 +16,5 @@ return function (RoutingConfigurator $routes) {
 	$routes->post('/form/', new PublicPageController('/local/modules/up.forms/views/form-result.php'));
 
 	$routes->get('/form/create/', new PublicPageController('/local/modules/up.forms/views/form-create.php'));
+	$routes->get('/form/create/done/', new PublicPageController('/local/modules/up.forms/views/form-create-done.php'));
 };

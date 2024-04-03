@@ -60,7 +60,7 @@ class QuestionTable extends DataManager
 				]
 			),
 			new Reference(
-				'QuestionChapter',
+				'Chapter',
 				ChapterTable::class,
 				Join::on('this.Chapter_ID', 'ref.ID')
 			),
@@ -72,7 +72,7 @@ class QuestionTable extends DataManager
 				]
 			),
 			new Reference(
-				'QuestionField',
+				'Field',
 				FieldTable::class,
 				Join::on('this.Field_ID', 'ref.ID')
 			),
