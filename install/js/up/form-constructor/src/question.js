@@ -1,6 +1,7 @@
 import { Event, Tag } from 'main.core';
 import { EditableText } from './editable-text';
 
+
 export class Question
 {
 	constructor(questionData)

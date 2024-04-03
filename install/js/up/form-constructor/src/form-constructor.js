@@ -1,6 +1,7 @@
-import {Tag, Type, Event} from 'main.core';
-import {Question} from './question';
+import { Event, Tag } from 'main.core';
+import { Question } from './question';
 import { EditableText } from './editable-text';
+import { FormManager } from './form-manager';
 
 export class FormConstructor
 {
@@ -8,46 +9,56 @@ export class FormConstructor
 	{
 		this.layout = {};
 		this.layout.wrap = options.container;
-		this.formData = {
-			'title' : 'Название формы',
-			'chapters': [
-				{
-					'title': 'Название раздела',
-					'description': 'Описание раздела',
-					'questions': [
-						{
-							'title': 'Название 1',
-							'description': 'Описание 1',
-							'position': 1,
-							'type' : 1,
-						},
-						{
-							'title': 'Название 2',
-							'description': 'Описание 2',
-							'position': 2,
-							'type' : 1,
-						},
-						{
-							'title': 'Название 3',
-							'description': 'Описание 3',
-							'position': 3,
-							'type' : 1,
-						},
-					]
-				}
-			]
-		}
-		this.questions = []
+		this.formData = {};
+		this.questions = [];
+		this.chapters = [];
+		this.isLoading = true;
 		if (!this.layout.wrap)
 		{
 			throw new Error(`TaskList: container is not found`);
 		}
 		this.layout.wrap.append(this.render());
+		this.loadFormData();
+	}
+
+	async loadFormData()
+	{
+		try
+		{
+			this.formData = await FormManager.getFormData();
+			this.isLoading = false;
+			this.formData.chapters[0].questions.map((questionData) => {
+				let question = null;
+				if (questionData.type === 1)
+				{
+					question = new Question(questionData);
+				}
+				this.questions.push(question);
+			});
+			this.layout.form = this.render();
+		}
+		catch (error)
+		{
+			console.log(error);
+		}
 	}
 
 	render()
 	{
-		const wrap = Tag.render`
+		let wrap;
+		if (this.isLoading)
+		{
+			wrap = Tag.render`
+			<div class="container d-flex justify-content-center">
+				<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+					<span class="sr-only"></span>
+				</div>
+			</div>
+			`;
+		}
+		else
+		{
+			wrap = Tag.render`
 		<div class="container">
 			<div class="container d-flex justify-content-center">
 				${this.renderEditableTitle()}
@@ -62,29 +73,29 @@ export class FormConstructor
 				${this.renderSaveFormButton()}
 		 	</div>
 		</div>
-`
-		return wrap
+`;
+		}
+		this.layout.form?.replaceWith(wrap);
+		this.layout.form = wrap;
+		return this.layout.form;
 	}
 
 	renderQuestionList()
 	{
-		console.log(this.formData)
+
+		console.log(this.formData);
+		this.questionNumber = 1;
 		const wrap = Tag.render`
 		<div class="container">
-			${this.formData.chapters[0].questions.map((questionData) => {
-				let question = null
-				if (questionData.type === 1)
-				{
-					question = new Question(questionData);
-				}
-				this.questions.push(question);
-				return question.render();
-			})}
+			${this.questions.map((question) => {
+			question.questionData.position = this.questionNumber++;
+			return question.render();
+		})}
 		</div>
-		`
+		`;
 		this.layout.questionList?.replaceWith(wrap);
 		this.layout.questionList = wrap;
-		return this.layout.questionList
+		return this.layout.questionList;
 	}
 
 	renderAddQuestionButton()
@@ -94,14 +105,19 @@ export class FormConstructor
 		`;
 		Event.bind(wrap, 'click', this.onAddQuestionButtonClickHandler.bind(this));
 
-		return wrap
+		return wrap;
 	}
 
 	onAddQuestionButtonClickHandler()
 	{
-		this.questions.push({
-			'title': 'Новое название'
-		})
+		this.questions.push(new Question(
+			{
+				'title': 'Название',
+				'description': 'Описание',
+				'position': 1,
+				'type': 1,
+			},
+		));
 		this.renderQuestionList();
 	}
 
@@ -112,8 +128,9 @@ export class FormConstructor
 		`;
 		Event.bind(wrap, 'click', this.onSaveFormButtonClickHandler.bind(this));
 
-		return wrap
+		return wrap;
 	}
+
 	onSaveFormButtonClickHandler()
 	{
 		const hardCodeChapter = {
@@ -125,15 +142,15 @@ export class FormConstructor
 				{
 					return question.getData();
 				}
-			})
-		}
+			}),
+		};
 		const hardCodeForm = {
 			'title': this.title.innerText,
 			'chapters': [
-				hardCodeChapter
-			]
-		}
-		console.log(hardCodeForm)
+				hardCodeChapter,
+			],
+		};
+		console.log(hardCodeForm);
 	}
 
 	renderEditableTitle(): HTMLElement
@@ -142,7 +159,7 @@ export class FormConstructor
 		<h1 class="text-center mt-5 mb-4">${this.formData.title}</h1>
 		`;
 		new EditableText(wrap);
-		this.title = wrap
+		this.title = wrap;
 		return this.title;
 	}
 }
