@@ -102,34 +102,17 @@ this.BX.Up = this.BX.Up || {};
 	  }
 	  babelHelpers.createClass(FormManager, null, [{
 	    key: "getFormData",
-	    value: function getFormData() {
+	    value: function getFormData(id) {
 	      return new Promise(function (resolve, reject) {
-	        var formData = {
-	          'title': 'Название формы',
-	          'chapters': [{
-	            'title': 'Название раздела',
-	            'description': 'Описание раздела',
-	            'questions': [{
-	              'title': 'Название 1',
-	              'description': 'Описание 1',
-	              'position': 1,
-	              'type': 1
-	            }, {
-	              'title': 'Название 2',
-	              'description': 'Описание 2',
-	              'position': 2,
-	              'type': 1
-	            }, {
-	              'title': 'Название 3',
-	              'description': 'Описание 3',
-	              'position': 3,
-	              'type': 1
-	            }]
-	          }]
-	        };
-	        setTimeout(function () {
-	          return resolve(formData);
-	        }, 1000);
+	        BX.ajax.runAction('up:forms.FormCreate.getFormData', {
+	          id: id
+	        }).then(function (response) {
+	          var result = response.data.result;
+	          resolve(result);
+	        })["catch"](function (error) {
+	          console.log(error);
+	          reject(error);
+	        });
 	      });
 	    }
 	  }, {
@@ -159,6 +142,7 @@ this.BX.Up = this.BX.Up || {};
 	    babelHelpers.classCallCheck(this, FormConstructor);
 	    this.layout = {};
 	    this.layout.wrap = options.container;
+	    this.id = options.id;
 	    this.formData = {};
 	    this.questions = [];
 	    this.chapters = [];

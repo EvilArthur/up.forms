@@ -13,4 +13,11 @@ class FormCreate extends Controller
 			'result' => FormRepository::saveForm($formData),
 		];
 	}
+
+	public function getFormDataAction($id)
+	{
+		return [
+			'result' => FormRepository::getForm($id),
+		];
+	}
 }

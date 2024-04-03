@@ -33,6 +33,19 @@ class FormRepository
 		return $form->save()->getErrors();
 
 	}
+
+	public static function getForm($id)
+	{
+		$formList = [];
+		$form = FormTable::query()->setSelect(
+			[
+				'ID',
+				'title',
+				'ch'
+			]
+		)->fetchAll();
+		return $form->collectValues();
+	}
 }
 
 /*{

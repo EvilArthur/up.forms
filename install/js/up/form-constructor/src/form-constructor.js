@@ -9,6 +9,7 @@ export class FormConstructor
 	{
 		this.layout = {};
 		this.layout.wrap = options.container;
+		this.id = options.id
 		this.formData = {};
 		this.questions = [];
 		this.chapters = [];

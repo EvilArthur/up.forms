@@ -16,6 +16,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 	BX.ready(function() {
 		window.FormConstructor = new BX.Up.Forms.FormConstructor({
 			container: document.getElementById('main-container'),
+			id: <?=$arParams['ID']?>
+
 		});
 	});
 </script>
