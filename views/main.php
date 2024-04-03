@@ -5,6 +5,6 @@
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("Forms");
 
-$APPLICATION->IncludeComponent('up:task.list', '');
+$APPLICATION->IncludeComponent('up:form.main', '');
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

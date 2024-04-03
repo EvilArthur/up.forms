@@ -1,7 +1,7 @@
 <?php
-namespace Up\Tasks\Service;
+namespace Up\Forms\Service;
 
-use Bitrix\Main\Context;
+
 use Up\Forms\Model\EO_Form;
 use Up\Forms\Model\FormTable;
 
@@ -14,7 +14,7 @@ class FormManager
 		$form->setCreatorId(1);
 		$form->save();
 
-		var_dump(FormTable::getByPrimary(1)->fetchObject());
+		var_dump(FormTable::getByPrimary(1)->fetchObject()->getTitle());
 		die();
 	}
 }

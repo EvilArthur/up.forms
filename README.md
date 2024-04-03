@@ -47,7 +47,7 @@ require_once __DIR__ . '/bitrix/routing_index.php';
  COMPOSER=composer-bx.json composer install    
 ```
 
-9. Создаем анотации для ORM
+9. Создаем анотации для ORM находясь в папке `/{pathToProject}/bitrix/`
 
 ```
    php bitrix.php orm:annotate -m up.forms 
