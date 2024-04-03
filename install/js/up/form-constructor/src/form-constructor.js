@@ -82,8 +82,6 @@ export class FormConstructor
 
 	renderQuestionList()
 	{
-
-		console.log(this.formData);
 		this.questionNumber = 1;
 		const wrap = Tag.render`
 		<div class="container">

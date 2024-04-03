@@ -21,12 +21,13 @@ this.BX.Up = this.BX.Up || {};
 	    value: function onEditableTextClickHandler() {
 	      var _this = this;
 	      var wrap = main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["\n\t\t<input type=\"text\" class=\"form-control form-control-sm w-50\" value=\"", "\">\n\t\t"])), this.element.innerText);
+	      main_core.Event.bind(wrap, 'blur', this.onEditableTextEndChangeHandler.bind(this));
 	      main_core.Event.bind(wrap, 'keypress', function (event) {
+	        console.log(event.key === 'Enter');
 	        if (event.key === 'Enter') {
-	          _this.onEditableTextEndChangeHandler.bind(_this);
+	          _this.onEditableTextEndChangeHandler();
 	        }
 	      });
-	      main_core.Event.bind(wrap, 'blur', this.onEditableTextEndChangeHandler.bind(this));
 	      this.input = wrap;
 	      this.element.replaceWith(this.input);
 	      this.input.focus();
@@ -211,7 +212,6 @@ this.BX.Up = this.BX.Up || {};
 	    value: function renderQuestionList() {
 	      var _this2 = this,
 	        _this$layout$question;
-	      console.log(this.formData);
 	      this.questionNumber = 1;
 	      var wrap = main_core.Tag.render(_templateObject3$1 || (_templateObject3$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t<div class=\"container\">\n\t\t\t", "\n\t\t</div>\n\t\t"])), this.questions.map(function (question) {
 	        question.questionData.position = _this2.questionNumber++;
