@@ -14,7 +14,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 
 <script>
 	BX.ready(function() {
-		window.TasksTaskList = new BX.Up.Forms.FormConstructor({
+		window.FormConstructor = new BX.Up.Forms.FormConstructor({
 			container: document.getElementById('main-container'),
 		});
 	});
