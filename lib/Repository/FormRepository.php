@@ -101,6 +101,19 @@ class FormRepository
 		}
 		return $formList;
 	}
+
+	public static function getForms()
+	{
+		return FormTable::query()
+						->setSelect(['Id', 'Title',])
+						->fetchAll();
+	}
+
+	public static function deleteForm(int $id)
+	{
+		$form = FormTable::getByPrimary($id)->fetchObject();
+		$form->delete();
+	}
 }
 
 /*{

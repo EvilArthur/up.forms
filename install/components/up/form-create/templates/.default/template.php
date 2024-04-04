@@ -4,7 +4,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 {
 	die();
 }
-var_dump($arParams);
 \Bitrix\Main\UI\Extension::load('up.form-constructor');
 ?>
 
