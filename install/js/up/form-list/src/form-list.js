@@ -69,7 +69,7 @@ export class FormList
 			<tr>
 				<td class="align-middle">${form.Title}</td>
 				<td><a href="/form/edit/${form.ID}/" class="btn btn-primary">${Loc.getMessage('UP_FORMS_FORM_LIST_EDIT')}</a></td>
-				<td><button class="btn btn-success">${Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_LINK')}</button></td>
+				<td><a href="/form/view/${form.ID}/" class="btn btn-success">${Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_LINK')}</a></td>
 				<td><button class="btn btn-info">${Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_RESULTS')}</button></td>
 				<td>${this.renderDeleteButton(form.ID)}</td>
 			</tr>

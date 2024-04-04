@@ -71,7 +71,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderForm",
 	    value: function renderForm(form) {
-	      return main_core.Tag.render(_templateObject3 || (_templateObject3 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<tr>\n\t\t\t\t<td class=\"align-middle\">", "</td>\n\t\t\t\t<td><a href=\"/form/edit/", "/\" class=\"btn btn-primary\">", "</a></td>\n\t\t\t\t<td><button class=\"btn btn-success\">", "</button></td>\n\t\t\t\t<td><button class=\"btn btn-info\">", "</button></td>\n\t\t\t\t<td>", "</td>\n\t\t\t</tr>\n\t\t\t"])), form.Title, form.ID, main_core.Loc.getMessage('UP_FORMS_FORM_LIST_EDIT'), main_core.Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_LINK'), main_core.Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_RESULTS'), this.renderDeleteButton(form.ID));
+	      return main_core.Tag.render(_templateObject3 || (_templateObject3 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<tr>\n\t\t\t\t<td class=\"align-middle\">", "</td>\n\t\t\t\t<td><a href=\"/form/edit/", "/\" class=\"btn btn-primary\">", "</a></td>\n\t\t\t\t<td><a href=\"/form/view/", "/\" class=\"btn btn-success\">", "</a></td>\n\t\t\t\t<td><button class=\"btn btn-info\">", "</button></td>\n\t\t\t\t<td>", "</td>\n\t\t\t</tr>\n\t\t\t"])), form.Title, form.ID, main_core.Loc.getMessage('UP_FORMS_FORM_LIST_EDIT'), form.ID, main_core.Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_LINK'), main_core.Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_RESULTS'), this.renderDeleteButton(form.ID));
 	    }
 	  }, {
 	    key: "renderDeleteButton",

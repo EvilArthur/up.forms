@@ -12,7 +12,7 @@ return function (RoutingConfigurator $routes) {
 		\Up\Forms\Repository\FormRepository::getForm('11');
 	});
 
-	$routes->get('/form/{id}/', new PublicPageController('/local/modules/up.forms/views/form.php'));
+	$routes->get('/form/view/{id}/', new PublicPageController('/local/modules/up.forms/views/form.php'));
 
 	$routes->get('/form/create/', new PublicPageController('/local/modules/up.forms/views/form-create.php'));
 	$routes->get('/form/create/done/', new PublicPageController('/local/modules/up.forms/views/form-create-done.php'));

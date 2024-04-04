@@ -150,7 +150,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (this.isLoading) {
 	        wrap = main_core.Tag.render(_templateObject$1 || (_templateObject$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container d-flex justify-content-center\">\n\t\t\t\t<div class=\"spinner-border\" style=\"width: 3rem; height: 3rem;\" role=\"status\">\n\t\t\t\t\t<span class=\"sr-only\"></span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t"])));
 	      } else {
-	        wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>\n\t\t"])), this.formData.title, this.renderQuestionList(), this.renderSubmitButton());
+	        wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>\n\t\t"])), this.formData.Title, this.renderQuestionList(), this.renderSubmitButton());
 	      }
 	      (_this$layout$form = this.layout.form) === null || _this$layout$form === void 0 ? void 0 : _this$layout$form.replaceWith(wrap);
 	      this.layout.form = wrap;

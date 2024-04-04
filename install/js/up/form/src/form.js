@@ -60,7 +60,7 @@ export class Form
 		{
 			wrap = Tag.render`
 			<div class="container">
-				<h1 class="text-center mt-5 mb-4">${this.formData.title}</h1>
+				<h1 class="text-center mt-5 mb-4">${this.formData.Title}</h1>
 				${this.renderQuestionList()}
 				${this.renderSubmitButton()}
 			</div>
