@@ -77,7 +77,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableTitle",
 	    value: function renderEditableTitle() {
-	      var wrap = main_core.Tag.render(_templateObject4 || (_templateObject4 = babelHelpers.taggedTemplateLiteral(["\n\t\t<label class=\"form-label\">", "</label>\n\t\t"])), this.questionData.title);
+	      var wrap = main_core.Tag.render(_templateObject4 || (_templateObject4 = babelHelpers.taggedTemplateLiteral(["\n\t\t<label class=\"form-label\">", "</label>\n\t\t"])), this.questionData.Title);
 	      new EditableText(wrap);
 	      this.title = wrap;
 	      return this.title;
@@ -87,7 +87,6 @@ this.BX.Up = this.BX.Up || {};
 	    value: function getData() {
 	      return {
 	        'title': this.title.innerText,
-	        'description': this.questionData.description,
 	        'position': this.questionData.position,
 	        'type': this.questionData.type
 	      };
@@ -103,9 +102,12 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(FormManager, null, [{
 	    key: "getFormData",
 	    value: function getFormData(id) {
+	      id = 3;
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.FormCreate.getFormData', {
-	          id: id
+	          data: {
+	            id: id
+	          }
 	        }).then(function (response) {
 	          var result = response.data.result;
 	          resolve(result);
@@ -143,6 +145,7 @@ this.BX.Up = this.BX.Up || {};
 	    this.layout = {};
 	    this.layout.wrap = options.container;
 	    this.id = options.id;
+	    console.log(this.id);
 	    this.formData = {};
 	    this.questions = [];
 	    this.chapters = [];
@@ -161,31 +164,43 @@ this.BX.Up = this.BX.Up || {};
 	        return _regeneratorRuntime().wrap(function _callee$(_context) {
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
-	              _context.prev = 0;
-	              _context.next = 3;
+	              if (!(this.id !== 0)) {
+	                _context.next = 16;
+	                break;
+	              }
+	              _context.prev = 1;
+	              _context.next = 4;
 	              return FormManager.getFormData();
-	            case 3:
+	            case 4:
 	              this.formData = _context.sent;
 	              this.isLoading = false;
+	              console.log(this.formData);
 	              this.formData.chapters[0].questions.map(function (questionData) {
 	                var question = null;
-	                if (questionData.type === 1) {
+	                if (questionData.Field_ID === 1) {
 	                  question = new Question(questionData);
 	                }
 	                _this.questions.push(question);
 	              });
 	              this.layout.form = this.render();
-	              _context.next = 12;
+	              _context.next = 14;
 	              break;
-	            case 9:
-	              _context.prev = 9;
-	              _context.t0 = _context["catch"](0);
+	            case 11:
+	              _context.prev = 11;
+	              _context.t0 = _context["catch"](1);
 	              console.log(_context.t0);
-	            case 12:
+	            case 14:
+	              _context.next = 19;
+	              break;
+	            case 16:
+	              this.isLoading = false;
+	              this.formData.Title = 'Новая форма';
+	              this.layout.form = this.render();
+	            case 19:
 	            case "end":
 	              return _context.stop();
 	          }
-	        }, _callee, this, [[0, 9]]);
+	        }, _callee, this, [[1, 11]]);
 	      }));
 	      function loadFormData() {
 	        return _loadFormData.apply(this, arguments);
@@ -231,7 +246,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "onAddQuestionButtonClickHandler",
 	    value: function onAddQuestionButtonClickHandler() {
 	      this.questions.push(new Question({
-	        'title': 'Название',
+	        'Title': 'Название',
 	        'description': 'Описание',
 	        'position': 1,
 	        'type': 1
@@ -258,12 +273,13 @@ this.BX.Up = this.BX.Up || {};
 	          }
 	        })
 	      };
-	      var hardCodeForm = {
+	      var form = {
+	        'ID': this.id,
 	        'title': this.title.innerText,
 	        'chapters': [hardCodeChapter]
 	      };
 	      FormManager.saveFormData({
-	        formData: hardCodeForm
+	        formData: form
 	      }).then(function (response) {
 	        console.log(response);
 	      })["catch"](function (error) {
@@ -273,7 +289,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableTitle",
 	    value: function renderEditableTitle() {
-	      var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t"])), this.formData.title);
+	      var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t"])), this.formData.Title);
 	      new EditableText(wrap);
 	      this.title = wrap;
 	      return this.title;

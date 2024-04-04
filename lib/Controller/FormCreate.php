@@ -9,9 +9,18 @@ class FormCreate extends Controller
 {
 	public function saveFormDataAction($formData)
 	{
-		return [
-			'result' => FormRepository::saveForm($formData),
-		];
+		if ((int) $formData['ID'] === 0)
+		{
+			return [
+				'result' => FormRepository::createForm($formData),
+			];
+		}
+		else
+		{
+			return [
+				'result' => FormRepository::saveForm($formData),
+			];
+		}
 	}
 
 	public function getFormDataAction($id)

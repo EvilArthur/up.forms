@@ -9,7 +9,7 @@ return function (RoutingConfigurator $routes) {
 	$routes->get('/forms/', new PublicPageController('/local/modules/up.forms/views/main.php'));
 
 	$routes->get('/test/', function () {
-		FormManager::createForm();
+		\Up\Forms\Repository\FormRepository::saveForm(3);
 	});
 
 	$routes->get('/form/', new PublicPageController('/local/modules/up.forms/views/form.php'));
@@ -17,4 +17,6 @@ return function (RoutingConfigurator $routes) {
 
 	$routes->get('/form/create/', new PublicPageController('/local/modules/up.forms/views/form-create.php'));
 	$routes->get('/form/create/done/', new PublicPageController('/local/modules/up.forms/views/form-create-done.php'));
+
+	$routes->get('/form/edit/{id}/', new PublicPageController('/local/modules/up.forms/views/form-create.php'));
 };

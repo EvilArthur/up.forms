@@ -10,6 +10,7 @@ export class FormConstructor
 		this.layout = {};
 		this.layout.wrap = options.container;
 		this.id = options.id
+		console.log(this.id)
 		this.formData = {};
 		this.questions = [];
 		this.chapters = [];
@@ -24,23 +25,33 @@ export class FormConstructor
 
 	async loadFormData()
 	{
-		try
+		if (this.id !== 0)
 		{
-			this.formData = await FormManager.getFormData();
-			this.isLoading = false;
-			this.formData.chapters[0].questions.map((questionData) => {
-				let question = null;
-				if (questionData.type === 1)
-				{
-					question = new Question(questionData);
-				}
-				this.questions.push(question);
-			});
-			this.layout.form = this.render();
+			try
+			{
+				this.formData = await FormManager.getFormData();
+				this.isLoading = false;
+				console.log(this.formData);
+				this.formData.chapters[0].questions.map((questionData) => {
+					let question = null;
+					if (questionData.Field_ID === 1)
+					{
+						question = new Question(questionData);
+					}
+					this.questions.push(question);
+				});
+				this.layout.form = this.render();
+			}
+			catch (error)
+			{
+				console.log(error);
+			}
 		}
-		catch (error)
+		else
 		{
-			console.log(error);
+			this.isLoading = false
+			this.formData.Title = 'Новая форма';
+			this.layout.form = this.render();
 		}
 	}
 
@@ -111,7 +122,7 @@ export class FormConstructor
 	{
 		this.questions.push(new Question(
 			{
-				'title': 'Название',
+				'Title': 'Название',
 				'description': 'Описание',
 				'position': 1,
 				'type': 1,
@@ -143,14 +154,15 @@ export class FormConstructor
 				}
 			}),
 		};
-		const hardCodeForm = {
+		const form = {
+			'ID': this.id,
 			'title': this.title.innerText,
 			'chapters': [
 				hardCodeChapter,
 			],
 		};
 
-		FormManager.saveFormData({formData: hardCodeForm})
+		FormManager.saveFormData({formData: form})
 			.then((response) => {
 				console.log(response);
 			})
@@ -162,7 +174,7 @@ export class FormConstructor
 	renderEditableTitle(): HTMLElement
 	{
 		const wrap = Tag.render`
-		<h1 class="text-center mt-5 mb-4">${this.formData.title}</h1>
+		<h1 class="text-center mt-5 mb-4">${this.formData.Title}</h1>
 		`;
 		new EditableText(wrap);
 		this.title = wrap;

@@ -50,7 +50,7 @@ export class Question
 	renderEditableTitle(): HTMLElement
 	{
 		const wrap = Tag.render`
-		<label class="form-label">${this.questionData.title}</label>
+		<label class="form-label">${this.questionData.Title}</label>
 		`;
 		new EditableText(wrap);
 		this.title = wrap
@@ -61,7 +61,6 @@ export class Question
 	{
 		return {
 			'title': this.title.innerText,
-			'description': this.questionData.description,
 			'position': this.questionData.position,
 			'type': this.questionData.type
 		}

@@ -9,10 +9,11 @@ use Up\Forms\Model\QuestionTable;
 
 class FormRepository
 {
-	public static function saveForm($formData)
+	public static function createForm($formData)
 	{
 		$form = FormTable::createObject();
 		$form->setCreatorId(1);
+		$form->setTitle($formData['title']);
 		foreach ($formData['chapters'] as $chapterData)
 		{
 
@@ -31,26 +32,49 @@ class FormRepository
 		}
 
 		return $form->save()->getErrors();
-
 	}
+
+	/*public static function saveForm($formData)
+	{
+
+		$form = FormTable::getById(3)->fetchObject();
+		foreach ($formData['chapters']['questions'] as $questionData)
+		{
+			if (is_null($questionData['ID']))
+			{
+				$question = QuestionTable::createObject();
+			}
+			$questions = $chapter->fillQuestion();
+			$questions->removeByPrimary(2);
+			echo '<pre>';
+			var_dump(count($chapter->collectValues()['Question']));
+		}
+	}*/
 
 	public static function getForm($id)
 	{
-		$formList = [];
-		$form = FormTable::query()->setSelect(
-			[
-				'ID',
-				'title',
-				'ch'
-			]
-		)->fetchAll();
-		return $form->collectValues();
+		$form = FormTable::getById($id)->fetchObject();
+		$formList = $form->collectValues();
+		$chapters = $form->fillChapter();
+		foreach ($chapters as $chapter)
+		{
+			$chapterList = $chapter->collectValues();
+			$questions = $chapter->fillQuestion();
+			foreach ($questions as $question)
+			{
+				$questionList = $question->collectValues();
+				$chapterList['questions'][] = $questionList;
+			}
+			$formList['chapters'][] = $chapterList;
+		}
+		var_dump($formList);
+		return $formList;
 	}
 }
 
 /*{
 	'title': 'Название формы',
-				'chapters': [
+	'chapters': [
 					{
 						'title': 'Название раздела',
 						'description': 'Описание раздела',
@@ -59,7 +83,7 @@ class FormRepository
 								'title': 'Название 1',
 								'description': 'Описание 1',
 								'position': 1,
-								'type': 1,
+								'Field_ID': 1,
 							},
 							{
 								'title': 'Название 2',
