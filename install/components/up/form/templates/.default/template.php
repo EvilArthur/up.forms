@@ -14,6 +14,7 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 	BX.ready(function() {
 		window.Form = new BX.Up.Forms.Form({
 			container: document.getElementById('main-container'),
+			id: <?=$arParams['ID']?>
 		});
 	});
 </script>

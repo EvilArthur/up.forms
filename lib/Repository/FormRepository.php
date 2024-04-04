@@ -85,6 +85,7 @@ class FormRepository
 	public static function getForm($id)
 	{
 		$form = FormTable::getById($id)->fetchObject();
+		var_dump($form);
 		$formList = $form->collectValues();
 		$chapters = $form->fillChapter();
 		foreach ($chapters as $chapter)

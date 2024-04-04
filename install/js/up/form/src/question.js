@@ -13,7 +13,7 @@ export class Question
 	{
 		const wrap = Tag.render`
 		<div class="mb-3">
-			<label class="form-label">${this.questionData.title}</label>
+			<label class="form-label">${this.questionData.Title}</label>
 			${this.renderInput()}
 		</div>
 		`
@@ -33,7 +33,7 @@ export class Question
 	getAnswer()
 	{
 		return {
-			'id': this.questionData.id,
+			'id': this.questionData.ID,
 			'answer':this.layout.input.value
 		}
 	}

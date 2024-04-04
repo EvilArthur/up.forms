@@ -288,6 +288,7 @@ this.BX.Up = this.BX.Up || {};
 	        formData: form
 	      }).then(function (response) {
 	        console.log(response);
+	        location.href = 'done/';
 	      })["catch"](function (error) {
 	        console.log(error);
 	      });

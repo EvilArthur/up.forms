@@ -22,6 +22,7 @@ class FormCreate extends Controller
 
 	public function getFormDataAction($id)
 	{
+		$id = (int) $id;
 		return [
 			'result' => FormRepository::getForm($id),
 		];
