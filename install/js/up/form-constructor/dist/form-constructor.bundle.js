@@ -6,9 +6,11 @@ this.BX.Up = this.BX.Up || {};
 
 	var _templateObject;
 	var EditableText = /*#__PURE__*/function () {
-	  function EditableText(element) {
+	  function EditableText(element, dataObject, titleProperty) {
 	    babelHelpers.classCallCheck(this, EditableText);
 	    this.element = element;
+	    this.dataObject = dataObject;
+	    this.titleProperty = titleProperty;
 	    this.setupEditHandler();
 	  }
 	  babelHelpers.createClass(EditableText, [{
@@ -23,7 +25,6 @@ this.BX.Up = this.BX.Up || {};
 	      var wrap = main_core.Tag.render(_templateObject || (_templateObject = babelHelpers.taggedTemplateLiteral(["\n\t\t<input type=\"text\" class=\"form-control form-control-sm w-50\" value=\"", "\">\n\t\t"])), this.element.innerText);
 	      main_core.Event.bind(wrap, 'blur', this.onEditableTextEndChangeHandler.bind(this));
 	      main_core.Event.bind(wrap, 'keypress', function (event) {
-	        console.log(event.key === 'Enter');
 	        if (event.key === 'Enter') {
 	          _this.onEditableTextEndChangeHandler();
 	        }
@@ -35,7 +36,9 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onEditableTextEndChangeHandler",
 	    value: function onEditableTextEndChangeHandler() {
-	      this.element.innerText = this.input.value;
+	      var newTitle = this.input.value;
+	      this.element.innerText = newTitle;
+	      this.dataObject[this.titleProperty] = newTitle; // Обновляем Title в dataObject
 	      this.input.replaceWith(this.element);
 	    }
 	  }]);
@@ -78,7 +81,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "renderEditableTitle",
 	    value: function renderEditableTitle() {
 	      var wrap = main_core.Tag.render(_templateObject4 || (_templateObject4 = babelHelpers.taggedTemplateLiteral(["\n\t\t<label class=\"form-label\">", "</label>\n\t\t"])), this.questionData.Title);
-	      new EditableText(wrap);
+	      new EditableText(wrap, this.questionData, 'Title');
 	      this.title = wrap;
 	      return this.title;
 	    }
@@ -86,9 +89,10 @@ this.BX.Up = this.BX.Up || {};
 	    key: "getData",
 	    value: function getData() {
 	      return {
-	        'title': this.title.innerText,
-	        'position': this.questionData.position,
-	        'type': this.questionData.type
+	        'Title': this.title.innerText,
+	        'Position': this.questionData.position,
+	        'Field_ID': this.questionData.Field_ID,
+	        'ID': this.questionData.ID
 	      };
 	    }
 	  }]);
@@ -102,7 +106,6 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(FormManager, null, [{
 	    key: "getFormData",
 	    value: function getFormData(id) {
-	      id = 3;
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.FormCreate.getFormData', {
 	          data: {
@@ -145,8 +148,9 @@ this.BX.Up = this.BX.Up || {};
 	    this.layout = {};
 	    this.layout.wrap = options.container;
 	    this.id = options.id;
-	    console.log(this.id);
-	    this.formData = {};
+	    this.formData = {
+	      chapters: []
+	    };
 	    this.questions = [];
 	    this.chapters = [];
 	    this.isLoading = true;
@@ -165,16 +169,15 @@ this.BX.Up = this.BX.Up || {};
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
 	              if (!(this.id !== 0)) {
-	                _context.next = 16;
+	                _context.next = 15;
 	                break;
 	              }
 	              _context.prev = 1;
 	              _context.next = 4;
-	              return FormManager.getFormData();
+	              return FormManager.getFormData(this.id);
 	            case 4:
 	              this.formData = _context.sent;
 	              this.isLoading = false;
-	              console.log(this.formData);
 	              this.formData.chapters[0].questions.map(function (questionData) {
 	                var question = null;
 	                if (questionData.Field_ID === 1) {
@@ -183,16 +186,22 @@ this.BX.Up = this.BX.Up || {};
 	                _this.questions.push(question);
 	              });
 	              this.layout.form = this.render();
-	              _context.next = 14;
+	              _context.next = 13;
 	              break;
-	            case 11:
-	              _context.prev = 11;
+	            case 10:
+	              _context.prev = 10;
 	              _context.t0 = _context["catch"](1);
 	              console.log(_context.t0);
-	            case 14:
+	            case 13:
 	              _context.next = 19;
 	              break;
-	            case 16:
+	            case 15:
+	              this.formData.chapters[0] = {
+	                'title': 'Заголовок раздела',
+	                'description': 'Описание раздела',
+	                'position': 1,
+	                'questions': []
+	              };
 	              this.isLoading = false;
 	              this.formData.Title = 'Новая форма';
 	              this.layout.form = this.render();
@@ -200,7 +209,7 @@ this.BX.Up = this.BX.Up || {};
 	            case "end":
 	              return _context.stop();
 	          }
-	        }, _callee, this, [[1, 11]]);
+	        }, _callee, this, [[1, 10]]);
 	      }));
 	      function loadFormData() {
 	        return _loadFormData.apply(this, arguments);
@@ -247,9 +256,9 @@ this.BX.Up = this.BX.Up || {};
 	    value: function onAddQuestionButtonClickHandler() {
 	      this.questions.push(new Question({
 	        'Title': 'Название',
-	        'description': 'Описание',
-	        'position': 1,
-	        'type': 1
+	        'Description': 'Описание',
+	        'Position': this.questionNumber++,
+	        'Field_ID': 1
 	      }));
 	      this.renderQuestionList();
 	    }
@@ -263,19 +272,16 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onSaveFormButtonClickHandler",
 	    value: function onSaveFormButtonClickHandler() {
-	      var hardCodeChapter = {
-	        'title': 'Заголовок раздела',
-	        'description': 'Описание раздела',
-	        'position': 1,
-	        'questions': this.questions.map(function (question) {
-	          if (!question.isDeleted) {
-	            return question.getData();
-	          }
-	        })
-	      };
+	      var hardCodeChapter = this.formData.chapters[0];
+	      hardCodeChapter.questions = this.questions.map(function (question) {
+	        if (!question.isDeleted) {
+	          return question.getData();
+	        }
+	      });
 	      var form = {
 	        'ID': this.id,
-	        'title': this.title.innerText,
+	        'Title': this.title.innerText,
+	        'Creator_ID': 1,
 	        'chapters': [hardCodeChapter]
 	      };
 	      FormManager.saveFormData({
@@ -290,8 +296,9 @@ this.BX.Up = this.BX.Up || {};
 	    key: "renderEditableTitle",
 	    value: function renderEditableTitle() {
 	      var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t"])), this.formData.Title);
-	      new EditableText(wrap);
+	      new EditableText(wrap, this.formData, 'Title');
 	      this.title = wrap;
+	      this.formData.Title = this.title.innerHTML;
 	      return this.title;
 	    }
 	  }]);

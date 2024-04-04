@@ -52,7 +52,7 @@ export class Question
 		const wrap = Tag.render`
 		<label class="form-label">${this.questionData.Title}</label>
 		`;
-		new EditableText(wrap);
+		new EditableText(wrap, this.questionData, 'Title');
 		this.title = wrap
 		return this.title;
 	}
@@ -60,9 +60,10 @@ export class Question
 	getData()
 	{
 		return {
-			'title': this.title.innerText,
-			'position': this.questionData.position,
-			'type': this.questionData.type
+			'Title': this.title.innerText,
+			'Position': this.questionData.position,
+			'Field_ID': this.questionData.Field_ID,
+			'ID': this.questionData.ID,
 		}
 	}
 }

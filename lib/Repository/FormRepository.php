@@ -13,7 +13,7 @@ class FormRepository
 	{
 		$form = FormTable::createObject();
 		$form->setCreatorId(1);
-		$form->setTitle($formData['title']);
+		$form->setTitle($formData['Title']);
 		foreach ($formData['chapters'] as $chapterData)
 		{
 
@@ -22,10 +22,14 @@ class FormRepository
 			$chapter->setDescription($chapterData['description']);
 			foreach ($chapterData['questions'] as $questionData)
 			{
+				if ($questionData === "undefined")
+				{
+					continue;
+				}
 				$question = QuestionTable::createObject();
-				$question->setTitle($questionData['title']);
-				$question->setPosition($questionData['position']);
-				$question->setFieldId($questionData['type']);
+				$question->setTitle($questionData['Title']);
+				$question->setPosition($questionData['Position']);
+				$question->setFieldId($questionData['Field_ID']);
 				$chapter->addToQuestion($question);
 			}
 			$form->addToChapter($chapter);
@@ -34,22 +38,50 @@ class FormRepository
 		return $form->save()->getErrors();
 	}
 
-	/*public static function saveForm($formData)
+	public static function saveForm($formData)
 	{
-
-		$form = FormTable::getById(3)->fetchObject();
-		foreach ($formData['chapters']['questions'] as $questionData)
+		$form = FormTable::getById($formData['ID'])->fetchObject();
+		$form->setTitle($formData['Title']);
+		$form->removeAllChapter();
+		foreach ($formData['chapters'] as $chapterData)
 		{
-			if (is_null($questionData['ID']))
+			$chapter = ChapterTable::wakeUpObject(
+				[
+					'ID' => $chapterData['ID'],
+				]);
+			$chapter->removeAllQuestion();
+			foreach ($chapterData['questions'] as $questionData)
 			{
-				$question = QuestionTable::createObject();
+				if ($questionData === "undefined")
+				{
+					continue;
+				}
+				if ($questionData['ID'] === "undefined")
+				{
+					$question = QuestionTable::createObject();
+					$question->setTitle($questionData['Title']);
+					$question->setPosition($questionData['Position']);
+					$question->setFieldId($questionData['Field_ID']);
+				}
+				else
+				{
+					$question = QuestionTable::wakeUpObject(
+						[
+							'ID' => $questionData['ID'],
+						]
+					);
+					$question->setTitle($questionData['Title']);
+					$question->setPosition($questionData['Position']);
+					$question->setFieldId($questionData['Field_ID']);
+				}
+				$chapter->addToQuestion($question);
 			}
-			$questions = $chapter->fillQuestion();
-			$questions->removeByPrimary(2);
-			echo '<pre>';
-			var_dump(count($chapter->collectValues()['Question']));
+			$form->addToChapter($chapter);
 		}
-	}*/
+		echo '<pre>';
+		$result = $form->save();
+		return $result->isSuccess();
+	}
 
 	public static function getForm($id)
 	{
@@ -67,7 +99,6 @@ class FormRepository
 			}
 			$formList['chapters'][] = $chapterList;
 		}
-		var_dump($formList);
 		return $formList;
 	}
 }

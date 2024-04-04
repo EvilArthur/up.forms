@@ -2,9 +2,11 @@ import {Tag, Event, Type} from 'main.core';
 
 export class EditableText
 {
-	constructor(element)
+	constructor(element, dataObject, titleProperty)
 	{
 		this.element = element;
+		this.dataObject = dataObject;
+		this.titleProperty = titleProperty;
 		this.setupEditHandler();
 	}
 
@@ -21,7 +23,6 @@ export class EditableText
 		Event.bind(wrap, 'blur', this.onEditableTextEndChangeHandler.bind(this))
 		Event.bind(wrap, 'keypress',
 			(event) => {
-				console.log(event.key === 'Enter')
 				if (event.key === 'Enter') {
 					this.onEditableTextEndChangeHandler();
 				}
@@ -34,9 +35,10 @@ export class EditableText
 
 	}
 
-	onEditableTextEndChangeHandler()
-	{
-		this.element.innerText = this.input.value;
-		this.input.replaceWith(this.element)
+	onEditableTextEndChangeHandler() {
+		const newTitle = this.input.value;
+		this.element.innerText = newTitle;
+		this.dataObject[this.titleProperty] = newTitle; // Обновляем Title в dataObject
+		this.input.replaceWith(this.element);
 	}
 }

@@ -9,9 +9,10 @@ export class FormConstructor
 	{
 		this.layout = {};
 		this.layout.wrap = options.container;
-		this.id = options.id
-		console.log(this.id)
-		this.formData = {};
+		this.id = options.id;
+		this.formData = {
+			chapters: []
+		};
 		this.questions = [];
 		this.chapters = [];
 		this.isLoading = true;
@@ -29,9 +30,8 @@ export class FormConstructor
 		{
 			try
 			{
-				this.formData = await FormManager.getFormData();
+				this.formData = await FormManager.getFormData(this.id);
 				this.isLoading = false;
-				console.log(this.formData);
 				this.formData.chapters[0].questions.map((questionData) => {
 					let question = null;
 					if (questionData.Field_ID === 1)
@@ -49,7 +49,13 @@ export class FormConstructor
 		}
 		else
 		{
-			this.isLoading = false
+			this.formData.chapters[0] = {
+				'title': 'Заголовок раздела',
+				'description': 'Описание раздела',
+				'position': 1,
+				'questions': [],
+			};
+			this.isLoading = false;
 			this.formData.Title = 'Новая форма';
 			this.layout.form = this.render();
 		}
@@ -123,9 +129,9 @@ export class FormConstructor
 		this.questions.push(new Question(
 			{
 				'Title': 'Название',
-				'description': 'Описание',
-				'position': 1,
-				'type': 1,
+				'Description': 'Описание',
+				'Position': this.questionNumber++,
+				'Field_ID': 1,
 			},
 		));
 		this.renderQuestionList();
@@ -143,32 +149,29 @@ export class FormConstructor
 
 	onSaveFormButtonClickHandler()
 	{
-		const hardCodeChapter = {
-			'title': 'Заголовок раздела',
-			'description': 'Описание раздела',
-			'position': 1,
-			'questions': this.questions.map((question) => {
-				if (!question.isDeleted)
-				{
-					return question.getData();
-				}
-			}),
-		};
+		const hardCodeChapter = this.formData.chapters[0];
+		hardCodeChapter.questions = this.questions.map((question) => {
+			if (!question.isDeleted)
+			{
+				return question.getData();
+			}
+		});
 		const form = {
 			'ID': this.id,
-			'title': this.title.innerText,
+			'Title': this.title.innerText,
+			'Creator_ID': 1,
 			'chapters': [
 				hardCodeChapter,
 			],
 		};
 
-		FormManager.saveFormData({formData: form})
+		FormManager.saveFormData({ formData: form })
 			.then((response) => {
 				console.log(response);
 			})
 			.catch((error) => {
-				console.log(error)
-			})
+				console.log(error);
+			});
 	}
 
 	renderEditableTitle(): HTMLElement
@@ -176,8 +179,9 @@ export class FormConstructor
 		const wrap = Tag.render`
 		<h1 class="text-center mt-5 mb-4">${this.formData.Title}</h1>
 		`;
-		new EditableText(wrap);
+		new EditableText(wrap, this.formData, 'Title')
 		this.title = wrap;
+		this.formData.Title = this.title.innerHTML;
 		return this.title;
 	}
 }
