@@ -78,7 +78,6 @@ class FormRepository
 			}
 			$form->addToChapter($chapter);
 		}
-		echo '<pre>';
 		$result = $form->save();
 		return $result->isSuccess();
 	}
