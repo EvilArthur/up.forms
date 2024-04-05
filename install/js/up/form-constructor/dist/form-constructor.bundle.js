@@ -113,6 +113,7 @@ this.BX.Up = this.BX.Up || {};
 	          }
 	        }).then(function (response) {
 	          var result = response.data.result;
+	          console.log(result);
 	          resolve(result);
 	        })["catch"](function (error) {
 	          console.log(error);
@@ -288,7 +289,7 @@ this.BX.Up = this.BX.Up || {};
 	        formData: form
 	      }).then(function (response) {
 	        console.log(response);
-	        location.href = 'done/';
+	        BX.SidePanel.Instance.close();
 	      })["catch"](function (error) {
 	        console.log(error);
 	      });

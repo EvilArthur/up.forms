@@ -4,6 +4,7 @@
  * @var array $arResult
  */
 \Bitrix\Main\UI\Extension::load('up.form-list');
+\CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 ?>
 

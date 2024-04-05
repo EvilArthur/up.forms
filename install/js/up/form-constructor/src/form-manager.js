@@ -12,6 +12,7 @@ export class FormManager
 					})
 				.then((response) => {
 					const result = response.data.result;
+					console.log(result);
 					resolve(result);
 				})
 				.catch((error) => {

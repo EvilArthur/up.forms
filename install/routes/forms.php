@@ -8,9 +8,7 @@ return function (RoutingConfigurator $routes) {
 
 	$routes->get('/forms/', new PublicPageController('/local/modules/up.forms/views/main.php'));
 
-	$routes->get('/test/', function () {
-		\Up\Forms\Repository\FormRepository::getForm('11');
-	});
+	$routes->get('/test/', new PublicPageController('/local/modules/up.forms/views/index.php'));
 
 	$routes->get('/form/view/{id}/', new PublicPageController('/local/modules/up.forms/views/form.php'));
 

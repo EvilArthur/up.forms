@@ -14,6 +14,15 @@ export class FormList
 		}
 		this.layout.wrap.append(this.render());
 		this.loadFormsData();
+		BX.addCustomEvent("onPullEvent", (module_id,command,params) => {
+			if (command === 'update')
+			{
+				this.isLoading = true;
+				this.layout.form = this.render();
+				this.loadFormsData();
+			}
+		});
+		BX.PULL.extendWatch('FORMS-UPDATE');
 	}
 
 	async loadFormsData()
@@ -68,12 +77,30 @@ export class FormList
 			`
 			<tr>
 				<td class="align-middle">${form.Title}</td>
-				<td><a href="/form/edit/${form.ID}/" class="btn btn-primary">${Loc.getMessage('UP_FORMS_FORM_LIST_EDIT')}</a></td>
+				<td>${this.renderOpenConstructorButton(form.ID)}</td>
 				<td><a href="/form/view/${form.ID}/" class="btn btn-success">${Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_LINK')}</a></td>
 				<td><button class="btn btn-info">${Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_RESULTS')}</button></td>
 				<td>${this.renderDeleteButton(form.ID)}</td>
 			</tr>
 			`;
+	}
+
+	renderOpenConstructorButton(formId)
+	{
+		const wrap = Tag.render
+			`
+			<button class="btn btn-primary">${Loc.getMessage('UP_FORMS_FORM_LIST_EDIT')}</button>
+			`;
+		Event.bind(wrap, 'click', () => {
+			this.onOpenConstructorButtonClickHandler(formId);
+		});
+
+		return wrap;
+	}
+
+	onOpenConstructorButtonClickHandler(formId)
+	{
+		BX.SidePanel.Instance.open(`/form/edit/${formId}/`);
 	}
 
 	renderDeleteButton(formId)

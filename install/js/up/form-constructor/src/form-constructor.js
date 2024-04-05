@@ -168,7 +168,7 @@ export class FormConstructor
 		FormManager.saveFormData({ formData: form })
 			.then((response) => {
 				console.log(response);
-				location.href='done/';
+				BX.SidePanel.Instance.close();
 			})
 			.catch((error) => {
 				console.log(error);
