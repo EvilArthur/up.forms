@@ -8,22 +8,6 @@
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 ?>
 
-	<nav class="navbar navbar-expand-lg bg-body-tertiary mb-10">
-	<div class="container-fluid">
-
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<div class="container-fluid justify-content-start">
-					<a type="button" class="btn btn-success" href="/form/create/">Добавить Форму</a>
-				</div>
-			</ul>
-			<form class="d-flex" role="search">
-				<input class="form-control me-2" type="search" placeholder="Название формы..." aria-label="Search">
-				<button class="btn btn-outline-success" type="submit">Поиск</button>
-			</form>
-		</div>
-	</div>
-</nav>
 
 <div class="container" id="main-container">
 </div>

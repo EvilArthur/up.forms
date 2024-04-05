@@ -4,9 +4,6 @@
  */
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $componentParameters = ['ID' => (int)$_REQUEST['id']];
-
-
-
 if (isset($_REQUEST['IFRAME']) && $_REQUEST['IFRAME'] == 'Y')
 {
 	$APPLICATION->IncludeComponent(

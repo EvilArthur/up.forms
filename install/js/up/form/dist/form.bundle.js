@@ -177,7 +177,8 @@ this.BX.Up = this.BX.Up || {};
 	      FormManager.saveAnswerData(this.questions.map(function (question) {
 	        return question.getAnswer();
 	      })).then(function (response) {
-	        return console.log(response);
+	        BX.SidePanel.Instance.close();
+	        console.log(response);
 	      })["catch"](function (error) {
 	        return console.log(error);
 	      });

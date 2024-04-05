@@ -99,7 +99,10 @@ export class Form
 		FormManager.saveAnswerData(this.questions.map((question) => {
 				return question.getAnswer();
 			}))
-			.then((response) => console.log(response))
+			.then((response) => {
+				BX.SidePanel.Instance.close();
+				console.log(response)
+			})
 			.catch((error) => console.log(error));
 	}
 }

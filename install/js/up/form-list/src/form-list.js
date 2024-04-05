@@ -1,4 +1,4 @@
-import { Loc, Tag, Event } from 'main.core';
+import { Event, Loc, Tag } from 'main.core';
 
 export class FormList
 {
@@ -13,13 +13,12 @@ export class FormList
 			throw new Error(`Forms: container is not found`);
 		}
 		this.layout.wrap.append(this.render());
+		this.layout.wrap.append(this.renderFormTable());
 		this.loadFormsData();
-		BX.addCustomEvent("onPullEvent", (module_id,command,params) => {
+		BX.addCustomEvent('onPullEvent', (module_id, command, params) => {
 			if (command === 'update')
 			{
-				this.isLoading = true;
-				this.layout.form = this.render();
-				this.loadFormsData();
+				this.reload();
 			}
 		});
 		BX.PULL.extendWatch('FORMS-UPDATE');
@@ -31,7 +30,7 @@ export class FormList
 		{
 			this.formList = await this.loadList();
 			this.isLoading = false;
-			this.layout.form = this.render();
+			this.layout.form = this.renderFormTable();
 		}
 		catch (error)
 		{
@@ -40,6 +39,27 @@ export class FormList
 	}
 
 	render()
+	{
+		const wrap = Tag.render`
+			<nav class="navbar navbar-expand-lg bg-body-tertiary mb-10">
+				<div class="container-fluid">
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+							<div class="container-fluid justify-content-start">
+								${this.renderOpenCreateButton()}
+							</div>
+						</ul>
+						<form class="d-flex" role="search">
+							<input class="form-control me-2" type="search" placeholder="Название формы..." aria-label="Search">
+							<button class="btn btn-outline-success" type="submit">Поиск</button>
+						</form>
+					</div>
+				</div>
+			</nav>`;
+		return wrap;
+	}
+
+	renderFormTable()
 	{
 		let wrap;
 		if (this.isLoading)
@@ -60,8 +80,8 @@ export class FormList
 				<table class="table" id="form-list-app">
 					<tbody>
 						${this.formList.map((form) => {
-							return this.renderForm(form)
-						})}
+					return this.renderForm(form);
+				})}
 					</tbody>
 				</table>
 				`;
@@ -77,30 +97,51 @@ export class FormList
 			`
 			<tr>
 				<td class="align-middle">${form.Title}</td>
-				<td>${this.renderOpenConstructorButton(form.ID)}</td>
-				<td><a href="/form/view/${form.ID}/" class="btn btn-success">${Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_LINK')}</a></td>
+				<td>${this.renderOpenEditButton(form.ID)}</td>
+				<td>${this.renderOpenFormButton(form.ID)}</td>
 				<td><button class="btn btn-info">${Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_RESULTS')}</button></td>
 				<td>${this.renderDeleteButton(form.ID)}</td>
 			</tr>
 			`;
 	}
 
-	renderOpenConstructorButton(formId)
+	renderOpenEditButton(formId)
 	{
 		const wrap = Tag.render
 			`
 			<button class="btn btn-primary">${Loc.getMessage('UP_FORMS_FORM_LIST_EDIT')}</button>
 			`;
 		Event.bind(wrap, 'click', () => {
-			this.onOpenConstructorButtonClickHandler(formId);
+			this.openSlider(`/form/edit/${formId}/`);
 		});
 
 		return wrap;
 	}
 
-	onOpenConstructorButtonClickHandler(formId)
+	renderOpenCreateButton()
 	{
-		BX.SidePanel.Instance.open(`/form/edit/${formId}/`);
+		const wrap = Tag.render
+			`
+			<button class="btn btn-success">Добавить Форму</button>
+			`;
+		Event.bind(wrap, 'click', () => {
+			this.openSlider(`/form/create/`);
+		});
+
+		return wrap;
+	}
+
+	renderOpenFormButton(formId)
+	{
+		const wrap = Tag.render
+			`
+			<button class="btn btn-success">${Loc.getMessage('UP_FORMS_FORM_LIST_PUBLIC_LINK')}</button>
+			`;
+		Event.bind(wrap, 'click', () => {
+			this.openSlider(`/form/view/${formId}/`);
+		});
+
+		return wrap;
 	}
 
 	renderDeleteButton(formId)
@@ -118,15 +159,15 @@ export class FormList
 
 	onRemoveFormButtonClickHandler(formId)
 	{
-		console.log(formId)
+		console.log(formId);
 		BX.ajax.runAction(
 			'up:forms.form.deleteForm',
 			{
 				data: {
-					id: formId
-				}
-			}
-		).then(() => this.reload())
+					id: formId,
+				},
+			},
+		).then(() => this.reload());
 	}
 
 	loadList()
@@ -134,7 +175,7 @@ export class FormList
 		return new Promise((resolve, reject) => {
 			BX.ajax.runAction(
 					'up:forms.form.getList',
-					{}
+					{},
 				)
 				.then((response) => {
 					const formList = response.data.formList;
@@ -150,9 +191,13 @@ export class FormList
 	reload()
 	{
 		this.isLoading = true;
-		this.formList = [];
-		this.layout.wrap.append(this.render());
+		this.layout.form = this.renderFormTable();
 		this.loadFormsData();
+	}
+
+	openSlider(url)
+	{
+		BX.SidePanel.Instance.open(url);
 	}
 
 }

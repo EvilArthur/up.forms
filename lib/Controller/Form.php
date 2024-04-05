@@ -3,6 +3,7 @@
 namespace Up\Forms\Controller;
 
 use Bitrix\Main\Engine\Controller;
+use Bitrix\Main\Loader;
 use Up\Forms\Repository\AnswerRepository;
 use Up\Forms\Repository\FormRepository;
 
@@ -17,6 +18,14 @@ class Form extends Controller
 
 	public function deleteFormAction($id)
 	{
+		if(Loader::includeModule('pull'))
+		{
+			\CPullWatch::AddToStack('FORMS-UPDATE', [
+				'module_id' => 'forms',
+				'command' => 'update',
+				'params' => []
+			]);
+		}
 		FormRepository::deleteForm($id);
 	}
 
