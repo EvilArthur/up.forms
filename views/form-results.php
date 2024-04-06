@@ -5,6 +5,7 @@
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("Forms");
 
-var_dump(request()->getPostList());
+$APPLICATION->IncludeComponent('up:form.results', '',
+							   ['ID' => (int)$_REQUEST['id']]);
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

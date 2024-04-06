@@ -3,6 +3,7 @@ namespace Up\Forms\Repository;
 
 use Bitrix\Main\DB\Exception;
 use Bitrix\Main\ORM\Query\Query;
+use Up\Forms\Model\AnswerTable;
 use Up\Forms\Model\ChapterTable;
 use Up\Forms\Model\FormTable;
 use Up\Forms\Model\QuestionTable;
@@ -112,6 +113,17 @@ class FormRepository
 	{
 		$form = FormTable::getByPrimary($id)->fetchObject();
 		$form->delete();
+	}
+
+	public static function getFormWithAnswers(int $id)
+	{
+		$form = FormTable::getById($id)->fetchObject();
+		$form->fillChapter()->fillQuestion()->fillAnswer();
+		var_dump($form);
+		die();
+
+		// $question = AnswerTable::getById(1)->fetchObject();
+		// var_dump($question->fillQuestionId());
 	}
 }
 

@@ -1,12 +1,10 @@
 <?php
+
 /**
  * @var array $arParams
  */
 
-if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
-{
-	die();
-}
+if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 \Bitrix\Main\UI\Extension::load('up.form-constructor');
 ?>
 
@@ -19,7 +17,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 		window.FormConstructor = new BX.Up.Forms.FormConstructor({
 			container: document.getElementById('main-container'),
 			id: <?=$arParams['ID']?>
-
 		});
 	});
 </script>

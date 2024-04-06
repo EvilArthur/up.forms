@@ -4,6 +4,7 @@ namespace Up\Forms\Model;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\IntegerField;
+use Bitrix\Main\ORM\Fields\Relations\OneToMany;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
 use Bitrix\Main\ORM\Fields\StringField;
 use Bitrix\Main\ORM\Fields\Validators\LengthValidator;
@@ -95,6 +96,9 @@ class QuestionTable extends DataManager
 					'title' => Loc::getMessage('QUESTION_ENTITY_TITLE_FIELD'),
 				]
 			),
+			(new OneToMany(
+				'Answer', AnswerTable::class, 'Question'
+			)),
 		];
 	}
 }
