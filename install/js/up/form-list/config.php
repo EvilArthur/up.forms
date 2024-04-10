@@ -9,6 +9,7 @@ return [
 	'js' => 'dist/form-list.bundle.js',
 	'rel' => [
 		'main.core',
+		'main.ui.grid',
 	],
 	'skip_core' => false,
 ];

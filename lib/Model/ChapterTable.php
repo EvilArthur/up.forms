@@ -4,6 +4,7 @@ namespace Up\Forms\Model;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\IntegerField;
+use Bitrix\Main\ORM\Fields\Relations\CascadePolicy;
 use Bitrix\Main\ORM\Fields\Relations\OneToMany;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
 use Bitrix\Main\ORM\Fields\StringField;
@@ -85,7 +86,7 @@ class ChapterTable extends DataManager
 			),
 			(new OneToMany(
 				'Question', QuestionTable::class, 'Chapter'
-			)),
+			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];
 	}
 }

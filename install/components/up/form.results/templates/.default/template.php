@@ -2,32 +2,41 @@
 
 /**
  * @var array $arParams
+ * @var array $arResult
+ * @var CMain $APPLICATION
  */
 
+use Bitrix\Main\UI\Extension;
+use Bitrix\UI\Toolbar\Facade\Toolbar;
+
+Extension::load('up.form-results');
+\CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
-\Bitrix\Main\UI\Extension::load('up.form-results');
+
+Toolbar::addFilter([
+					   'GRID_ID' => 'MY_GRID_ID',
+					   'FILTER_ID' => 'report_list',
+				   ]);
+
+$APPLICATION->IncludeComponent(
+	'bitrix:main.ui.grid',
+	'',
+	[
+		'GRID_ID' => "FORMS_RESULTS_GRID_{$arParams['ID']}",
+		'COLUMNS' => $arResult['COLUMNS'],
+		'ROWS' => $arResult['ROWS'],
+		'AJAX_MODE' => 'Y',
+		'AJAX_OPTION_JUMP' => 'N',
+		'AJAX_OPTION_HISTORY' => 'N',
+	]
+);
+
 ?>
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary mb-10">
-	<div class="container-fluid">
 
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<div class="container-fluid justify-content-start">
-					<a type="button" class="btn btn-success" >Результаты</a>
-				</div>
-			</ul>
-			<form class="d-flex" role="search">
-				<input class="form-control me-2" type="search" placeholder="Название формы..." aria-label="Search">
-				<button class="btn btn-outline-success" type="submit">Поиск</button>
-			</form>
-		</div>
-	</div>
-</nav>
-<?=$arParams['ID']?>
 
-<div class="container" id="main-container">
-</div>
+
+<div class="container" id="main-container"></div>
 
 
 <script>

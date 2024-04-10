@@ -59,7 +59,7 @@ class AnswerTable extends DataManager
 				]
 			),
 			new Reference(
-				'AnswerQuestion',
+				'Question',
 				QuestionTable::class,
 				Join::on('this.Question_ID', 'ref.ID')
 			),

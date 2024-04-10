@@ -141,7 +141,7 @@ class FormRepository
 		return $form;
 	}
 
-	public static function getForms()
+	public static function getForms(): array
 	{
 		return FormTable::query()
 						->setSelect(['Id', 'Title',])
@@ -150,15 +150,16 @@ class FormRepository
 
 	public static function deleteForm(int $id): void
 	{
-		$form = FormTable::getByPrimary($id)->fetchObject();
+		$form = FormTable::getById($id)->fetchObject();
+
 		$form->delete();
 	}
 
 	public static function getFormWithAnswers(int $id)
 	{
 		$form = FormTable::getById($id)->fetchObject();
-		$form->fillChapter()->fillQuestion()->fillAnswer();
-		var_dump($form);
+
+		var_dump($form->fillChapter()->fillQuestion()->getTitleList());
 		die();
 
 		// $question = AnswerTable::getById(1)->fetchObject();
