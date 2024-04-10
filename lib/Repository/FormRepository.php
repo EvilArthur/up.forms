@@ -7,6 +7,7 @@ use Bitrix\Main\ORM\Query\Query;
 use Bitrix\Tasks\Util\Db;
 use Up\Forms\Model\AnswerTable;
 use Up\Forms\Model\ChapterTable;
+use Up\Forms\Model\EO_Form;
 use Up\Forms\Model\FormTable;
 use Up\Forms\Model\OptionTable;
 use Up\Forms\Model\QuestionTable;
@@ -80,16 +81,13 @@ class FormRepository
 			$chapter->removeAllQuestion();
 			foreach ($chapterData['questions'] as $questionData)
 			{
-				if ($questionData === "undefined")
+				if ($questionData === null)
 				{
 					continue;
 				}
-				if ($questionData['ID'] === "undefined")
+				if ($questionData['ID'] === null)
 				{
 					$question = QuestionTable::createObject();
-					$question->setTitle($questionData['Title']);
-					$question->setPosition($questionData['Position']);
-					$question->setFieldId($questionData['Field_ID']);
 				}
 				else
 				{
@@ -98,35 +96,49 @@ class FormRepository
 							'ID' => $questionData['ID'],
 						]
 					);
-					$question->setTitle($questionData['Title']);
-					$question->setPosition($questionData['Position']);
-					$question->setFieldId($questionData['Field_ID']);
+				}
+				$question->setTitle($questionData['Title']);
+				$question->setPosition($questionData['Position']);
+				$question->setFieldId($questionData['Field_ID']);
+				$question->removeAllOptions();
+				foreach ($questionData['Options'] as $optionData)
+				{
+					if ($optionData === null)
+					{
+						continue;
+					}
+					if ($optionData['ID'] === null)
+					{
+						$option = OptionTable::createObject();
+					}
+					else
+					{
+						$option = OptionTable::wakeObject(
+							[
+								'ID' => $optionData['ID'],
+							]
+						);
+
+					}
+					$option->setValue($optionData['Value']);
+
+					$option->save();
+
+					$question->addToOptions($option);
 				}
 				$chapter->addToQuestion($question);
 			}
 			$form->addToChapter($chapter);
 		}
 		$result = $form->save();
-		return $result->isSuccess();
+		return $result->getErrors();
 	}
 
-	public static function getForm(int $id): array
+	public static function getForm(int $id): EO_Form
 	{
 		$form = FormTable::getById($id)->fetchObject();
-		$formList = $form->collectValues();
-		$chapters = $form->fillChapter();
-		foreach ($chapters as $chapter)
-		{
-			$chapterList = $chapter->collectValues();
-			$questions = $chapter->fillQuestion();
-			foreach ($questions as $question)
-			{
-				$questionList = $question->collectValues();
-				$chapterList['questions'][] = $questionList;
-			}
-			$formList['chapters'][] = $chapterList;
-		}
-		return $formList;
+		$form->fillChapter()->fillQuestion()->fillOptions();
+		return $form;
 	}
 
 	public static function getForms()
@@ -136,7 +148,7 @@ class FormRepository
 						->fetchAll();
 	}
 
-	public static function deleteForm(int $id)
+	public static function deleteForm(int $id): void
 	{
 		$form = FormTable::getByPrimary($id)->fetchObject();
 		$form->delete();

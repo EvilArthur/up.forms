@@ -41,7 +41,7 @@ class FormCreate extends Controller
 
 		$id = (int) $id;
 		return [
-			'result' => FormRepository::getForm($id),
+			'result' => FormRepository::getForm($id)->collectValues(recursive: true),
 		];
 	}
 

@@ -36,13 +36,13 @@ export class FormConstructor
 				this.formData = await FormManager.getFormData(this.id);
 				this.titleObject.value = this.formData.Title
 				this.isLoading = false;
-				this.formData.chapters[0].questions.map((questionData) => {
+				this.formData.Chapter[0].Question.map((questionData) => {
 					let question = null;
 					console.log(questionData);
 					question = new Question(
 						questionData.Chapter_ID, questionData.Field_ID,
 						questionData.ID, questionData.Position,
-						questionData.Title, [], this.fieldData);
+						questionData.Title, questionData.Options, this.fieldData);
 					this.questions.push(question);
 				});
 				this.layout.form = this.render();

@@ -60,6 +60,9 @@ this.BX.Up = this.BX.Up || {};
 	    key: "render",
 	    value: function render() {
 	      var _this$layout$wrap;
+	      if (this.isDeleted) {
+	        return;
+	      }
 	      var wrap = main_core.Tag.render(_templateObject$1 || (_templateObject$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t<div class=\"form-check\">\n\t\t\t", "\n\t\t\t", "\n\t\t</div>"])), this.renderEditableLabel(), this.renderDeleteButton());
 	      (_this$layout$wrap = this.layout.wrap) === null || _this$layout$wrap === void 0 ? void 0 : _this$layout$wrap.replaceWith(wrap);
 	      this.layout.wrap = wrap;
@@ -108,7 +111,7 @@ this.BX.Up = this.BX.Up || {};
 	  return Option;
 	}();
 
-	var _templateObject$2, _templateObject2$1, _templateObject3$1, _templateObject4$1, _templateObject5$1, _templateObject6, _templateObject7, _templateObject8, _templateObject9, _templateObject10, _templateObject11;
+	var _templateObject$2, _templateObject2$1, _templateObject3$1, _templateObject4$1, _templateObject5$1, _templateObject6, _templateObject7, _templateObject8, _templateObject9, _templateObject10;
 	var Question = /*#__PURE__*/function () {
 	  function Question(chapter_id, field_id, id, position, title, optionData, fieldData) {
 	    babelHelpers.classCallCheck(this, Question);
@@ -122,9 +125,8 @@ this.BX.Up = this.BX.Up || {};
 	    this.position = position;
 	    this.fieldData = fieldData;
 	    this.isDeleted = false;
-	    this.optionsData = optionData;
 	    this.options = optionData.map(function (option) {
-	      return new Option(option.id, option.value);
+	      return new Option(option.ID, option.Value);
 	    });
 	  }
 	  babelHelpers.createClass(Question, [{
@@ -205,12 +207,9 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderOptions",
 	    value: function renderOptions() {
-	      var _this2 = this,
-	        _this$layout$options;
-	      var wrap = main_core.Tag.render(_templateObject9 || (_templateObject9 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t", "\n\t\t</div>"])), this.optionsData.map(function (option) {
-	        var radio = new Option(option.ID, option.Value, _this2.id);
-	        _this2.options.push(radio);
-	        return radio.render();
+	      var _this$layout$options;
+	      var wrap = main_core.Tag.render(_templateObject9 || (_templateObject9 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t", "\n\t\t</div>"])), this.options.map(function (option) {
+	        return option.render();
 	      }));
 	      (_this$layout$options = this.layout.options) === null || _this$layout$options === void 0 ? void 0 : _this$layout$options.replaceWith(wrap);
 	      this.layout.options = wrap;
@@ -229,18 +228,6 @@ this.BX.Up = this.BX.Up || {};
 	      var option = new Option(null, 'Новая опция', this.id);
 	      this.layout.body.append(option.render());
 	      this.options.push(option);
-	    }
-	  }, {
-	    key: "renderClearRadioButton",
-	    value: function renderClearRadioButton() {
-	      var wrap = main_core.Tag.render(_templateObject11 || (_templateObject11 = babelHelpers.taggedTemplateLiteral(["\n\t\t<button class=\"btn btn-primary btn-sm\">\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C</button>"])));
-	      main_core.Event.bind(wrap, 'click', this.onClearRadioButtonClickHandler.bind(this));
-	      return wrap;
-	    }
-	  }, {
-	    key: "onClearRadioButtonClickHandler",
-	    value: function onClearRadioButtonClickHandler() {
-	      this.renderOptions();
 	    }
 	  }, {
 	    key: "getData",
@@ -366,10 +353,10 @@ this.BX.Up = this.BX.Up || {};
 	              this.formData = _context.sent;
 	              this.titleObject.value = this.formData.Title;
 	              this.isLoading = false;
-	              this.formData.chapters[0].questions.map(function (questionData) {
+	              this.formData.Chapter[0].Question.map(function (questionData) {
 	                var question = null;
 	                console.log(questionData);
-	                question = new Question(questionData.Chapter_ID, questionData.Field_ID, questionData.ID, questionData.Position, questionData.Title, [], _this.fieldData);
+	                question = new Question(questionData.Chapter_ID, questionData.Field_ID, questionData.ID, questionData.Position, questionData.Title, questionData.Options, _this.fieldData);
 	                _this.questions.push(question);
 	              });
 	              this.layout.form = this.render();

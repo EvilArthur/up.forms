@@ -14,9 +14,8 @@ export class Question
 		this.position = position;
 		this.fieldData = fieldData;
 		this.isDeleted = false;
-		this.optionsData = optionData;
 		this.options = optionData.map((option) => {
-			return new Option(option.id, option.value)
+			return new Option(option.ID, option.Value)
 		});
 	}
 
@@ -137,11 +136,7 @@ export class Question
 	renderOptions()
 	{
 		const wrap = Tag.render`<div class="container">
-			${this.optionsData.map((option) => {
-				const radio = new Option(option.ID, option.Value, this.id);
-				this.options.push(radio);
-				return radio.render();
-			})}
+			${this.options.map((option) => option.render())}
 		</div>`;
 		this.layout.options?.replaceWith(wrap);
 		this.layout.options = wrap;
@@ -160,19 +155,6 @@ export class Question
 		const option = new Option(null, 'Новая опция', this.id)
 		this.layout.body.append(option.render());
 		this.options.push(option);
-	}
-
-	renderClearRadioButton()
-	{
-		const wrap = Tag.render`
-		<button class="btn btn-primary btn-sm">Очистить</button>`;
-		Event.bind(wrap, 'click', this.onClearRadioButtonClickHandler.bind(this));
-		return wrap;
-	}
-
-	onClearRadioButtonClickHandler()
-	{
-		this.renderOptions();
 	}
 
 	getData()

@@ -14,6 +14,10 @@ export class Option
 
 	render()
 	{
+		if (this.isDeleted)
+		{
+			return;
+		}
 		const wrap = Tag.render`
 		<div class="form-check">
 			${this.renderEditableLabel()}

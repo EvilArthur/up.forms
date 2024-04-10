@@ -25,12 +25,12 @@ export class Form
 				this.formData = await FormManager.getFormData(this.id);
 				this.isLoading = false;
 				console.log(this.formData);
-				this.formData.chapters[0].questions.map((questionData) => {
-					let question = null;
-					if (questionData.Field_ID === 1)
-					{
-						question = new Question(questionData);
-					}
+				this.formData.Chapter[0].Question.map((questionData) => {
+					const question = new Question(
+						questionData.Chapter_ID, questionData.Field_ID,
+						questionData.ID, questionData.Position,
+						questionData.Title, questionData.Options);
+
 					this.questions.push(question);
 				});
 				console.log(this.questions);
@@ -95,13 +95,14 @@ export class Form
 
 	onSubmitButtonClickHandler()
 	{
-
-		FormManager.saveAnswerData(this.questions.map((question) => {
-				return question.getAnswer();
-			}))
+		const answers = this.questions.map((question) => {
+			return question.getAnswer();
+		})
+		console.log(answers)
+		FormManager.saveAnswerData(answers)
 			.then((response) => {
 				BX.SidePanel.Instance.close();
-				console.log(response)
+				console.log(response);
 			})
 			.catch((error) => console.log(error));
 	}
