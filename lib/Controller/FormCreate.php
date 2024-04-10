@@ -4,6 +4,7 @@ namespace Up\Forms\Controller;
 
 use Bitrix\Main\Engine\Controller;
 use Bitrix\Main\Loader;
+use Up\Forms\Repository\FieldRepository;
 use Up\Forms\Repository\FormRepository;
 
 class FormCreate extends Controller
@@ -41,6 +42,13 @@ class FormCreate extends Controller
 		$id = (int) $id;
 		return [
 			'result' => FormRepository::getForm($id),
+		];
+	}
+
+	public function getFieldDataAction()
+	{
+		return [
+			'result' => FieldRepository::getFields(),
 		];
 	}
 }

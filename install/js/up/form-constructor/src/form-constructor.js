@@ -11,8 +11,10 @@ export class FormConstructor
 		this.layout.wrap = options.container;
 		this.id = options.id;
 		this.formData = {
-			chapters: []
+			chapters: [],
 		};
+		this.titleObject = {value: ''}
+		this.fieldData = [];
 		this.questions = [];
 		this.chapters = [];
 		this.isLoading = true;
@@ -26,18 +28,21 @@ export class FormConstructor
 
 	async loadFormData()
 	{
+		this.fieldData = await FormManager.getFieldData();
 		if (this.id !== 0)
 		{
 			try
 			{
 				this.formData = await FormManager.getFormData(this.id);
+				this.titleObject.value = this.formData.Title
 				this.isLoading = false;
 				this.formData.chapters[0].questions.map((questionData) => {
 					let question = null;
-					if (questionData.Field_ID === 1)
-					{
-						question = new Question(questionData);
-					}
+					console.log(questionData);
+					question = new Question(
+						questionData.Chapter_ID, questionData.Field_ID,
+						questionData.ID, questionData.Position,
+						questionData.Title, [], this.fieldData);
 					this.questions.push(question);
 				});
 				this.layout.form = this.render();
@@ -52,11 +57,12 @@ export class FormConstructor
 			this.formData.chapters[0] = {
 				'title': 'Заголовок раздела',
 				'description': 'Описание раздела',
-				'position': 1,
+				'Position': 1,
 				'questions': [],
+				'id': null,
 			};
 			this.isLoading = false;
-			this.formData.Title = 'Новая форма';
+			this.titleObject.value = 'Новая форма';
 			this.layout.form = this.render();
 		}
 	}
@@ -104,7 +110,7 @@ export class FormConstructor
 		const wrap = Tag.render`
 		<div class="container">
 			${this.questions.map((question) => {
-			question.questionData.position = this.questionNumber++;
+			question.position = this.questionNumber++;
 			return question.render();
 		})}
 		</div>
@@ -127,12 +133,8 @@ export class FormConstructor
 	onAddQuestionButtonClickHandler()
 	{
 		this.questions.push(new Question(
-			{
-				'Title': 'Название',
-				'Description': 'Описание',
-				'Position': this.questionNumber++,
-				'Field_ID': 1,
-			},
+			this.formData.chapters[0].id,
+			1, null, this.questionNumber++, 'Название', [], this.fieldData,
 		));
 		this.renderQuestionList();
 	}
@@ -150,21 +152,16 @@ export class FormConstructor
 	onSaveFormButtonClickHandler()
 	{
 		const hardCodeChapter = this.formData.chapters[0];
-		hardCodeChapter.questions = this.questions.map((question) => {
-			if (!question.isDeleted)
-			{
-				return question.getData();
-			}
-		});
+		hardCodeChapter.questions = this.questions.map((question) => question.getData());
 		const form = {
 			'ID': this.id,
-			'Title': this.title.innerText,
+			'Title': this.titleObject.value,
 			'Creator_ID': 1,
 			'chapters': [
 				hardCodeChapter,
 			],
 		};
-
+		console.log(form);
 		FormManager.saveFormData({ formData: form })
 			.then((response) => {
 				console.log(response);
@@ -178,11 +175,10 @@ export class FormConstructor
 	renderEditableTitle(): HTMLElement
 	{
 		const wrap = Tag.render`
-		<h1 class="text-center mt-5 mb-4">${this.formData.Title}</h1>
+		<h1 class="text-center mt-5 mb-4">${this.titleObject.value}</h1>
 		`;
-		new EditableText(wrap, this.formData, 'Title')
-		this.title = wrap;
-		this.formData.Title = this.title.innerHTML;
-		return this.title;
+		new EditableText(wrap, this.titleObject);
+		this.layout.title = wrap;
+		return this.layout.title;
 	}
 }

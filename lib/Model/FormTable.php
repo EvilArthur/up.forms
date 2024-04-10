@@ -70,7 +70,7 @@ class FormTable extends DataManager
 			),
 			(new OneToMany(
 				'Chapter', ChapterTable::class, 'Form'
-			)),
+			))
 		];
 	}
 }

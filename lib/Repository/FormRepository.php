@@ -1,42 +1,69 @@
 <?php
 namespace Up\Forms\Repository;
 
+use Bitrix\Main\Config\Configuration;
 use Bitrix\Main\DB\Exception;
 use Bitrix\Main\ORM\Query\Query;
+use Bitrix\Tasks\Util\Db;
 use Up\Forms\Model\AnswerTable;
 use Up\Forms\Model\ChapterTable;
 use Up\Forms\Model\FormTable;
+use Up\Forms\Model\OptionTable;
 use Up\Forms\Model\QuestionTable;
 
 class FormRepository
 {
 	public static function createForm($formData)
 	{
-		$form = FormTable::createObject();
-		$form->setCreatorId(1);
-		$form->setTitle($formData['Title']);
-		foreach ($formData['chapters'] as $chapterData)
+		\db()->startTransaction();
+		try
 		{
-
-			$chapter = ChapterTable::createObject();
-			$chapter->setTitle($chapterData['title']);
-			$chapter->setDescription($chapterData['description']);
-			foreach ($chapterData['questions'] as $questionData)
+			$form = FormTable::createObject();
+			$form->setCreatorId(1);
+			$form->setTitle($formData['Title']);
+			foreach ($formData['chapters'] as $chapterData)
 			{
-				if ($questionData === "undefined")
+
+				$chapter = ChapterTable::createObject();
+				$chapter->setTitle($chapterData['title']);
+				$chapter->setDescription($chapterData['description']);
+				foreach ($chapterData['questions'] as $questionData)
 				{
-					continue;
+					if ($questionData === null)
+					{
+						continue;
+					}
+					$question = QuestionTable::createObject();
+					$question->setTitle($questionData['Title']);
+					$question->setPosition($questionData['Position']);
+					$question->setFieldId($questionData['Field_ID']);
+					foreach ($questionData['Options'] as $optionData)
+					{
+						if ($optionData === null)
+						{
+							continue;
+						}
+						$option = OptionTable::createObject();
+						$option->setValue($optionData['Value']);
+
+						$option->save();
+
+						$question->addToOptions($option);
+					}
+					$chapter->addToQuestion($question);
 				}
-				$question = QuestionTable::createObject();
-				$question->setTitle($questionData['Title']);
-				$question->setPosition($questionData['Position']);
-				$question->setFieldId($questionData['Field_ID']);
-				$chapter->addToQuestion($question);
+				$form->addToChapter($chapter);
 			}
-			$form->addToChapter($chapter);
+			$result = $form->save()->getErrors();
+			\db()->commitTransaction();
+			return $result;
+		}
+		catch (\Throwable $error)
+		{
+			db()->rollbackTransaction();
+			throw $error;
 		}
 
-		return $form->save()->getErrors();
 	}
 
 	public static function saveForm($formData)
@@ -83,7 +110,7 @@ class FormRepository
 		return $result->isSuccess();
 	}
 
-	public static function getForm($id)
+	public static function getForm(int $id): array
 	{
 		$form = FormTable::getById($id)->fetchObject();
 		$formList = $form->collectValues();

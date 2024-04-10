@@ -2,11 +2,10 @@ import {Tag, Event, Type} from 'main.core';
 
 export class EditableText
 {
-	constructor(element, dataObject, titleProperty)
+	constructor(element, textObject)
 	{
 		this.element = element;
-		this.dataObject = dataObject;
-		this.titleProperty = titleProperty;
+		this.textObject = textObject;
 		this.setupEditHandler();
 	}
 
@@ -38,7 +37,7 @@ export class EditableText
 	onEditableTextEndChangeHandler() {
 		const newTitle = this.input.value;
 		this.element.innerText = newTitle;
-		this.dataObject[this.titleProperty] = newTitle; // Обновляем Title в dataObject
+		this.textObject.value = newTitle;
 		this.input.replaceWith(this.element);
 	}
 }

@@ -4,6 +4,7 @@ namespace Up\Forms\Model;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\IntegerField;
+use Bitrix\Main\ORM\Fields\Relations\ManyToMany;
 use Bitrix\Main\ORM\Fields\Relations\OneToMany;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
 use Bitrix\Main\ORM\Fields\StringField;
@@ -99,6 +100,12 @@ class QuestionTable extends DataManager
 			(new OneToMany(
 				'Answer', AnswerTable::class, 'Question'
 			)),
+			(new ManyToMany('Options', OptionTable::class))
+				->configureTableName('Up_Question_Option')
+				->configureLocalPrimary('ID', 'Question_ID')
+				->configureLocalReference('Question')
+				->configureRemotePrimary('ID', 'Option_ID')
+				->configureRemoteReference('Options')
 		];
 	}
 }
