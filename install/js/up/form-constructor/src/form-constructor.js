@@ -11,7 +11,7 @@ export class FormConstructor
 		this.layout.wrap = options.container;
 		this.id = options.id;
 		this.formData = {
-			chapters: [],
+			Chapter: [],
 		};
 		this.titleObject = {value: ''}
 		this.fieldData = [];
@@ -54,7 +54,7 @@ export class FormConstructor
 		}
 		else
 		{
-			this.formData.chapters[0] = {
+			this.formData.Chapter[0] = {
 				'title': 'Заголовок раздела',
 				'description': 'Описание раздела',
 				'Position': 1,
@@ -133,7 +133,7 @@ export class FormConstructor
 	onAddQuestionButtonClickHandler()
 	{
 		this.questions.push(new Question(
-			this.formData.chapters[0].id,
+			this.formData.Chapter[0].id,
 			1, null, this.questionNumber++, 'Название', [], this.fieldData,
 		));
 		this.renderQuestionList();
@@ -151,8 +151,8 @@ export class FormConstructor
 
 	onSaveFormButtonClickHandler()
 	{
-		const hardCodeChapter = this.formData.chapters[0];
-		hardCodeChapter.questions = this.questions.map((question) => question.getData());
+		const hardCodeChapter = this.formData.Chapter[0];
+		hardCodeChapter.Question = this.questions.map((question) => question.getData());
 		const form = {
 			'ID': this.id,
 			'Title': this.titleObject.value,

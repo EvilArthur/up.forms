@@ -315,7 +315,7 @@ this.BX.Up = this.BX.Up || {};
 	    this.layout.wrap = options.container;
 	    this.id = options.id;
 	    this.formData = {
-	      chapters: []
+	      Chapter: []
 	    };
 	    this.titleObject = {
 	      value: ''
@@ -370,7 +370,7 @@ this.BX.Up = this.BX.Up || {};
 	              _context.next = 23;
 	              break;
 	            case 19:
-	              this.formData.chapters[0] = {
+	              this.formData.Chapter[0] = {
 	                'title': 'Заголовок раздела',
 	                'description': 'Описание раздела',
 	                'Position': 1,
@@ -429,7 +429,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onAddQuestionButtonClickHandler",
 	    value: function onAddQuestionButtonClickHandler() {
-	      this.questions.push(new Question(this.formData.chapters[0].id, 1, null, this.questionNumber++, 'Название', [], this.fieldData));
+	      this.questions.push(new Question(this.formData.Chapter[0].id, 1, null, this.questionNumber++, 'Название', [], this.fieldData));
 	      this.renderQuestionList();
 	    }
 	  }, {
@@ -442,8 +442,8 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onSaveFormButtonClickHandler",
 	    value: function onSaveFormButtonClickHandler() {
-	      var hardCodeChapter = this.formData.chapters[0];
-	      hardCodeChapter.questions = this.questions.map(function (question) {
+	      var hardCodeChapter = this.formData.Chapter[0];
+	      hardCodeChapter.Question = this.questions.map(function (question) {
 	        return question.getData();
 	      });
 	      var form = {

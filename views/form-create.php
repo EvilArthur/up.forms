@@ -10,7 +10,7 @@ if (isset($_REQUEST['IFRAME']) && $_REQUEST['IFRAME'] == 'Y')
 		'up:slider.wrapper',
 		'',
 		array(
-			'COMPONENT_NAME' => 'up:form-create',
+			'COMPONENT_NAME' => 'up:form.create',
 			'COMPONENT_TEMPLATE_NAME' => '',
 			'COMPONENT_PARAMS' => $componentParameters,
 		)
@@ -19,7 +19,7 @@ if (isset($_REQUEST['IFRAME']) && $_REQUEST['IFRAME'] == 'Y')
 else
 {
 	$APPLICATION->IncludeComponent(
-		'up:form-create',
+		'up:form.create',
 		'',
 		$componentParameters
 	);

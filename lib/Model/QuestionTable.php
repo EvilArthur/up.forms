@@ -62,11 +62,11 @@ class QuestionTable extends DataManager
 					'title' => Loc::getMessage('QUESTION_ENTITY_CHAPTER_ID_FIELD'),
 				]
 			),
-			new Reference(
+			(new Reference(
 				'Chapter',
 				ChapterTable::class,
 				Join::on('this.Chapter_ID', 'ref.ID')
-			),
+			)),
 			new IntegerField(
 				'Field_ID',
 				[
@@ -101,12 +101,15 @@ class QuestionTable extends DataManager
 			(new OneToMany(
 				'Answer', AnswerTable::class, 'Question'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
+
 			(new ManyToMany('Options', OptionTable::class))
 				->configureTableName('Up_Question_Option')
 				->configureLocalPrimary('ID', 'Question_ID')
 				->configureLocalReference('Question')
 				->configureRemotePrimary('ID', 'Option_ID')
 				->configureRemoteReference('Options')
+
+				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW_ORPHANS)
 		];
 	}
 }

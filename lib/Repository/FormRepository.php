@@ -28,7 +28,7 @@ class FormRepository
 				$chapter = ChapterTable::createObject();
 				$chapter->setTitle($chapterData['title']);
 				$chapter->setDescription($chapterData['description']);
-				foreach ($chapterData['questions'] as $questionData)
+				foreach ($chapterData['Question'] as $questionData)
 				{
 					if ($questionData === null)
 					{
@@ -79,7 +79,7 @@ class FormRepository
 					'ID' => $chapterData['ID'],
 				]);
 			$chapter->removeAllQuestion();
-			foreach ($chapterData['questions'] as $questionData)
+			foreach ($chapterData['Question'] as $questionData)
 			{
 				if ($questionData === null)
 				{
@@ -151,6 +151,9 @@ class FormRepository
 	public static function deleteForm(int $id): void
 	{
 		$form = FormTable::getById($id)->fetchObject();
+		$questions =  $form->fillChapter()->fillQuestion();
+		$questions->fillOptions();
+		$questions->fillAnswer();
 
 		$form->delete();
 	}

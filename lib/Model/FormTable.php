@@ -71,7 +71,8 @@ class FormTable extends DataManager
 			),
 			(new OneToMany(
 				'Chapter', ChapterTable::class, 'Form'
-			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
+			))
+				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];
 	}
 }
