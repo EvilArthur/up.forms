@@ -38,11 +38,21 @@
 
 6. Символические ссылки
 
+для linux систем
 ```
 ln -s /{pathToProject}/local/modules/up.forms/install/routes/  /{pathToProject}/local/
 ln -s /{pathToProject}/local/modules/up.forms/install/components/up  /{pathToProject}/local/components
 ln -s /{pathToProject}/local/modules/up.forms/install/js/ /{pathToProject}/local/
 ```
+
+для windows систем
+
+```
+mklink "C:\{pathToProject}\local\components\up" "C:\{pathToProject}\local\modules\up.forms\install\components\up"
+mklink "C:\{pathToProject}\local\routes\forms.php" "C:\{pathToProject}\local\modules\up.forms\install\routes\forms.php"
+mklink "C:\{pathToProject}\local\js\up" "C:\{pathToProject}\local\modules\up.forms\install\js\up"
+```
+
 
 7. В корне проекта в файле `${pathToProject}/index.php` добавляем
 
