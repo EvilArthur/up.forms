@@ -1,6 +1,8 @@
 <?php
 
+use Bitrix\Main\UserTable;
 use Up\Forms\Model\FormTable;
+use Up\Forms\Repository\AnswerRepository;
 
 class FormResultsComponent extends CBitrixComponent
 {
@@ -30,8 +32,7 @@ class FormResultsComponent extends CBitrixComponent
 
 	protected function fetchFormRows()
 	{
-		$answers = FormTable::getByPrimary($this->arParams['ID'])->fetchObject()->fillChapter()->fillQuestion()->fillAnswer();
-
+		$answers = AnswerRepository::getAnswersByFormId($this->arParams['ID']);
 		$rows = [];
 		$userAnswers = [];
 
@@ -41,18 +42,17 @@ class FormResultsComponent extends CBitrixComponent
 			$questionId = $answer->getQuestionId();
 			$userAnswer = $answer->getAnswer();
 
-			// Если ответы для данного пользователя еще не собраны, создаем запись в массиве
 			if (!isset($userAnswers[$userId]))
 			{
 				$userAnswers[$userId] = [];
 			}
 
-			// Добавляем ответ в массив ответов для данного пользователя
 			$userAnswers[$userId][$questionId] = $userAnswer;
 		}
 
-		// Преобразуем массив ответов пользователей в желаемый формат $rows
-		foreach ($userAnswers as $userId => $answers) {
+		foreach ($userAnswers as $userId => $answers)
+		{
+			$answers['USER'] = UserTable::getByPrimary(1)->fetchObject()->getName();
 			$row = [
 				'id' => (int)$userId,
 				'columns' => $answers

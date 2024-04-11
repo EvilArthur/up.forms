@@ -41,7 +41,7 @@ $APPLICATION->IncludeComponent(
 
 <script>
 	BX.ready(function() {
-		window.FormConstructor = new BX.Up.Forms.FormResults({
+		window.FormResults = new BX.Up.Forms.FormResults({
 			container: document.getElementById('main-container'),
 			id: <?=$arParams['ID']?>
 		});

@@ -2,6 +2,7 @@
 namespace Up\Forms\Repository;
 
 use Up\Forms\Model\AnswerTable;
+use Up\Forms\Model\FormTable;
 
 Class AnswerRepository
 {
@@ -17,6 +18,13 @@ Class AnswerRepository
 			$answers->add($answer);
 		}
 		return $answers->save()->getErrors();
+	}
+
+	public static function getAnswersByFormId(int $id)
+	{
+		$questions = FormTable::getByPrimary($id)->fetchObject()->fillChapter()->fillQuestion();
+		$Options = $questions->fillOptions();
+		return $questions->fillAnswer();
 	}
 }
 

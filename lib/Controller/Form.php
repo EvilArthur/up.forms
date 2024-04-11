@@ -29,6 +29,19 @@ class Form extends Controller
 		FormRepository::deleteForm($id);
 	}
 
+	public function deleteFormsAction($ids)
+	{
+		if(Loader::includeModule('pull'))
+		{
+			\CPullWatch::AddToStack('FORMS-UPDATE', [
+				'module_id' => 'forms',
+				'command' => 'update',
+				'params' => []
+			]);
+		}
+		FormRepository::deleteForms($ids);
+	}
+
 	public function saveAnswersAction($answers)
 	{
 		return

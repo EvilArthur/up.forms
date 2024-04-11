@@ -1,29 +1,12 @@
 <?php
 
-		// 'ACTION_PANEL' => [
-		// 	'GROUPS' => [
-		// 		[
-		// 			'ITEMS' => [
-		// 				[
-		// 					'TYPE' => 'BUTTON',
-		// 					'ID' => 'action_panel_button',
-		// 					'TEXT' => 'Добавить форму',
-		// 					'CLASS' => 'ui-btn-primary',
-		// 				],
-		// 			],
-		// 		],
-		// 	],
-		// ],
-		// 'SHOW_GROUP_DELETE_BUTTON' => true,
-		// 'SHOW_ACTION_PANEL' => true,
-		// 'SHOW_SELECT_ALL_RECORDS_CHECKBOX' => true,
-
 /**
  * @var array $arResult
  * @var CMain $APPLICATION
  */
 
 use Bitrix\Main\UI\Extension;
+use Bitrix\Main\UI\Filter\Options;
 use Bitrix\UI\Toolbar\Facade\Toolbar;
 
 Extension::load('up.form-list');
@@ -31,39 +14,29 @@ Extension::load('up.form-list');
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 Toolbar::addFilter([
-					   'GRID_ID' => 'MY_GRID_ID',
-					   'FILTER_ID' => 'report_list',
-					   // 'FILTER' => [
-						//    [
-						// 	   'id' => 'TITLE',
-						// 	   'name' => 'Название формы',
-						// 	   'type' => 'string',
-						// 	   'default' => true,
-						//    ],
-						   // [
-							//    'id' => 'DATE_CREATE',
-							//    'name' => 'Дата создания',
-							//    'type' => 'date',
-							//    'default' => true,
-						   // ],
-						   // [
-							//    'id' => 'STATUS',
-							//    'name' => 'Статус',
-							//    'type' => 'list',
-							//    'items' => [
-							// 	   'Active' => 'Active',
-							// 	   'Inactive' => 'Inactive',
-							//    ],
-							//    'default' => true,
-						   // ],
-						   // [
-							//    'id' => 'USER_NAME',
-							//    'name' => 'Создал',
-							//    'type' => 'string',
-							//    'default' => true,
-						   // ],
-					   // ],
+					   'GRID_ID' => $arResult['GRID_ID'],
+					   'FILTER_ID' => $arResult['FILTER_ID'],
+					   'FILTER' => [
+						   [
+							   'id' => 'Title',
+							   'name' => 'Название формы',
+							   'type' => 'text',
+							   'default' => true,
+						   ],
+					   ],
+					   'ENABLE_LIVE_SEARCH' => true,
+					   'ENABLE_LABEL' => true
 				   ]);
+
+$filterOptions = new Options('FORMS_LIST_GRID_FILTER');
+$filterFields = $filterOptions->getFilter([
+											  [
+												  'id' => 'Title',
+												  'name' => 'Название формы',
+												  'type' => 'text',
+												  'default' => true,
+											  ],
+										  ]);
 
 Toolbar::addButton($arResult['ADD_BUTTON']);
 
@@ -71,9 +44,10 @@ $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',
 	'',
 	[
-		'GRID_ID' => 'FORMS_LIST_GRID',
+		'GRID_ID' => $arResult['GRID_ID'],
 		'COLUMNS' => $arResult['COLUMNS'],
 		'ROWS' => $arResult['ROWS'],
+		'ACTION_PANEL' => $arResult['ACTION_PANEL'],
 		'AJAX_MODE' => 'Y',
 		'AJAX_OPTION_JUMP' => 'N',
 		'AJAX_OPTION_HISTORY' => 'N',
@@ -86,7 +60,8 @@ $APPLICATION->IncludeComponent(
 <script>
 	BX.ready(function() {
 		window.FormList = new BX.Up.Forms.FormList({
-			container: document.getElementById('main-container')
+			container: document.getElementById('main-container'),
+			gridId: "<?=$arResult['GRID_ID']?>"
 		});
 	});
 </script>

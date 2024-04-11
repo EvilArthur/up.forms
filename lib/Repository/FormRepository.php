@@ -158,15 +158,12 @@ class FormRepository
 		$form->delete();
 	}
 
-	public static function getFormWithAnswers(int $id)
+	public static function deleteForms(array $ids): void
 	{
-		$form = FormTable::getById($id)->fetchObject();
-
-		var_dump($form->fillChapter()->fillQuestion()->getTitleList());
-		die();
-
-		// $question = AnswerTable::getById(1)->fetchObject();
-		// var_dump($question->fillQuestionId());
+		foreach ($ids as $id)
+		{
+			self::deleteForm($id);
+		}
 	}
 }
 

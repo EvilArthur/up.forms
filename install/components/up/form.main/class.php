@@ -1,6 +1,7 @@
 <?php
 
-use Bitrix\Crm\WebForm\Internals\FormTable;
+use Bitrix\Main\Grid\Panel\Actions;
+use Bitrix\Main\Grid\Panel\Snippet\Onchange;
 use Bitrix\Main\Loader;
 use Bitrix\UI\Buttons\AddButton;
 use Bitrix\UI\Buttons\JsCode;
@@ -15,13 +16,20 @@ class FormMainComponent extends CBitrixComponent
 		{
 			\CPullWatch::Add($USER->GetID(), 'FORMS-UPDATE');
 		}
+		$this->fetchParams();
 		$this->fetchFormRows();
 		$this->fetchFormColumns();
 		$this->fetchAddButton();
+		$this->fetchActionPanel();
 
 		$this->includeComponentTemplate();
 	}
 
+	protected function fetchParams()
+	{
+		$this->arResult['GRID_ID'] = 'FORMS_LIST_GRID';
+		$this->arResult['FILTER_ID'] = 'FORMS_LIST_GRID_FILTER';
+	}
 	protected function fetchFormRows()
 	{
 		$forms = FormRepository::getForms();
@@ -32,7 +40,7 @@ class FormMainComponent extends CBitrixComponent
 			$rows[] = [
 				'id' => (int)$form['ID'],
 				'columns' => [
-					'TITLE' => $form['Title'],
+					'Title' => $form['Title'],
 					'DATE_CREATE' => '2022-01-01',
 					'STATUS' => 'Active',
 					'USER_NAME' => 'Супер Админ'
@@ -69,10 +77,41 @@ class FormMainComponent extends CBitrixComponent
 	protected function fetchFormColumns()
 	{
 		$this->arResult['COLUMNS'] = [
-			['id' => 'TITLE', 'name' => 'Название формы', 'sort' => 'Title', 'default' => true],
+			['id' => 'Title', 'name' => 'Название формы', 'sort' => 'Title', 'default' => true],
 			['id' => 'DATE_CREATE', 'name' => 'Создано', 'default' => true],
 			['id' => 'STATUS', 'name' => 'Статус', 'default' => true],
 			['id' => 'USER_NAME', 'name' => 'Создал', 'default' => true],
+		];
+	}
+
+	protected function fetchActionPanel()
+	{
+		$deleteOnchange = new Onchange();
+		$deleteOnchange->addAction(
+			[
+				'ACTION' => Actions::CALLBACK,
+				'CONFIRM' => true,
+				'CONFIRM_APPLY_BUTTON'  => 'Подтвердить',
+				'DATA' => [
+					['JS' => 'FormList.deleteForms()']
+				]
+			]
+		);
+
+		$this->arResult['ACTION_PANEL'] = [
+			'GROUPS' => [
+				'TYPE' => [
+					'ITEMS' => [
+						[
+							'ID'       => 'delete',
+							'TYPE'     => 'BUTTON',
+							'TEXT'     => 'Удалить',
+							'CLASS'    => 'icon remove',
+							'ONCHANGE' => $deleteOnchange->toArray(),
+						],
+					],
+				]
+			],
 		];
 	}
 

@@ -5,13 +5,36 @@ export class FormList
 {
 	constructor(options = {})
 	{
-		console.log('FormList constructor');
+		this.gridId = options.gridId;
+		console.log(this.gridId)
 		BX.addCustomEvent('onPullEvent', (module_id, command, params) => {
 			if (command === 'update')
 			{
 				this.reload();
 			}
 		});
+	}
+
+	deleteForms()
+	{
+		BX.ready(function()
+		{
+			const grid = BX.Main.gridManager.getById('FORMS_LIST_GRID')?.instance;
+			if (Type.isObject(grid))
+			{
+				const rowsCollectionWrapper: BX.Grid.Rows = grid.getRows();
+				const selectedRowsIdsList: Array = rowsCollectionWrapper.getSelectedIds();
+				BX.ajax.runAction(
+					'up:forms.form.deleteForms',
+					{
+						data: {
+							ids: selectedRowsIdsList,
+						},
+					},
+				).then(() => this.reload());
+			}
+		})
+
 	}
 
 	deleteForm(formId)
@@ -47,9 +70,9 @@ export class FormList
 		BX.ready(function()
 		{
 			const grid = BX.Main.gridManager.getById('FORMS_LIST_GRID')?.instance;
-			if (grid)
+			if (Type.isObject(grid))
 			{
-				grid.reload()
+				grid.reload();
 			}
 		});
 	}

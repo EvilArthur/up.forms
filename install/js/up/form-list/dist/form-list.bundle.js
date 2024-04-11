@@ -7,8 +7,10 @@ this.BX.Up = this.BX.Up || {};
 	var FormList = /*#__PURE__*/function () {
 	  function FormList() {
 	    var _this = this;
+	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    babelHelpers.classCallCheck(this, FormList);
-	    console.log('FormList constructor');
+	    this.gridId = options.gridId;
+	    console.log(this.gridId);
 	    BX.addCustomEvent('onPullEvent', function (module_id, command, params) {
 	      if (command === 'update') {
 	        _this.reload();
@@ -16,16 +18,36 @@ this.BX.Up = this.BX.Up || {};
 	    });
 	  }
 	  babelHelpers.createClass(FormList, [{
+	    key: "deleteForms",
+	    value: function deleteForms() {
+	      BX.ready(function () {
+	        var _BX$Main$gridManager$,
+	          _this2 = this;
+	        var grid = (_BX$Main$gridManager$ = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$ === void 0 ? void 0 : _BX$Main$gridManager$.instance;
+	        if (main_core.Type.isObject(grid)) {
+	          var rowsCollectionWrapper = grid.getRows();
+	          var selectedRowsIdsList = rowsCollectionWrapper.getSelectedIds();
+	          BX.ajax.runAction('up:forms.form.deleteForms', {
+	            data: {
+	              ids: selectedRowsIdsList
+	            }
+	          }).then(function () {
+	            return _this2.reload();
+	          });
+	        }
+	      });
+	    }
+	  }, {
 	    key: "deleteForm",
 	    value: function deleteForm(formId) {
-	      var _this2 = this;
+	      var _this3 = this;
 	      console.log(formId);
 	      BX.ajax.runAction('up:forms.form.deleteForm', {
 	        data: {
 	          id: formId
 	        }
 	      }).then(function () {
-	        return _this2.reload();
+	        return _this3.reload();
 	      });
 	    }
 	  }, {
@@ -47,9 +69,9 @@ this.BX.Up = this.BX.Up || {};
 	    key: "reload",
 	    value: function reload() {
 	      BX.ready(function () {
-	        var _BX$Main$gridManager$;
-	        var grid = (_BX$Main$gridManager$ = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$ === void 0 ? void 0 : _BX$Main$gridManager$.instance;
-	        if (grid) {
+	        var _BX$Main$gridManager$2;
+	        var grid = (_BX$Main$gridManager$2 = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$2 === void 0 ? void 0 : _BX$Main$gridManager$2.instance;
+	        if (main_core.Type.isObject(grid)) {
 	          grid.reload();
 	        }
 	      });
