@@ -96,11 +96,11 @@ class FormRepository
 							'ID' => $questionData['ID'],
 						]
 					);
+					$question->removeAllOptions();
 				}
 				$question->setTitle($questionData['Title']);
 				$question->setPosition($questionData['Position']);
 				$question->setFieldId($questionData['Field_ID']);
-				$question->removeAllOptions();
 				foreach ($questionData['Options'] as $optionData)
 				{
 					if ($optionData === null)
@@ -121,7 +121,6 @@ class FormRepository
 
 					}
 					$option->setValue($optionData['Value']);
-
 					$option->save();
 
 					$question->addToOptions($option);
