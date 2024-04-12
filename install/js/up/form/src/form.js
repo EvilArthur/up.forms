@@ -99,6 +99,7 @@ export class Form
 			return question.getAnswer();
 		})
 		console.log(answers)
+		return;
 		FormManager.saveAnswerData(answers)
 			.then((response) => {
 				BX.SidePanel.Instance.close();

@@ -121,7 +121,7 @@ export class Question
 			wrap = Tag.render`<p class="text-decoration-underline mb-0">Краткий ответ</p>`;
 
 		}
-		else if (this.field_id === 2)
+		else if (this.field_id === 2 || this.field_id === 3)
 		{
 			wrap = Tag.render`<div class="container">
 								${this.renderAddOptionButton()}

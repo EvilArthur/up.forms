@@ -94,3 +94,15 @@ __formsMigrate(7, function($updater, $DB)
 		');
 	}
 });
+
+__formsMigrate(8, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
+	{
+		$DB->query
+		("
+			INSERT INTO UP_Field (Title)
+			VALUES ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_3');
+		");
+	}
+});
