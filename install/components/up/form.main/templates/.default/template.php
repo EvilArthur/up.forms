@@ -38,6 +38,46 @@ $filterFields = $filterOptions->getFilter([
 											  ],
 										  ]);
 
+$forms = \Up\Forms\Repository\FormRepository::getForms();
+
+$rows = [];
+
+foreach ($forms as $form)
+{
+	$rows[] = [
+		'id' => (int)$form['ID'],
+		'columns' => [
+			'Title' => $form['Title'],
+			'DATE_CREATE' => '2022-01-01',
+			'STATUS' => 'Active',
+			'USER_NAME' => 'Супер Админ'
+		],
+		'actions' => [
+			[
+				'text' => 'Delete',
+				'onclick' => 'FormList.deleteForm(' . $form['ID'] . ')',
+				'default' => true,
+			],
+			[
+				'text' => 'Edit',
+				'onclick' => 'FormList.editForm(' . $form['ID'] . ')',
+				'default' => true,
+			],
+			[
+				'text' => 'Open',
+				'onclick' => 'FormList.openForm(' . $form['ID'] . ')',
+				'default' => true,
+			],
+			[
+				'text' => 'Results',
+				'href' => '/form/results/' . $form['ID'] . '/',
+				'default' => true,
+			],
+		],
+
+	];
+}
+
 Toolbar::addButton($arResult['ADD_BUTTON']);
 
 $APPLICATION->IncludeComponent(
@@ -46,7 +86,8 @@ $APPLICATION->IncludeComponent(
 	[
 		'GRID_ID' => $arResult['GRID_ID'],
 		'COLUMNS' => $arResult['COLUMNS'],
-		'ROWS' => $arResult['ROWS'],
+		// 'ROWS' => $arResult['ROWS'],
+		'ROWS' => $rows,
 		'ACTION_PANEL' => $arResult['ACTION_PANEL'],
 		'AJAX_MODE' => 'Y',
 		'AJAX_OPTION_JUMP' => 'N',

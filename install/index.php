@@ -61,6 +61,13 @@ class up_forms extends CModule
 			true,
 			true
 		);
+
+		CopyDirFiles(
+			$_SERVER['DOCUMENT_ROOT'] . '/local/modules/up.forms/install/js',
+			$_SERVER['DOCUMENT_ROOT'] . '/local/routes/',
+			true,
+			true
+		);
 	}
 
 	public function uninstallFiles(): void
