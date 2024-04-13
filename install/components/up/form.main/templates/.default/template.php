@@ -7,69 +7,24 @@
 
 use Bitrix\Main\UI\Extension;
 use Bitrix\UI\Toolbar\Facade\Toolbar;
-use Bitrix\Main\Grid\Options as GridOptions;
-use Bitrix\Main\UI\Filter\Options as FilterOptions;
-use Bitrix\Main\UI\PageNavigation;
-use Up\Forms\Repository\FormRepository;
-use Up\Forms\Service\FormManager;
+
 
 Extension::load('up.form-list');
 \CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-Toolbar::addButton($arResult['ADD_BUTTON']);
-// Toolbar::addFilter([
-// 					   'GRID_ID' => $arResult['GRID_ID'],
-// 					   'FILTER_ID' => $arResult['FILTER_ID'],
-// 					   'FILTER' => [
-// 						   [
-// 							   'id' => 'Title',
-// 							   'name' => 'Название формы',
-// 							   'type' => 'text',
-// 						   ],
-// 					   ],
-// 					   'ENABLE_LIVE_SEARCH' => false,
-// 					   'ENABLE_LABEL' => true,
-// 					   'DISABLE_SEARCH' => true,
-// 				   ]);
-
-$gridOptions = new GridOptions($arResult['GRID_ID']);
-
-$APPLICATION->includeComponent(
-	"bitrix:main.ui.filter",
-	"",
-	[
-		'FILTER_ID' => $arResult['GRID_ID'],
-		'GRID_ID' => $arResult['GRID_ID'],
-		'FILTER' => [['id' => 'Title', 'name' => 'Название формы']],
-		'ENABLE_LIVE_SEARCH' => false,
-		'ENABLE_LABEL' => true,
-		'DISABLE_SEARCH' => true,
-	]
-);
-
-
-$filterOptions = new FilterOptions($arResult['GRID_ID']);
-$filterFields = $gridOptions->getFilter([['id' => 'Title', 'name' => 'Название формы']]);
-
-
-
-
-
-
-$nav = new PageNavigation($arResult['NAVIGATION_ID']);
-$nav->allowAllRecords(false)
-	->setPageSize($arResult['NUM_OF_ITEMS_PER_PAGE'])
-	->initFromUri();
-
-$filter = [
-	'LIMIT' => $nav->getLimit() + 1,
-	'OFFSET' => $nav->getOffset(),
+$filterParams = [
+	'GRID_ID' => $arResult['GRID_ID'],
+	'FILTER_ID' => $arResult['FILTER_ID'],
+	'FILTER' => [['id' => 'Title', 'name' => 'Название формы']],
+	'DISABLE_SEARCH' => true,
+	'ENABLE_LABEL' => true,
 ];
 
-$forms = FormRepository::getForms($filter);
-$rows = FormManager::prepareFormsForGrid($forms, $arResult['NUM_OF_ITEMS_PER_PAGE']);
-$nav->setRecordCount($nav->getOffset() + count($forms));
+Toolbar::addButton($arResult['ADD_BUTTON']);
+Toolbar::addFilter($filterParams);
+
+
 
 
 
@@ -79,7 +34,7 @@ $APPLICATION->IncludeComponent(
 	[
 		'GRID_ID' => $arResult['GRID_ID'],
 		'COLUMNS' => $arResult['COLUMNS'],
-		'ROWS' => $rows,
+		'ROWS' => $arResult['ROWS'],
 		'ACTION_PANEL' => $arResult['ACTION_PANEL'],
 		'AJAX_MODE' => 'Y',
 		'AJAX_OPTION_JUMP' => 'N',
@@ -97,7 +52,7 @@ $APPLICATION->IncludeComponent(
 
 
 		//Настройки для пагинации
-		'NAV_OBJECT' => $nav,
+		'NAV_OBJECT' => $arResult['NAV_OBJECT'],
 		'SHOW_NAVIGATION_PANEL'     => true,
 		'SHOW_PAGINATION'           => true,
 

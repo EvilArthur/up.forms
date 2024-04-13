@@ -6,6 +6,10 @@ use Bitrix\Main\Loader;
 use Bitrix\UI\Buttons\AddButton;
 use Bitrix\UI\Buttons\JsCode;
 use Up\Forms\Repository\FormRepository;
+use Bitrix\Main\Grid\Options as GridOptions;
+use Bitrix\Main\UI\Filter\Options as FilterOptions;
+use Bitrix\Main\UI\PageNavigation;
+use Up\Forms\Service\FormManager;
 
 class FormMainComponent extends CBitrixComponent
 {
@@ -34,44 +38,28 @@ class FormMainComponent extends CBitrixComponent
 
 	protected function fetchFormRows()
 	{
-		$forms = FormRepository::getForms();
-		$rows = [];
+		// $gridOptions = new GridOptions($this->arResult['GRID_ID']);
+		// $filterOptions = new FilterOptions($this->arResult['FILTER_ID']);
+		// $filterFields = $filterOptions->getFilter([['id' => 'Title', 'name' => 'Название формы']]);
 
-		foreach ($forms as $form)
-		{
-			$rows[] = [
-				'id' => (int)$form['ID'],
-				'columns' => [
-					'Title' => $form['Title'],
-					'DATE_CREATE' => '2022-01-01',
-					'STATUS' => 'Active',
-					'USER_NAME' => 'Супер Админ'
-				],
-				'actions' => [
-					[
-						'text' => 'Delete',
-						'onclick' => 'FormList.deleteForm(' . $form['ID'] . ')',
-						'default' => true,
-					],
-					[
-						'text' => 'Edit',
-						'onclick' => 'FormList.editForm(' . $form['ID'] . ')',
-						'default' => true,
-					],
-					[
-						'text' => 'Open',
-						'onclick' => 'FormList.openForm(' . $form['ID'] . ')',
-						'default' => true,
-					],
-					[
-						'text' => 'Results',
-						'href' => '/form/results/' . $form['ID'] . '/',
-						'default' => true,
-					],
-				],
 
-			];
-		}
+
+
+
+
+		$nav = new PageNavigation($this->arResult['NAVIGATION_ID']);
+		$nav->allowAllRecords(false)
+			->setPageSize($this->arResult['NUM_OF_ITEMS_PER_PAGE'])
+			->initFromUri();
+
+		$filter = [
+			'LIMIT' => $nav->getLimit() + 1,
+			'OFFSET' => $nav->getOffset(),
+		];
+
+		$forms = FormRepository::getForms($filter);
+		$rows = FormManager::prepareFormsForGrid($forms, $this->arResult['NUM_OF_ITEMS_PER_PAGE']);
+		$nav->setRecordCount($nav->getOffset() + count($forms));
 
 		$this->arResult['ROWS'] = $rows;
 	}
