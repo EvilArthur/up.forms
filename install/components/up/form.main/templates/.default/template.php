@@ -6,79 +6,72 @@
  */
 
 use Bitrix\Main\UI\Extension;
-use Bitrix\Main\UI\Filter\Options;
 use Bitrix\UI\Toolbar\Facade\Toolbar;
+use Bitrix\Main\Grid\Options as GridOptions;
+use Bitrix\Main\UI\Filter\Options as FilterOptions;
+use Bitrix\Main\UI\PageNavigation;
+use Up\Forms\Repository\FormRepository;
+use Up\Forms\Service\FormManager;
 
 Extension::load('up.form-list');
 \CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-Toolbar::addFilter([
-					   'GRID_ID' => $arResult['GRID_ID'],
-					   'FILTER_ID' => $arResult['FILTER_ID'],
-					   'FILTER' => [
-						   [
-							   'id' => 'Title',
-							   'name' => 'Название формы',
-							   'type' => 'text',
-							   'default' => true,
-						   ],
-					   ],
-					   'ENABLE_LIVE_SEARCH' => true,
-					   'ENABLE_LABEL' => true
-				   ]);
-
-$filterOptions = new Options('FORMS_LIST_GRID_FILTER');
-$filterFields = $filterOptions->getFilter([
-											  [
-												  'id' => 'Title',
-												  'name' => 'Название формы',
-												  'type' => 'text',
-												  'default' => true,
-											  ],
-										  ]);
-
-$forms = \Up\Forms\Repository\FormRepository::getForms();
-
-$rows = [];
-
-foreach ($forms as $form)
-{
-	$rows[] = [
-		'id' => (int)$form['ID'],
-		'columns' => [
-			'Title' => $form['Title'],
-			'DATE_CREATE' => '2022-01-01',
-			'STATUS' => 'Active',
-			'USER_NAME' => 'Супер Админ'
-		],
-		'actions' => [
-			[
-				'text' => 'Delete',
-				'onclick' => 'FormList.deleteForm(' . $form['ID'] . ')',
-				'default' => true,
-			],
-			[
-				'text' => 'Edit',
-				'onclick' => 'FormList.editForm(' . $form['ID'] . ')',
-				'default' => true,
-			],
-			[
-				'text' => 'Open',
-				'onclick' => 'FormList.openForm(' . $form['ID'] . ')',
-				'default' => true,
-			],
-			[
-				'text' => 'Results',
-				'href' => '/form/results/' . $form['ID'] . '/',
-				'default' => true,
-			],
-		],
-
-	];
-}
-
 Toolbar::addButton($arResult['ADD_BUTTON']);
+// Toolbar::addFilter([
+// 					   'GRID_ID' => $arResult['GRID_ID'],
+// 					   'FILTER_ID' => $arResult['FILTER_ID'],
+// 					   'FILTER' => [
+// 						   [
+// 							   'id' => 'Title',
+// 							   'name' => 'Название формы',
+// 							   'type' => 'text',
+// 						   ],
+// 					   ],
+// 					   'ENABLE_LIVE_SEARCH' => false,
+// 					   'ENABLE_LABEL' => true,
+// 					   'DISABLE_SEARCH' => true,
+// 				   ]);
+
+$gridOptions = new GridOptions($arResult['GRID_ID']);
+
+$APPLICATION->includeComponent(
+	"bitrix:main.ui.filter",
+	"",
+	[
+		'FILTER_ID' => $arResult['GRID_ID'],
+		'GRID_ID' => $arResult['GRID_ID'],
+		'FILTER' => [['id' => 'Title', 'name' => 'Название формы']],
+		'ENABLE_LIVE_SEARCH' => false,
+		'ENABLE_LABEL' => true,
+		'DISABLE_SEARCH' => true,
+	]
+);
+
+
+$filterOptions = new FilterOptions($arResult['GRID_ID']);
+$filterFields = $gridOptions->getFilter([['id' => 'Title', 'name' => 'Название формы']]);
+
+
+
+
+
+
+$nav = new PageNavigation($arResult['NAVIGATION_ID']);
+$nav->allowAllRecords(false)
+	->setPageSize($arResult['NUM_OF_ITEMS_PER_PAGE'])
+	->initFromUri();
+
+$filter = [
+	'LIMIT' => $nav->getLimit() + 1,
+	'OFFSET' => $nav->getOffset(),
+];
+
+$forms = FormRepository::getForms($filter);
+$rows = FormManager::prepareFormsForGrid($forms, $arResult['NUM_OF_ITEMS_PER_PAGE']);
+$nav->setRecordCount($nav->getOffset() + count($forms));
+
+
 
 $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',
@@ -86,12 +79,37 @@ $APPLICATION->IncludeComponent(
 	[
 		'GRID_ID' => $arResult['GRID_ID'],
 		'COLUMNS' => $arResult['COLUMNS'],
-		// 'ROWS' => $arResult['ROWS'],
 		'ROWS' => $rows,
 		'ACTION_PANEL' => $arResult['ACTION_PANEL'],
 		'AJAX_MODE' => 'Y',
 		'AJAX_OPTION_JUMP' => 'N',
 		'AJAX_OPTION_HISTORY' => 'N',
+
+		'SHOW_ROW_ACTIONS_MENU'     => true,
+		'SHOW_GRID_SETTINGS_MENU'   => true,
+		'SHOW_SELECTED_COUNTER'     => true,
+		'SHOW_TOTAL_COUNTER'        => false,
+		'SHOW_ACTION_PANEL'         => true,
+		'ALLOW_COLUMNS_SORT'        => true,
+		'ALLOW_COLUMNS_RESIZE'      => true,
+		'ALLOW_HORIZONTAL_SCROLL'   => true,
+		'ALLOW_PIN_HEADER'          => true,
+
+
+		//Настройки для пагинации
+		'NAV_OBJECT' => $nav,
+		'SHOW_NAVIGATION_PANEL'     => true,
+		'SHOW_PAGINATION'           => true,
+
+		// 'NAV_PARAM_NAME'
+		// 'CURRENT_PAGE'
+		// 'ENABLE_NEXT_PAGE'
+		// 'TOTAL_ROWS_COUNT'
+		// 'DEFAULT_PAGE_SIZE'
+
+
+		//Настройки для сортировки\фильтрации\поиска
+		'ALLOW_SORT'                => true,
 	]
 );
 ?>

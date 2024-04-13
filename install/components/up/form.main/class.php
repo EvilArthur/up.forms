@@ -17,7 +17,6 @@ class FormMainComponent extends CBitrixComponent
 			\CPullWatch::Add($USER->GetID(), 'FORMS-UPDATE');
 		}
 		$this->fetchParams();
-		$this->fetchFormRows();
 		$this->fetchFormColumns();
 		$this->fetchAddButton();
 		$this->fetchActionPanel();
@@ -29,7 +28,10 @@ class FormMainComponent extends CBitrixComponent
 	{
 		$this->arResult['GRID_ID'] = 'FORMS_LIST_GRID';
 		$this->arResult['FILTER_ID'] = 'FORMS_LIST_GRID_FILTER';
+		$this->arResult['NAVIGATION_ID'] = 'FORMS_LIST_GRID_NAVIGATION';
+		$this->arResult['NUM_OF_ITEMS_PER_PAGE'] = 10;
 	}
+
 	protected function fetchFormRows()
 	{
 		$forms = FormRepository::getForms();

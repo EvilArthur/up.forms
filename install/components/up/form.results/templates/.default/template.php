@@ -7,7 +7,9 @@
  */
 
 use Bitrix\Main\UI\Extension;
+use Bitrix\Main\UI\PageNavigation;
 use Bitrix\UI\Toolbar\Facade\Toolbar;
+use Up\Forms\Repository\AnswerRepository;
 
 Extension::load('up.form-results');
 \CJSCore::init("sidepanel");
@@ -18,13 +20,28 @@ Toolbar::addFilter([
 					   'FILTER_ID' => 'report_list',
 				   ]);
 
+$nav = new PageNavigation($arResult['NAVIGATION_ID']);
+$nav->allowAllRecords(true)
+	->setPageSize($arResult['NUM_OF_ITEMS_PER_PAGE'])
+	->initFromUri();
+
+$filter = [
+	'LIMIT' => $nav->getLimit() + 1,
+	'OFFSET' => $nav->getOffset(),
+];
+
+$answers = AnswerRepository::getAnswersByFormId($this->arParams['ID'], $filter);
+$rows = AnswerManager::prepareAnswersForGrid($answers, $arResult['NUM_OF_ITEMS_PER_PAGE']);
+$nav->setRecordCount($nav->getOffset() + count($answers));
+$nav->allowAllRecords(false);
+
 $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',
 	'',
 	[
 		'GRID_ID' => "FORMS_RESULTS_GRID_{$arParams['ID']}",
 		'COLUMNS' => $arResult['COLUMNS'],
-		'ROWS' => $arResult['ROWS'],
+		'ROWS' => $rows,
 		'AJAX_MODE' => 'Y',
 		'AJAX_OPTION_JUMP' => 'N',
 		'AJAX_OPTION_HISTORY' => 'N',
@@ -33,11 +50,7 @@ $APPLICATION->IncludeComponent(
 
 ?>
 
-
-
-
 <div class="container" id="main-container"></div>
-
 
 <script>
 	BX.ready(function() {

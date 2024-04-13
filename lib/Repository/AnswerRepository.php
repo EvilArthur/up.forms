@@ -20,11 +20,13 @@ Class AnswerRepository
 		return $answers->save()->getErrors();
 	}
 
-	public static function getAnswersByFormId(int $id)
+	public static function getAnswersByFormId(int $id, array $filter = null)
 	{
-		$questions = FormTable::getByPrimary($id)->fetchObject()->fillChapter()->fillQuestion();
-		$Options = $questions->fillOptions();
-		return $questions->fillAnswer();
+		if ($filter === null)
+		{
+			return FormTable::getByPrimary($id)->fetchObject()->fillChapter()->fillQuestion()->fillAnswer();
+		}
+
 	}
 }
 
