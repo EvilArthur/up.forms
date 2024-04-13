@@ -28,7 +28,7 @@ function __formsMigrate(int $nextVersion, callable $callback)
 
 __formsMigrate(3, function($updater, $DB)
 {
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('Up_Chapter'))
 	{
 		$DB->query
 		('
@@ -54,7 +54,7 @@ __formsMigrate(4, function($updater, $DB)
 });
 __formsMigrate(5, function($updater, $DB)
 {
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('Up_Option'))
 	{
 		$DB->query
 		('
@@ -73,7 +73,7 @@ __formsMigrate(6, function($updater, $DB)
 	{
 		$DB->query
 		("
-			INSERT INTO UP_Field (Title)
+			INSERT INTO Up_Field (Title)
 			VALUES ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_1'),
 				   ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_2');
 		");
@@ -82,7 +82,7 @@ __formsMigrate(6, function($updater, $DB)
 
 __formsMigrate(7, function($updater, $DB)
 {
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('Up_Question_Option'))
 	{
 		$DB->query
 		('
