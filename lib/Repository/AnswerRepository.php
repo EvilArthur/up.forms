@@ -22,11 +22,15 @@ Class AnswerRepository
 
 	public static function getAnswersByFormId(int $id, array $filter = null)
 	{
-		if ($filter === null)
-		{
-			return FormTable::getByPrimary($id)->fetchObject()->fillChapter()->fillQuestion()->fillAnswer();
-		}
-
+		// if ($filter === null)
+		// {
+		// 	// $a =  FormTable::query()
+		// 	// 	->addSelect(['*', 'Chapter'])
+		// 	// 	->addSelect(['*', 'Question'])->exec();
+		// 	// $b = 0;
+		//
+		// }
+		return FormTable::getByPrimary($id)->fetchObject()->fillChapter()->fillQuestion()->fillAnswer();
 	}
 }
 

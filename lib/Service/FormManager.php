@@ -35,7 +35,7 @@ class FormManager
 					],
 					[
 						'text' => 'Results',
-						'href' => '/form/results/' . $form['ID'] . '/',
+						'onclick' => 'FormList.showResults(' . $form['ID'] . ')',
 						'default' => true,
 					],
 				],

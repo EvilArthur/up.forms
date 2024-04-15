@@ -9,6 +9,7 @@ use Bitrix\Main\ORM\Fields\Relations\ManyToMany;
 use Bitrix\Main\ORM\Fields\Relations\OneToMany;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
 use Bitrix\Main\ORM\Fields\StringField;
+use Bitrix\Main\ORM\Fields\TextField;
 use Bitrix\Main\ORM\Fields\Validators\LengthValidator;
 use Bitrix\Main\ORM\Query\Join;
 
@@ -36,7 +37,7 @@ class QuestionTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'UP_Question';
+		return 'up_question';
 	}
 
 	/**
@@ -56,38 +57,28 @@ class QuestionTable extends DataManager
 				]
 			),
 			new IntegerField(
-				'Chapter_ID',
+				'CHAPTER_ID',
 				[
 					'required' => true,
 					'title' => Loc::getMessage('QUESTION_ENTITY_CHAPTER_ID_FIELD'),
 				]
 			),
-			(new Reference(
-				'Chapter',
-				ChapterTable::class,
-				Join::on('this.Chapter_ID', 'ref.ID')
-			)),
 			new IntegerField(
-				'Field_ID',
+				'FIELD_ID',
 				[
 					'required' => true,
 					'title' => Loc::getMessage('QUESTION_ENTITY_FIELD_ID_FIELD'),
 				]
 			),
-			new Reference(
-				'Field',
-				FieldTable::class,
-				Join::on('this.Field_ID', 'ref.ID')
-			),
 			new IntegerField(
-				'Position',
+				'POSITION',
 				[
 					'required' => true,
 					'title' => Loc::getMessage('QUESTION_ENTITY_POSITION_FIELD'),
 				]
 			),
 			new StringField(
-				'Title',
+				'TITLE',
 				[
 					'validation' => function()
 					{
@@ -98,16 +89,33 @@ class QuestionTable extends DataManager
 					'title' => Loc::getMessage('QUESTION_ENTITY_TITLE_FIELD'),
 				]
 			),
+			new TextField(
+				'DESCRIPTION',
+				[
+					'title' => Loc::getMessage('CHAPTER_ENTITY_DESCRIPTION_FIELD'),
+				]
+			),
+			new Reference(
+				'field',
+				FieldTable::class,
+				Join::on('this.FIELD_ID', 'ref.ID')
+			),
+			(new Reference(
+				'chapter',
+				ChapterTable::class,
+				Join::on('this.CHAPTER_ID', 'ref.ID')
+			)),
+
 			(new OneToMany(
-				'Answer', AnswerTable::class, 'Question'
+				'answer', AnswerTable::class, 'question'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 
-			(new ManyToMany('Options', OptionTable::class))
-				->configureTableName('Up_Question_Option')
-				->configureLocalPrimary('ID', 'Question_ID')
-				->configureLocalReference('Question')
-				->configureRemotePrimary('ID', 'Option_ID')
-				->configureRemoteReference('Options')
+			(new ManyToMany('options', OptionTable::class))
+				->configureTableName('up_question_option')
+				->configureLocalPrimary('ID', 'QUESTION_ID')
+				->configureLocalReference('question')
+				->configureRemotePrimary('ID', 'OPTION_ID')
+				->configureRemoteReference('options')
 
 				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW_ORPHANS)
 		];

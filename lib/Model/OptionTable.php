@@ -32,7 +32,7 @@ class OptionTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'Up_Option';
+		return 'up_option';
 	}
 
 	/**
@@ -51,17 +51,17 @@ class OptionTable extends DataManager
 					]
 			),
 			new StringField(
-				'Value', [
+				'VALUE', [
 						   'validation' => [__CLASS__, 'validateValue'],
 						   'title' => Loc::getMessage('OPTION_ENTITY_VALUE_FIELD'),
 					   ]
 			),
-			(new ManyToMany('Question', QuestionTable::class))
-				->configureTableName('Up_Question_Option')
-				->configureLocalPrimary('ID', 'Option_ID')
-				->configureLocalReference('Options')
-				->configureRemotePrimary('ID', 'Question_ID')
-				->configureRemoteReference('Question')
+			(new ManyToMany('question', QuestionTable::class))
+				->configureTableName('up_question_option')
+				->configureLocalPrimary('ID', 'OPTION_ID')
+				->configureLocalReference('options')
+				->configureRemotePrimary('ID', 'QUESTION_ID')
+				->configureRemoteReference('question')
 				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW)
 		];
 	}

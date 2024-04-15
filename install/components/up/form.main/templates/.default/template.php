@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @var array $arParams
  * @var array $arResult
  * @var CMain $APPLICATION
  */
@@ -8,31 +9,18 @@
 use Bitrix\Main\UI\Extension;
 use Bitrix\UI\Toolbar\Facade\Toolbar;
 
-
 Extension::load('up.form-list');
 \CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-$filterParams = [
-	'GRID_ID' => $arResult['GRID_ID'],
-	'FILTER_ID' => $arResult['FILTER_ID'],
-	'FILTER' => [['id' => 'Title', 'name' => 'Название формы']],
-	'DISABLE_SEARCH' => true,
-	'ENABLE_LABEL' => true,
-];
-
 Toolbar::addButton($arResult['ADD_BUTTON']);
-Toolbar::addFilter($filterParams);
-
-
-
-
+Toolbar::addFilter($arResult['FILTER_PARAMS']);
 
 $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',
 	'',
 	[
-		'GRID_ID' => $arResult['GRID_ID'],
+		'GRID_ID' => $arParams['GRID_ID'],
 		'COLUMNS' => $arResult['COLUMNS'],
 		'ROWS' => $arResult['ROWS'],
 		'ACTION_PANEL' => $arResult['ACTION_PANEL'],
@@ -40,31 +28,30 @@ $APPLICATION->IncludeComponent(
 		'AJAX_OPTION_JUMP' => 'N',
 		'AJAX_OPTION_HISTORY' => 'N',
 
+		//Общие настройки
 		'SHOW_ROW_ACTIONS_MENU'     => true,
 		'SHOW_GRID_SETTINGS_MENU'   => true,
 		'SHOW_SELECTED_COUNTER'     => true,
 		'SHOW_TOTAL_COUNTER'        => false,
 		'SHOW_ACTION_PANEL'         => true,
-		'ALLOW_COLUMNS_SORT'        => true,
 		'ALLOW_COLUMNS_RESIZE'      => true,
 		'ALLOW_HORIZONTAL_SCROLL'   => true,
 		'ALLOW_PIN_HEADER'          => true,
-
 
 		//Настройки для пагинации
 		'NAV_OBJECT' => $arResult['NAV_OBJECT'],
 		'SHOW_NAVIGATION_PANEL'     => true,
 		'SHOW_PAGINATION'           => true,
 
+		//Настройки для сортировки\фильтрации\поиска
+		'ALLOW_SORT'                => true,
+		'ALLOW_COLUMNS_SORT'        => true,
+
 		// 'NAV_PARAM_NAME'
 		// 'CURRENT_PAGE'
 		// 'ENABLE_NEXT_PAGE'
 		// 'TOTAL_ROWS_COUNT'
 		// 'DEFAULT_PAGE_SIZE'
-
-
-		//Настройки для сортировки\фильтрации\поиска
-		'ALLOW_SORT'                => true,
 	]
 );
 ?>

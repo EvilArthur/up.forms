@@ -29,7 +29,7 @@ class FieldTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'UP_Field';
+		return 'up_field';
 	}
 
 	/**
@@ -50,7 +50,7 @@ class FieldTable extends DataManager
 				]
 			),
 			new StringField(
-				'Title',
+				'VALUE',
 				[
 					'validation' => function()
 					{
@@ -62,7 +62,7 @@ class FieldTable extends DataManager
 				]
 			),
 			(new OneToMany(
-				'Question', QuestionTable::class, 'Field'
+				'question', QuestionTable::class, 'field'
 			)),
 		];
 	}
