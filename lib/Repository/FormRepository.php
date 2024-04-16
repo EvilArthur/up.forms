@@ -56,7 +56,7 @@ class FormRepository
 				$form->addToChapter($chapter);
 			}
 			$result = $form->save()->getErrors();
-			\db()->commitTransaction();
+			db()->commitTransaction();
 			return $result;
 		}
 		catch (\Throwable $error)
@@ -101,6 +101,7 @@ class FormRepository
 				$question->setTitle($questionData['Title']);
 				$question->setPosition($questionData['Position']);
 				$question->setFieldId($questionData['Field_ID']);
+				/*$options = OptionTable::createCollection();*/
 				foreach ($questionData['Options'] as $optionData)
 				{
 					if ($optionData === null)
@@ -113,7 +114,7 @@ class FormRepository
 					}
 					else
 					{
-						$option = OptionTable::wakeObject(
+						$option = OptionTable::wakeUpObject(
 							[
 								'ID' => $optionData['ID'],
 							]
@@ -122,9 +123,11 @@ class FormRepository
 					}
 					$option->setValue($optionData['Value']);
 					$option->save();
+					/*$options->add($option);*/
 
 					$question->addToOptions($option);
 				}
+				/*$question->set('Options', $options);*/
 				$chapter->addToQuestion($question);
 			}
 			$form->addToChapter($chapter);
@@ -133,11 +136,19 @@ class FormRepository
 		return $result->getErrors();
 	}
 
-	public static function getForm(int $id): EO_Form
+	public static function getForm(int $id)/*: EO_Form*/
 	{
-		$form = FormTable::getById($id)->fetchObject();
-		$form->fillChapter()->fillQuestion()->fillOptions();
+		$form = FormTable::getByPrimary($id, ['select' =>
+												  ['Title',
+												   'Chapter',
+												   'Chapter.Question',
+												   'Chapter.Question.Options']
+		])->fetchObject();
+
 		return $form;
+		/*$form = FormTable::getById($id)->fetchObject();
+		$form->fillChapter()->fillQuestion()->fillOptions();
+		return $form;*/
 	}
 
 	public static function getForms(): array
