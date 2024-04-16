@@ -151,11 +151,19 @@ class FormRepository
 		return $form;*/
 	}
 
-	public static function getForms(): array
+	public static function getForms(array $filter = null): array
 	{
+		if ($filter === null)
+		{
+			return FormTable::query()
+							->setSelect(['Id', 'Title',])
+							->fetchAll();
+		}
 		return FormTable::query()
-						->setSelect(['Id', 'Title',])
-						->fetchAll();
+						  ->setSelect(['Id', 'Title',])
+						  ->setLimit($filter['LIMIT'])
+						  ->setOffset($filter['OFFSET'])
+						  ->fetchAll();
 	}
 
 	public static function deleteForm(int $id): void

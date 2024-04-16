@@ -1,17 +1,53 @@
 <?php
 namespace Up\Forms\Service;
 
-
-use Up\Forms\Model\EO_Form;
-use Up\Forms\Model\FormTable;
-
 class FormManager
 {
-	// public static function createForm()
-	// {
-	// 	$form = new EO_Form();
-	// 	$form->setTitle('New form');
-	// 	$form->setCreatorId(1);
-	// 	$form->save();
-	// }
+	public static function prepareFormsForGrid(array $forms, int $countOfItemsOnPage)
+	{
+		$rows = [];
+
+		foreach ($forms as $form)
+		{
+			$rows[] = [
+				'id' => (int)$form['ID'],
+				'columns' => [
+					'Title' => $form['Title'],
+					'DATE_CREATE' => '2022-01-01',
+					'STATUS' => 'Active',
+					'USER_NAME' => 'Супер Админ'
+				],
+				'actions' => [
+					[
+						'text' => 'Delete',
+						'onclick' => 'FormList.deleteForm(' . $form['ID'] . ')',
+						'default' => true,
+					],
+					[
+						'text' => 'Edit',
+						'onclick' => 'FormList.editForm(' . $form['ID'] . ')',
+						'default' => true,
+					],
+					[
+						'text' => 'Open',
+						'onclick' => 'FormList.openForm(' . $form['ID'] . ')',
+						'default' => true,
+					],
+					[
+						'text' => 'Results',
+						'onclick' => 'FormList.showResults(' . $form['ID'] . ')',
+						'default' => true,
+					],
+				],
+
+			];
+		}
+
+		if (count($rows) > $countOfItemsOnPage)
+		{
+			array_pop($rows);
+		}
+
+		return $rows;
+	}
 }

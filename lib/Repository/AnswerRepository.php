@@ -20,11 +20,17 @@ Class AnswerRepository
 		return $answers->save()->getErrors();
 	}
 
-	public static function getAnswersByFormId(int $id)
+	public static function getAnswersByFormId(int $id, array $filter = null)
 	{
-		$questions = FormTable::getByPrimary($id)->fetchObject()->fillChapter()->fillQuestion();
-		$Options = $questions->fillOptions();
-		return $questions->fillAnswer();
+		// if ($filter === null)
+		// {
+		// 	// $a =  FormTable::query()
+		// 	// 	->addSelect(['*', 'Chapter'])
+		// 	// 	->addSelect(['*', 'Question'])->exec();
+		// 	// $b = 0;
+		//
+		// }
+		return FormTable::getByPrimary($id)->fetchObject()->fillChapter()->fillQuestion()->fillAnswer();
 	}
 }
 

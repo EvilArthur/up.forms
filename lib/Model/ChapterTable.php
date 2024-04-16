@@ -35,7 +35,7 @@ class ChapterTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'Up_Chapter';
+		return 'up_chapter';
 	}
 
 	/**
@@ -55,19 +55,14 @@ class ChapterTable extends DataManager
 				]
 			),
 			new IntegerField(
-				'Form_ID',
+				'FORM_ID',
 				[
 					'required' => true,
 					'title' => Loc::getMessage('CHAPTER_ENTITY_FORM_ID_FIELD'),
 				]
 			),
-			new Reference(
-				'Form',
-				FormTable::class,
-				Join::on('this.Form_ID', 'ref.ID')
-			),
 			new StringField(
-				'Title',
+				'TITLE',
 				[
 					'validation' => function()
 					{
@@ -79,13 +74,18 @@ class ChapterTable extends DataManager
 				]
 			),
 			new TextField(
-				'Description',
+				'DESCRIPTION',
 				[
 					'title' => Loc::getMessage('CHAPTER_ENTITY_DESCRIPTION_FIELD'),
 				]
 			),
+			new Reference(
+				'form',
+				FormTable::class,
+				Join::on('this.FORM_ID', 'ref.ID')
+			),
 			(new OneToMany(
-				'Question', QuestionTable::class, 'Chapter'
+				'question', QuestionTable::class, 'chapter'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];
 	}

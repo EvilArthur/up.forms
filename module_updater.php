@@ -26,83 +26,19 @@ function __formsMigrate(int $nextVersion, callable $callback)
 	}
 }
 
-__formsMigrate(3, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
-	{
-		$DB->query
-		('
-			CREATE TABLE Up_Chapter (
-			ID int not null auto_increment,
-			Form_ID int not null,
-			Title varchar(100),
-			Description text,
-			PRIMARY KEY (ID)
-			);
-		');
-	}
-});
-__formsMigrate(4, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
-	{
-		$DB->query
-		('
-			ALTER TABLE Up_Question CHANGE Form_ID Chapter_ID int not null;
-		');
-	}
-});
-__formsMigrate(5, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
-	{
-		$DB->query
-		('
-			CREATE TABLE Up_Option (
-			ID int not null auto_increment,
-			Value varchar(100),
-			PRIMARY KEY (ID)
-			);
-		');
-	}
-});
-
-__formsMigrate(6, function($updater, $DB)
+__formsMigrate(2, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
 	{
 		$DB->query
 		("
-			INSERT INTO UP_Field (Title)
-			VALUES ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_1'),
-				   ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_2');
+			INSERT INTO up_field (TITLE)
+			VALUES('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_1'),
+				   ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_2'),
+				   ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_3');
 		");
 	}
 });
 
-__formsMigrate(7, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
-	{
-		$DB->query
-		('
-			CREATE TABLE Up_Question_Option(
-			Question_ID int,
-			Option_ID int,
-			primary key (Question_ID, Option_ID)
-			);
-		');
-	}
-});
 
-__formsMigrate(8, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
-	{
-		$DB->query
-		("
-			INSERT INTO UP_Field (Title)
-			VALUES ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_3');
-		");
-	}
-});
+

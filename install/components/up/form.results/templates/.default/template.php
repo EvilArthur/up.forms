@@ -13,31 +13,43 @@ Extension::load('up.form-results');
 \CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-Toolbar::addFilter([
-					   'GRID_ID' => 'MY_GRID_ID',
-					   'FILTER_ID' => 'report_list',
-				   ]);
+Toolbar::addFilter($arResult['FILTER_PARAMS']);
 
 $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',
 	'',
 	[
-		'GRID_ID' => "FORMS_RESULTS_GRID_{$arParams['ID']}",
+		'GRID_ID' => $arParams['GRID_ID'],
 		'COLUMNS' => $arResult['COLUMNS'],
 		'ROWS' => $arResult['ROWS'],
 		'AJAX_MODE' => 'Y',
 		'AJAX_OPTION_JUMP' => 'N',
 		'AJAX_OPTION_HISTORY' => 'N',
+
+		//Общие настройки
+		'SHOW_ROW_ACTIONS_MENU'     => true,
+		'SHOW_GRID_SETTINGS_MENU'   => true,
+		'SHOW_SELECTED_COUNTER'     => true,
+		'SHOW_TOTAL_COUNTER'        => false,
+		'SHOW_ACTION_PANEL'         => true,
+		'ALLOW_COLUMNS_RESIZE'      => true,
+		'ALLOW_HORIZONTAL_SCROLL'   => true,
+		'ALLOW_PIN_HEADER'          => true,
+
+		//Настройки для пагинации
+		'NAV_OBJECT' => $arResult['NAV_OBJECT'],
+		'SHOW_NAVIGATION_PANEL'     => true,
+		'SHOW_PAGINATION'           => true,
+
+		//Настройки для сортировки\фильтрации\поиска
+		'ALLOW_SORT'                => true,
+		'ALLOW_COLUMNS_SORT'        => true,
 	]
 );
 
 ?>
 
-
-
-
 <div class="container" id="main-container"></div>
-
 
 <script>
 	BX.ready(function() {

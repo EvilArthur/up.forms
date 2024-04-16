@@ -31,7 +31,7 @@ class FormTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'UP_Form';
+		return 'up_form';
 	}
 
 	/**
@@ -51,14 +51,14 @@ class FormTable extends DataManager
 				]
 			),
 			new IntegerField(
-				'Creator_ID',
+				'CREATOR_ID',
 				[
 					'required' => true,
 					'title' => Loc::getMessage('FORM_ENTITY_CREATOR_ID_FIELD'),
 				]
 			),
 			new StringField(
-				'Title',
+				'TITLE',
 				[
 					'validation' => function()
 					{
@@ -70,7 +70,11 @@ class FormTable extends DataManager
 				]
 			),
 			(new OneToMany(
-				'Chapter', ChapterTable::class, 'Form'
+				'chapter', ChapterTable::class, 'form'
+			))
+				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
+			(new OneToMany(
+				'response', ResponseTable::class, 'form'
 			))
 				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];

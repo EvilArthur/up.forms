@@ -3,9 +3,28 @@
  * @var CMain $APPLICATION
  */
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetTitle("Forms");
+$componentParameters = ['ID' => (int)$_REQUEST['id']];
+if (isset($_REQUEST['IFRAME']) && $_REQUEST['IFRAME'] == 'Y')
+{
+	$APPLICATION->IncludeComponent(
+		'up:slider.wrapper',
+		'',
+		array(
+			'COMPONENT_NAME' => 'up:form.results',
+			'COMPONENT_TEMPLATE_NAME' => '',
+			'COMPONENT_PARAMS' => $componentParameters,
+		)
+	);
+}
+else
+{
+	$APPLICATION->SetTitle("Forms");
+	$APPLICATION->IncludeComponent(
+		'up:form.results',
+		'',
+		$componentParameters
+	);
+}
 
-$APPLICATION->IncludeComponent('up:form.results', '',
-							   ['ID' => (int)$_REQUEST['id']]);
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

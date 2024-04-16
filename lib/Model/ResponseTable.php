@@ -7,26 +7,23 @@ use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\Relations\CascadePolicy;
 use Bitrix\Main\ORM\Fields\Relations\OneToMany;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
-use Bitrix\Main\ORM\Fields\StringField;
-use Bitrix\Main\ORM\Fields\Validators\LengthValidator;
 use Bitrix\Main\ORM\Query\Join;
-use Bitrix\Pull\Protobuf\Response;
 
 /**
- * Class AnswerTable
+ * Class ResponseTable
  *
  * Fields:
  * <ul>
  * <li> ID int mandatory
- * <li> Question_ID int mandatory
- * <li> User_ID int mandatory
- * <li> Answer string(100) optional
+ * <li> FORM_ID int mandatory
+ * <li> USER_ID int mandatory
+ * <li> TRY_NUMBER int mandatory
  * </ul>
  *
- * @package Bitrix\Answer
+ * @package Up\Forms\Model;
  **/
 
-class AnswerTable extends DataManager
+class ResponseTable extends DataManager
 {
 	/**
 	 * Returns DB table name for entity.
@@ -35,7 +32,7 @@ class AnswerTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'up_answer';
+		return 'up_response';
 	}
 
 	/**
@@ -51,40 +48,38 @@ class AnswerTable extends DataManager
 				[
 					'primary' => true,
 					'autocomplete' => true,
-					'title' => Loc::getMessage('ANSWER_ENTITY_ID_FIELD'),
+					'title' => Loc::getMessage('RESPONSE_ENTITY_ID_FIELD'),
 				]
 			),
 			new IntegerField(
-				'QUESTION_ID',
+				'FORM_ID',
 				[
 					'required' => true,
-					'title' => Loc::getMessage('ANSWER_ENTITY_QUESTION_ID_FIELD'),
+					'title' => Loc::getMessage('RESPONSE_ENTITY_FORM_ID_FIELD'),
 				]
 			),
-
 			new IntegerField(
-				'RESPONSE_ID',
+				'USER_ID',
 				[
 					'required' => true,
-					'title' => Loc::getMessage('ANSWER_ENTITY_USER_ID_FIELD'),
+					'title' => Loc::getMessage('RESPONSE_ENTITY_USER_ID_FIELD'),
+				]
+			),
+			new IntegerField(
+				'TRY_NUMBER',
+				[
+					'required' => true,
+					'title' => Loc::getMessage('RESPONSE_ENTITY_TRY_NUMBER_FIELD'),
 				]
 			),
 			new Reference(
-				'question',
-				QuestionTable::class,
-				Join::on('this.QUESTION_ID', 'ref.ID')
+				'form',
+				FormTable::class,
+				Join::on('this.FORM_ID', 'ref.ID')
 			),
-
-			new Reference(
-				'response',
-				ResponseTable::class,
-				Join::on('this.RESPONSE_ID', 'ref.ID')
-			),
-
 			(new OneToMany(
-				'subanswer', SubanswerTable::class, 'answer'
+				'answer', AnswerTable::class, 'response'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
-
 		];
 	}
 }
