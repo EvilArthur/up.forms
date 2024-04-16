@@ -80,12 +80,12 @@ class ChapterTable extends DataManager
 				]
 			),
 			new Reference(
-				'form',
+				'FORM',
 				FormTable::class,
 				Join::on('this.FORM_ID', 'ref.ID')
 			),
 			(new OneToMany(
-				'question', QuestionTable::class, 'chapter'
+				'QUESTION', QuestionTable::class, 'CHAPTER'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];
 	}

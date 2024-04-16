@@ -158,8 +158,8 @@ this.BX.Up = this.BX.Up || {};
 	    value: function getData() {
 	      if (this.isDeleted) return null;
 	      return {
-	        ID: this.id,
-	        Value: this.labelObject.value
+	        'ID': this.id,
+	        'TITLE': this.labelObject.value
 	      };
 	    }
 	  }]);
@@ -174,14 +174,14 @@ this.BX.Up = this.BX.Up || {};
 	    this.titleObject = {
 	      value: title
 	    };
-	    this.chapter_id = chapter_id;
-	    this.field_id = field_id;
+	    this.chapterId = chapter_id;
+	    this.fieldId = field_id;
 	    this.id = id;
 	    this.position = position;
 	    this.fieldData = fieldData;
 	    this.isDeleted = false;
 	    this.options = optionData.map(function (option) {
-	      return new Option(option.ID, option.Value);
+	      return new Option(option.ID, option.TITLE);
 	    });
 	  }
 	  babelHelpers.createClass(Question, [{
@@ -232,14 +232,14 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onChangeTypesHandler",
 	    value: function onChangeTypesHandler(value) {
-	      this.field_id = parseInt(value);
+	      this.fieldId = parseInt(value);
 	      this.render();
 	    }
 	  }, {
 	    key: "renderType",
 	    value: function renderType(field) {
-	      var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t\t\t<option value=\"", "\">", "</option>\n\t\t\t\t\t\t\t\t\t"])), field.ID, main_core.Loc.getMessage(field.Title));
-	      if (this.field_id === parseInt(field.ID)) {
+	      var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t\t\t<option value=\"", "\">", "</option>\n\t\t\t\t\t\t\t\t\t"])), field.ID, main_core.Loc.getMessage(field.TITLE));
+	      if (this.fieldId === parseInt(field.ID)) {
 	        wrap.setAttribute('selected', '');
 	      }
 	      return wrap;
@@ -249,10 +249,10 @@ this.BX.Up = this.BX.Up || {};
 	    value: function renderBody() {
 	      var _this$layout$body;
 	      var wrap;
-	      console.log(this.field_id);
-	      if (this.field_id === 1) {
+	      console.log(this.fieldId);
+	      if (this.fieldId === 1) {
 	        wrap = main_core.Tag.render(_templateObject7 || (_templateObject7 = babelHelpers.taggedTemplateLiteral(["<p class=\"text-decoration-underline mb-0\">\u041A\u0440\u0430\u0442\u043A\u0438\u0439 \u043E\u0442\u0432\u0435\u0442</p>"])));
-	      } else if (this.field_id === 2 || this.field_id === 3) {
+	      } else if (this.fieldId === 2 || this.fieldId === 3) {
 	        wrap = main_core.Tag.render(_templateObject8 || (_templateObject8 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t  </div>"])), this.renderAddOptionButton(), this.renderOptions());
 	      }
 	      (_this$layout$body = this.layout.body) === null || _this$layout$body === void 0 ? void 0 : _this$layout$body.replaceWith(wrap);
@@ -291,11 +291,11 @@ this.BX.Up = this.BX.Up || {};
 	        return null;
 	      }
 	      var data = {
-	        'Title': this.titleObject.value,
-	        'Position': this.position,
-	        'Field_ID': this.field_id,
+	        'TITLE': this.titleObject.value,
+	        'POSITION': this.position,
+	        'FIELD_ID': this.fieldId,
 	        'ID': this.id,
-	        'Options': this.options.map(function (options) {
+	        'OPTION': this.options.map(function (options) {
 	          return options.getData();
 	        })
 	      };
@@ -313,7 +313,7 @@ this.BX.Up = this.BX.Up || {};
 	    this.id = id;
 	    this.layout = {};
 	    this.formData = {
-	      Chapter: []
+	      CHAPTER: []
 	    };
 	    this.titleObject = {
 	      value: ''
@@ -336,49 +336,50 @@ this.BX.Up = this.BX.Up || {};
 	              return FormManager.getFieldData();
 	            case 2:
 	              this.fieldData = _context.sent;
+	              console.log(this.fieldData);
 	              if (!(this.id !== 0)) {
-	                _context.next = 19;
+	                _context.next = 20;
 	                break;
 	              }
-	              _context.prev = 4;
-	              _context.next = 7;
+	              _context.prev = 5;
+	              _context.next = 8;
 	              return FormManager.getFormData(this.id);
-	            case 7:
+	            case 8:
 	              this.formData = _context.sent;
-	              this.titleObject.value = this.formData.Title;
+	              this.titleObject.value = this.formData.TITLE;
 	              this.isLoading = false;
-	              this.formData.Chapter[0].Question.map(function (questionData) {
+	              this.formData.CHAPTER[0].QUESTION.map(function (questionData) {
 	                var question = null;
 	                console.log(questionData);
-	                question = new Question(questionData.Chapter_ID, questionData.Field_ID, questionData.ID, questionData.Position, questionData.Title, questionData.Options, _this.fieldData);
+	                question = new Question(questionData.CHAPTER_ID, questionData.FIELD_ID, questionData.ID, questionData.POSITION, questionData.TITLE, questionData.OPTION, _this.fieldData);
 	                _this.questions.push(question);
 	              });
 	              this.layout.wrap = this.render();
-	              _context.next = 17;
+	              _context.next = 18;
 	              break;
-	            case 14:
-	              _context.prev = 14;
-	              _context.t0 = _context["catch"](4);
+	            case 15:
+	              _context.prev = 15;
+	              _context.t0 = _context["catch"](5);
 	              console.log(_context.t0);
-	            case 17:
-	              _context.next = 23;
+	            case 18:
+	              _context.next = 24;
 	              break;
-	            case 19:
-	              this.formData.Chapter[0] = {
-	                'title': 'Заголовок раздела',
-	                'description': 'Описание раздела',
-	                'Position': 1,
-	                'questions': [],
-	                'id': null
+	            case 20:
+	              this.formData.CHAPTER[0] = {
+	                'TITLE': 'Заголовок раздела',
+	                'DESCRIPTION': 'Описание раздела',
+	                'POSITION': 1,
+	                'QUESTION': [],
+	                'ID': null
 	              };
 	              this.isLoading = false;
 	              this.titleObject.value = 'Новая форма';
 	              this.layout.wrap = this.render();
-	            case 23:
+	            case 24:
 	            case "end":
 	              return _context.stop();
 	          }
-	        }, _callee, this, [[4, 14]]);
+	        }, _callee, this, [[5, 15]]);
 	      }));
 	      function loadFormData() {
 	        return _loadFormData.apply(this, arguments);
@@ -423,7 +424,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onAddQuestionButtonClickHandler",
 	    value: function onAddQuestionButtonClickHandler() {
-	      this.questions.push(new Question(this.formData.Chapter[0].id, 1, null, this.questionNumber++, 'Название', [], this.fieldData));
+	      this.questions.push(new Question(this.formData.CHAPTER[0].id, 1, null, this.questionNumber++, 'Название', [], this.fieldData));
 	      this.renderQuestionList();
 	    }
 	  }, {
@@ -436,15 +437,15 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onSaveFormButtonClickHandler",
 	    value: function onSaveFormButtonClickHandler() {
-	      var hardCodeChapter = this.formData.Chapter[0];
-	      hardCodeChapter.Question = this.questions.map(function (question) {
+	      var hardCodeChapter = this.formData.CHAPTER[0];
+	      hardCodeChapter.QUESTION = this.questions.map(function (question) {
 	        return question.getData();
 	      });
 	      var form = {
 	        'ID': this.id,
-	        'Title': this.titleObject.value,
-	        'Creator_ID': 1,
-	        'chapters': [hardCodeChapter]
+	        'TITLE': this.titleObject.value,
+	        'CREATOR_ID': 1,
+	        'CHAPTER': [hardCodeChapter]
 	      };
 	      console.log(form);
 	      FormManager.saveFormData({

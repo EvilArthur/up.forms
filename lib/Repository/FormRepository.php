@@ -21,35 +21,35 @@ class FormRepository
 		{
 			$form = FormTable::createObject();
 			$form->setCreatorId(1);
-			$form->setTitle($formData['Title']);
-			foreach ($formData['chapters'] as $chapterData)
+			$form->setTitle($formData['TITLE']);
+			foreach ($formData['CHAPTER'] as $chapterData)
 			{
 
 				$chapter = ChapterTable::createObject();
-				$chapter->setTitle($chapterData['title']);
-				$chapter->setDescription($chapterData['description']);
-				foreach ($chapterData['Question'] as $questionData)
+				$chapter->setTitle($chapterData['TITLE']);
+				$chapter->setDescription($chapterData['DESCRIPTION']);
+				foreach ($chapterData['QUESTION'] as $questionData)
 				{
 					if ($questionData === null)
 					{
 						continue;
 					}
 					$question = QuestionTable::createObject();
-					$question->setTitle($questionData['Title']);
-					$question->setPosition($questionData['Position']);
-					$question->setFieldId($questionData['Field_ID']);
-					foreach ($questionData['Options'] as $optionData)
+					$question->setTitle($questionData['TITLE']);
+					$question->setPosition($questionData['POSITION']);
+					$question->setFieldId($questionData['FIELD_ID']);
+					foreach ($questionData['OPTION'] as $optionData)
 					{
 						if ($optionData === null)
 						{
 							continue;
 						}
 						$option = OptionTable::createObject();
-						$option->setValue($optionData['Value']);
+						$option->setTitle($optionData['TITLE']);
 
 						$option->save();
 
-						$question->addToOptions($option);
+						$question->addToOption($option);
 					}
 					$chapter->addToQuestion($question);
 				}
@@ -70,16 +70,16 @@ class FormRepository
 	public static function saveForm($formData)
 	{
 		$form = FormTable::getById($formData['ID'])->fetchObject();
-		$form->setTitle($formData['Title']);
+		$form->setTitle($formData['TITLE']);
 		$form->removeAllChapter();
-		foreach ($formData['chapters'] as $chapterData)
+		foreach ($formData['CHAPTER'] as $chapterData)
 		{
 			$chapter = ChapterTable::wakeUpObject(
 				[
 					'ID' => $chapterData['ID'],
 				]);
 			$chapter->removeAllQuestion();
-			foreach ($chapterData['Question'] as $questionData)
+			foreach ($chapterData['QUESTION'] as $questionData)
 			{
 				if ($questionData === null)
 				{
@@ -96,13 +96,13 @@ class FormRepository
 							'ID' => $questionData['ID'],
 						]
 					);
-					$question->removeAllOptions();
+					$question->removeAllOption();
 				}
-				$question->setTitle($questionData['Title']);
-				$question->setPosition($questionData['Position']);
-				$question->setFieldId($questionData['Field_ID']);
+				$question->setTitle($questionData['TITLE']);
+				$question->setPosition($questionData['POSITION']);
+				$question->setFieldId($questionData['FIELD_ID']);
 				/*$options = OptionTable::createCollection();*/
-				foreach ($questionData['Options'] as $optionData)
+				foreach ($questionData['OPTION'] as $optionData)
 				{
 					if ($optionData === null)
 					{
@@ -121,11 +121,11 @@ class FormRepository
 						);
 
 					}
-					$option->setValue($optionData['Value']);
+					$option->setTitle($optionData['TITLE']);
 					$option->save();
 					/*$options->add($option);*/
 
-					$question->addToOptions($option);
+					$question->addToOption($option);
 				}
 				/*$question->set('Options', $options);*/
 				$chapter->addToQuestion($question);
@@ -139,10 +139,10 @@ class FormRepository
 	public static function getForm(int $id)/*: EO_Form*/
 	{
 		$form = FormTable::getByPrimary($id, ['select' =>
-												  ['Title',
-												   'Chapter',
-												   'Chapter.Question',
-												   'Chapter.Question.Options']
+												  ['TITLE',
+												   'CHAPTER',
+												   'CHAPTER.QUESTION',
+												   'CHAPTER.QUESTION.OPTION']
 		])->fetchObject();
 
 		return $form;
@@ -156,11 +156,11 @@ class FormRepository
 		if ($filter === null)
 		{
 			return FormTable::query()
-							->setSelect(['Id', 'Title',])
+							->setSelect(['ID', 'TITLE',])
 							->fetchAll();
 		}
 		return FormTable::query()
-						  ->setSelect(['Id', 'Title',])
+						  ->setSelect(['ID', 'TITLE',])
 						  ->setLimit($filter['LIMIT'])
 						  ->setOffset($filter['OFFSET'])
 						  ->fetchAll();
@@ -170,7 +170,7 @@ class FormRepository
 	{
 		$form = FormTable::getById($id)->fetchObject();
 		$questions =  $form->fillChapter()->fillQuestion();
-		$questions->fillOptions();
+		$questions->fillOption();
 		$questions->fillAnswer();
 
 		$form->delete();

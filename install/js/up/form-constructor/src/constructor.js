@@ -10,7 +10,7 @@ export class Constructor
 		this.id = id;
 		this.layout = {};
 		this.formData = {
-			Chapter: [],
+			CHAPTER: [],
 		};
 		this.titleObject = {value: ''}
 		this.fieldData = [];
@@ -23,20 +23,21 @@ export class Constructor
 	async loadFormData()
 	{
 		this.fieldData = await FormManager.getFieldData();
+		console.log(this.fieldData);
 		if (this.id !== 0)
 		{
 			try
 			{
 				this.formData = await FormManager.getFormData(this.id);
-				this.titleObject.value = this.formData.Title
+				this.titleObject.value = this.formData.TITLE
 				this.isLoading = false;
-				this.formData.Chapter[0].Question.map((questionData) => {
+				this.formData.CHAPTER[0].QUESTION.map((questionData) => {
 					let question = null;
 					console.log(questionData);
 					question = new Question(
-						questionData.Chapter_ID, questionData.Field_ID,
-						questionData.ID, questionData.Position,
-						questionData.Title, questionData.Options, this.fieldData);
+						questionData.CHAPTER_ID, questionData.FIELD_ID,
+						questionData.ID, questionData.POSITION,
+						questionData.TITLE, questionData.OPTION, this.fieldData);
 					this.questions.push(question);
 				});
 				this.layout.wrap = this.render();
@@ -48,12 +49,12 @@ export class Constructor
 		}
 		else
 		{
-			this.formData.Chapter[0] = {
-				'title': 'Заголовок раздела',
-				'description': 'Описание раздела',
-				'Position': 1,
-				'questions': [],
-				'id': null,
+			this.formData.CHAPTER[0] = {
+				'TITLE': 'Заголовок раздела',
+				'DESCRIPTION': 'Описание раздела',
+				'POSITION': 1,
+				'QUESTION': [],
+				'ID': null,
 			};
 			this.isLoading = false;
 			this.titleObject.value = 'Новая форма';
@@ -127,7 +128,7 @@ export class Constructor
 	onAddQuestionButtonClickHandler()
 	{
 		this.questions.push(new Question(
-			this.formData.Chapter[0].id,
+			this.formData.CHAPTER[0].id,
 			1, null, this.questionNumber++, 'Название', [], this.fieldData,
 		));
 		this.renderQuestionList();
@@ -145,13 +146,13 @@ export class Constructor
 
 	onSaveFormButtonClickHandler()
 	{
-		const hardCodeChapter = this.formData.Chapter[0];
-		hardCodeChapter.Question = this.questions.map((question) => question.getData());
+		const hardCodeChapter = this.formData.CHAPTER[0];
+		hardCodeChapter.QUESTION = this.questions.map((question) => question.getData());
 		const form = {
 			'ID': this.id,
-			'Title': this.titleObject.value,
-			'Creator_ID': 1,
-			'chapters': [
+			'TITLE': this.titleObject.value,
+			'CREATOR_ID': 1,
+			'CHAPTER': [
 				hardCodeChapter,
 			],
 		};

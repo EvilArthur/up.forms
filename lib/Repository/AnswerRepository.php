@@ -12,8 +12,8 @@ Class AnswerRepository
 		foreach ($answersData as $answerData)
 		{
 			$answer = AnswerTable::createObject();
-			$answer->setAnswer($answerData['answer']);
-			$answer->setQuestionId($answerData['id']);
+			$answer->setValue($answerData['ANSWER']);
+			$answer->setQuestionId($answerData['ID']);
 			$answer->setUserId(1);
 			$answers->add($answer);
 		}

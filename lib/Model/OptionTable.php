@@ -56,7 +56,7 @@ class OptionTable extends DataManager
 						   'title' => Loc::getMessage('OPTION_ENTITY_VALUE_FIELD'),
 					   ]
 			),
-			(new ManyToMany('question', QuestionTable::class))
+			(new ManyToMany('QUESTION', QuestionTable::class))
 				->configureTableName('up_question_option')
 				->configureLocalPrimary('ID', 'OPTION_ID')
 				->configureLocalReference('options')

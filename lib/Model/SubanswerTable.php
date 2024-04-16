@@ -63,7 +63,7 @@ class SubanswerTable extends DataManager
 				]
 			),
 			new Reference(
-				'answer',
+				'ANSWER',
 				AnswerTable::class,
 				Join::on('this.ANSWER_ID', 'ref.ID')
 			),

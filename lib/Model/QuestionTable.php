@@ -96,21 +96,21 @@ class QuestionTable extends DataManager
 				]
 			),
 			new Reference(
-				'field',
+				'FIELD',
 				FieldTable::class,
 				Join::on('this.FIELD_ID', 'ref.ID')
 			),
 			(new Reference(
-				'chapter',
+				'CHAPTER',
 				ChapterTable::class,
 				Join::on('this.CHAPTER_ID', 'ref.ID')
 			)),
 
 			(new OneToMany(
-				'answer', AnswerTable::class, 'question'
+				'ANSWER', AnswerTable::class, 'QUESTION'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 
-			(new ManyToMany('options', OptionTable::class))
+			(new ManyToMany('OPTION', OptionTable::class))
 				->configureTableName('up_question_option')
 				->configureLocalPrimary('ID', 'QUESTION_ID')
 				->configureLocalReference('question')

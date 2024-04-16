@@ -8,14 +8,14 @@ export class Question
 	{
 		this.layout = {};
 		this.titleObject = {value: title};
-		this.chapter_id = chapter_id;
-		this.field_id = field_id;
+		this.chapterId = chapter_id;
+		this.fieldId = field_id;
 		this.id = id;
 		this.position = position;
 		this.fieldData = fieldData;
 		this.isDeleted = false;
 		this.options = optionData.map((option) => {
-			return new Option(option.ID, option.Value)
+			return new Option(option.ID, option.TITLE)
 		});
 	}
 
@@ -96,16 +96,16 @@ export class Question
 
 	onChangeTypesHandler(value)
 	{
-		this.field_id = parseInt(value);
+		this.fieldId = parseInt(value);
 		this.render();
 	}
 
 	renderType(field)
 	{
 		const wrap = Tag.render`
-						<option value="${field.ID}">${Loc.getMessage(field.Title)}</option>
+						<option value="${field.ID}">${Loc.getMessage(field.TITLE)}</option>
 									`;
-		if (this.field_id === parseInt(field.ID))
+		if (this.fieldId === parseInt(field.ID))
 		{
 			wrap.setAttribute('selected', '');
 		}
@@ -115,13 +115,13 @@ export class Question
 	renderBody()
 	{
 		let wrap;
-		console.log(this.field_id);
-		if (this.field_id === 1)
+		console.log(this.fieldId);
+		if (this.fieldId === 1)
 		{
 			wrap = Tag.render`<p class="text-decoration-underline mb-0">Краткий ответ</p>`;
 
 		}
-		else if (this.field_id === 2 || this.field_id === 3)
+		else if (this.fieldId === 2 || this.fieldId === 3)
 		{
 			wrap = Tag.render`<div class="container">
 								${this.renderAddOptionButton()}
@@ -164,11 +164,11 @@ export class Question
 			return null;
 		}
 		const data = {
-			'Title': this.titleObject.value,
-			'Position': this.position,
-			'Field_ID': this.field_id,
+			'TITLE': this.titleObject.value,
+			'POSITION': this.position,
+			'FIELD_ID': this.fieldId,
 			'ID': this.id,
-			'Options': this.options.map((options) => options.getData())
+			'OPTION': this.options.map((options) => options.getData())
 		};
 		return data;
 	}

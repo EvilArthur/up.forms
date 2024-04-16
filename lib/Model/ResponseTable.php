@@ -73,12 +73,12 @@ class ResponseTable extends DataManager
 				]
 			),
 			new Reference(
-				'form',
+				'FORM',
 				FormTable::class,
 				Join::on('this.FORM_ID', 'ref.ID')
 			),
 			(new OneToMany(
-				'answer', AnswerTable::class, 'response'
+				'ANSWER', AnswerTable::class, 'RESPONSE'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];
 	}

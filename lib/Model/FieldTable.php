@@ -62,7 +62,7 @@ class FieldTable extends DataManager
 				]
 			),
 			(new OneToMany(
-				'question', QuestionTable::class, 'field'
+				'QUESTION', QuestionTable::class, 'FIELD'
 			)),
 		];
 	}

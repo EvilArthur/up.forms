@@ -66,8 +66,8 @@ export class Option
 		if (this.isDeleted)
 			return null;
 		return {
-			ID: this.id,
-			Value: this.labelObject.value,
+			'ID': this.id,
+			'TITLE': this.labelObject.value,
 		};
 	}
 }

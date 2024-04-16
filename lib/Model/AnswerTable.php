@@ -70,19 +70,19 @@ class AnswerTable extends DataManager
 				]
 			),
 			new Reference(
-				'question',
+				'QUESTION',
 				QuestionTable::class,
 				Join::on('this.QUESTION_ID', 'ref.ID')
 			),
 
 			new Reference(
-				'response',
+				'RESPONSE',
 				ResponseTable::class,
 				Join::on('this.RESPONSE_ID', 'ref.ID')
 			),
 
 			(new OneToMany(
-				'subanswer', SubanswerTable::class, 'answer'
+				'SUBANSWER', SubanswerTable::class, 'ANSWER'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 
 		];
