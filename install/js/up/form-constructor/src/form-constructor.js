@@ -86,9 +86,7 @@ export class FormConstructor
 
 	onSaveButtonClickHandler()
 	{
-		const data = {
-			'settings': this.settings.getData(),
-		}
+
 		console.log(data);
 	}
 }

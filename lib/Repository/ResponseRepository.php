@@ -3,21 +3,31 @@ namespace Up\Forms\Repository;
 
 use Up\Forms\Model\AnswerTable;
 use Up\Forms\Model\FormTable;
+use Up\Forms\Model\ResponseTable;
+use Up\Forms\Model\SubanswerTable;
 
-Class AnswerRepository
+Class ResponseRepository
 {
-	public static function saveAnswers($answersData)
+	public static function saveResponse($responseData)
 	{
-		$answers = AnswerTable::createCollection();
-		foreach ($answersData as $answerData)
+		$response = ResponseTable::createObject();
+		$response->setUserId($responseData['USER_ID']);
+		$response->setFormId($responseData['FORM_ID']);
+		$response->setTryNumber($responseData['TRY_NUMBER']);
+		foreach ($responseData['ANSWER'] as $answerData)
 		{
 			$answer = AnswerTable::createObject();
-			$answer->setValue($answerData['ANSWER']);
 			$answer->setQuestionId($answerData['ID']);
-			$answer->setUserId(1);
-			$answers->add($answer);
+			foreach ($answerData['SUBANSWER'] as $subanswerData)
+			{
+				$subanswer = SubanswerTable::createObject();
+				$subanswer->setValue($subanswerData);
+				$answer->addToSubanswer($subanswer);
+			}
+			$response->addToAnswer($answer);
 		}
-		return $answers->save()->getErrors();
+		$result = $response->save();
+		return  $result->getErrors();
 	}
 
 	public static function getAnswersByFormId(int $id, array $filter = null)

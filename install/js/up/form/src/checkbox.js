@@ -5,7 +5,6 @@ export class Checkbox extends Options
 	constructor(options)
 	{
 		super(options);
-		this.selectedValue = [];
 		this.type = 'checkbox';
 	}
 
@@ -13,13 +12,13 @@ export class Checkbox extends Options
 	{
 		if (event.target.checked)
 		{
-			this.selectedValue.push(event.target.value)
+			this.subAnswer.push(event.target.value)
 		}
 		else
 		{
-			const index = this.selectedValue.indexOf(event.target.value);
+			const index = this.subAnswer.indexOf(event.target.value);
 			if (index !== -1) {
-				this.selectedValue.splice(index, 1);
+				this.subAnswer.splice(index, 1);
 			}
 		}
 	}

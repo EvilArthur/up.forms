@@ -5,7 +5,7 @@ use Up\Forms\Model\FormTable;
 use Bitrix\Main\Grid\Options as GridOptions;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UI\PageNavigation;
-use Up\Forms\Repository\AnswerRepository;
+use Up\Forms\Repository\ResponseRepository;
 use Up\Forms\Service\AnswerManager;
 
 class FormResultsComponent extends CBitrixComponent
@@ -79,7 +79,7 @@ class FormResultsComponent extends CBitrixComponent
 			'OFFSET' => $nav->getOffset(),
 		];
 
-		$answers = AnswerRepository::getAnswersByFormId($this->arParams['ID'], $filter);
+		$answers = ResponseRepository::getAnswersByFormId($this->arParams['ID'], $filter);
 		$rows = AnswerManager::prepareAnswersForGrid($answers, $this->arParams['NUM_OF_ITEMS_PER_PAGE']);
 		$nav->setRecordCount($nav->getOffset() + count($answers));
 

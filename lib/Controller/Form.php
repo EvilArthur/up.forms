@@ -4,7 +4,7 @@ namespace Up\Forms\Controller;
 
 use Bitrix\Main\Engine\Controller;
 use Bitrix\Main\Loader;
-use Up\Forms\Repository\AnswerRepository;
+use Up\Forms\Repository\ResponseRepository;
 use Up\Forms\Repository\FormRepository;
 
 class Form extends Controller
@@ -46,7 +46,7 @@ class Form extends Controller
 	{
 		return
 		[
-			'result' => AnswerRepository::saveAnswers($answers)
+			'result' => ResponseRepository::saveResponse($answers)
 		];
 
 	}

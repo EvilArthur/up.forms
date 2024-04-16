@@ -613,9 +613,6 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onSaveButtonClickHandler",
 	    value: function onSaveButtonClickHandler() {
-	      var data = {
-	        'settings': this.settings.getData()
-	      };
 	      console.log(data);
 	    }
 	  }]);

@@ -7,7 +7,7 @@ export class Options
 		this.layout = {};
 		this.options = options;
 		this.type = null;
-		this.selectedValue = null;
+		this.subAnswer = [];
 
 	}
 
@@ -15,7 +15,7 @@ export class Options
 	{
 		const wrap = Tag.render`
 		<div class="container">
-			${this.options.map((option) => this.renderButton(option.ID, option.Value, this.type))}
+			${this.options.map((option) => this.renderButton(option.ID, option.TITLE, this.type))}
 			${this.renderClearButton()}
 		</div>`;
 		this.layout.wrap?.replaceWith(wrap);
@@ -51,12 +51,12 @@ export class Options
 
 	onClearRadioButtonClickHandler()
 	{
-		this.selectedValue = null;
+		this.subAnswer = [];
 		this.render();
 	}
 
 	getAnswer()
 	{
-		return this.selectedValue;
+		return this.subAnswer;
 	}
 }

@@ -4,7 +4,7 @@ export class ShortText
 {
 	constructor()
 	{
-		this.selectedValue = null;
+		this.subAnswer = [];
 	}
 
 	render()
@@ -18,11 +18,11 @@ export class ShortText
 
 	onChangeHandler(event)
 	{
-		this.selectedValue = event.target.value;
+		this.subAnswer = [event.target.value];
 	}
 
 	getAnswer()
 	{
-		return this.selectedValue;
+		return this.subAnswer;
 	}
 }

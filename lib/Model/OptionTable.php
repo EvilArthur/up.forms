@@ -58,10 +58,6 @@ class OptionTable extends DataManager
 			),
 			(new ManyToMany('QUESTION', QuestionTable::class))
 				->configureTableName('up_question_option')
-				->configureLocalPrimary('ID', 'OPTION_ID')
-				->configureLocalReference('options')
-				->configureRemotePrimary('ID', 'QUESTION_ID')
-				->configureRemoteReference('question')
 				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW)
 		];
 	}

@@ -103,8 +103,8 @@ this.BX.Up = this.BX.Up || {};
 	    value: function getData() {
 	      if (this.isDeleted) return null;
 	      return {
-	        ID: this.id,
-	        Value: this.labelObject.value
+	        'ID': this.id,
+	        'TITLE': this.labelObject.value
 	      };
 	    }
 	  }]);
@@ -118,7 +118,7 @@ this.BX.Up = this.BX.Up || {};
 	    this.layout = {};
 	    this.options = options;
 	    this.type = null;
-	    this.selectedValue = null;
+	    this.subAnswer = [];
 	  }
 	  babelHelpers.createClass(Options, [{
 	    key: "render",
@@ -126,7 +126,7 @@ this.BX.Up = this.BX.Up || {};
 	      var _this = this,
 	        _this$layout$wrap;
 	      var wrap = main_core.Tag.render(_templateObject$2 || (_templateObject$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t<div class=\"container\">\n\t\t\t", "\n\t\t\t", "\n\t\t</div>"])), this.options.map(function (option) {
-	        return _this.renderButton(option.ID, option.Value, _this.type);
+	        return _this.renderButton(option.ID, option.TITLE, _this.type);
 	      }), this.renderClearButton());
 	      (_this$layout$wrap = this.layout.wrap) === null || _this$layout$wrap === void 0 ? void 0 : _this$layout$wrap.replaceWith(wrap);
 	      this.layout.wrap = wrap;
@@ -154,13 +154,13 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onClearRadioButtonClickHandler",
 	    value: function onClearRadioButtonClickHandler() {
-	      this.selectedValue = null;
+	      this.subAnswer = [];
 	      this.render();
 	    }
 	  }, {
 	    key: "getAnswer",
 	    value: function getAnswer() {
-	      return this.selectedValue;
+	      return this.subAnswer;
 	    }
 	  }]);
 	  return Options;
@@ -178,7 +178,7 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(Radio, [{
 	    key: "onButtonChangeHandler",
 	    value: function onButtonChangeHandler(event) {
-	      this.selectedValue = event.target.value;
+	      this.subAnswer = [event.target.value];
 	    }
 	  }]);
 	  return Radio;
@@ -188,7 +188,7 @@ this.BX.Up = this.BX.Up || {};
 	var ShortText = /*#__PURE__*/function () {
 	  function ShortText() {
 	    babelHelpers.classCallCheck(this, ShortText);
-	    this.selectedValue = null;
+	    this.subAnswer = [];
 	  }
 	  babelHelpers.createClass(ShortText, [{
 	    key: "render",
@@ -200,12 +200,12 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onChangeHandler",
 	    value: function onChangeHandler(event) {
-	      this.selectedValue = event.target.value;
+	      this.subAnswer = [event.target.value];
 	    }
 	  }, {
 	    key: "getAnswer",
 	    value: function getAnswer() {
-	      return this.selectedValue;
+	      return this.subAnswer;
 	    }
 	  }]);
 	  return ShortText;
@@ -217,7 +217,6 @@ this.BX.Up = this.BX.Up || {};
 	    var _this;
 	    babelHelpers.classCallCheck(this, Checkbox);
 	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Checkbox).call(this, options));
-	    _this.selectedValue = [];
 	    _this.type = 'checkbox';
 	    return _this;
 	  }
@@ -225,11 +224,11 @@ this.BX.Up = this.BX.Up || {};
 	    key: "onButtonChangeHandler",
 	    value: function onButtonChangeHandler(event) {
 	      if (event.target.checked) {
-	        this.selectedValue.push(event.target.value);
+	        this.subAnswer.push(event.target.value);
 	      } else {
-	        var index = this.selectedValue.indexOf(event.target.value);
+	        var index = this.subAnswer.indexOf(event.target.value);
 	        if (index !== -1) {
-	          this.selectedValue.splice(index, 1);
+	          this.subAnswer.splice(index, 1);
 	        }
 	      }
 	    }
@@ -276,8 +275,8 @@ this.BX.Up = this.BX.Up || {};
 	    key: "getAnswer",
 	    value: function getAnswer() {
 	      return {
-	        'id': this.id,
-	        'answer': this.field.getAnswer()
+	        'ID': this.id,
+	        'SUBANSWER': this.field.getAnswer()
 	      };
 	    }
 	  }]);
@@ -361,8 +360,8 @@ this.BX.Up = this.BX.Up || {};
 	              this.formData = _context.sent;
 	              this.isLoading = false;
 	              console.log(this.formData);
-	              this.formData.Chapter[0].Question.map(function (questionData) {
-	                var question = new Question(questionData.Chapter_ID, questionData.Field_ID, questionData.ID, questionData.Position, questionData.Title, questionData.Options);
+	              this.formData.CHAPTER[0].QUESTION.map(function (questionData) {
+	                var question = new Question(questionData.CHAPTER_ID, questionData.FIELD_ID, questionData.ID, questionData.POSITION, questionData.TITLE, questionData.OPTION);
 	                _this.questions.push(question);
 	              });
 	              console.log(this.questions);
@@ -392,7 +391,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (this.isLoading) {
 	        wrap = main_core.Tag.render(_templateObject$5 || (_templateObject$5 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container d-flex justify-content-center\">\n\t\t\t\t<div class=\"spinner-border\" style=\"width: 3rem; height: 3rem;\" role=\"status\">\n\t\t\t\t\t<span class=\"sr-only\"></span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t"])));
 	      } else {
-	        wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>\n\t\t"])), this.formData.Title, this.renderQuestionList(), this.renderSubmitButton());
+	        wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>\n\t\t"])), this.formData.TITLE, this.renderQuestionList(), this.renderSubmitButton());
 	      }
 	      (_this$layout$form = this.layout.form) === null || _this$layout$form === void 0 ? void 0 : _this$layout$form.replaceWith(wrap);
 	      this.layout.form = wrap;
@@ -419,9 +418,14 @@ this.BX.Up = this.BX.Up || {};
 	      var answers = this.questions.map(function (question) {
 	        return question.getAnswer();
 	      });
-	      console.log(answers);
-	      return;
-	      FormManager.saveAnswerData(answers).then(function (response) {
+	      var data = {
+	        'FORM_ID': this.id,
+	        'USER_ID': 1,
+	        'TRY_NUMBER': 1,
+	        'ANSWER': answers
+	      };
+	      console.log(data);
+	      FormManager.saveAnswerData(data).then(function (response) {
 	        BX.SidePanel.Instance.close();
 	        console.log(response);
 	      })["catch"](function (error) {

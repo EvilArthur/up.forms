@@ -10,6 +10,6 @@ export class Radio extends Options
 
 	onButtonChangeHandler(event)
 	{
-		this.selectedValue = event.target.value;
+		this.subAnswer = [event.target.value];
 	}
 }

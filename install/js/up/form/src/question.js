@@ -54,8 +54,8 @@ export class Question
 	getAnswer()
 	{
 		return {
-			'id': this.id,
-			'answer': this.field.getAnswer(),
+			'ID': this.id,
+			'SUBANSWER': this.field.getAnswer(),
 		};
 	}
 }

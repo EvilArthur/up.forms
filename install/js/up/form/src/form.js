@@ -25,11 +25,11 @@ export class Form
 				this.formData = await FormManager.getFormData(this.id);
 				this.isLoading = false;
 				console.log(this.formData);
-				this.formData.Chapter[0].Question.map((questionData) => {
+				this.formData.CHAPTER[0].QUESTION.map((questionData) => {
 					const question = new Question(
-						questionData.Chapter_ID, questionData.Field_ID,
-						questionData.ID, questionData.Position,
-						questionData.Title, questionData.Options);
+						questionData.CHAPTER_ID, questionData.FIELD_ID,
+						questionData.ID, questionData.POSITION,
+						questionData.TITLE, questionData.OPTION);
 
 					this.questions.push(question);
 				});
@@ -60,7 +60,7 @@ export class Form
 		{
 			wrap = Tag.render`
 			<div class="container">
-				<h1 class="text-center mt-5 mb-4">${this.formData.Title}</h1>
+				<h1 class="text-center mt-5 mb-4">${this.formData.TITLE}</h1>
 				${this.renderQuestionList()}
 				${this.renderSubmitButton()}
 			</div>
@@ -98,9 +98,14 @@ export class Form
 		const answers = this.questions.map((question) => {
 			return question.getAnswer();
 		})
-		console.log(answers)
-		return;
-		FormManager.saveAnswerData(answers)
+		const data = {
+			'FORM_ID': this.id,
+			'USER_ID': 1,
+			'TRY_NUMBER': 1,
+			'ANSWER': answers,
+		}
+		console.log(data)
+		FormManager.saveAnswerData(data)
 			.then((response) => {
 				BX.SidePanel.Instance.close();
 				console.log(response);
