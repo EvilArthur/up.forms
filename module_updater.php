@@ -32,7 +32,7 @@ __formsMigrate(2, function($updater, $DB)
 	{
 		$DB->query
 		("
-			INSERT INTO up_field (VALUE)
+			INSERT INTO up_field (TITLE)
 			VALUES('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_1'),
 				   ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_2'),
 				   ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_3');

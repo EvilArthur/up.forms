@@ -1,12 +1,12 @@
 CREATE TABLE up_field (
 	                      ID int not null auto_increment,
-	                      VALUE varchar(300),
+	                      TITLE varchar(300),
 	                      PRIMARY KEY (ID)
 );
 
 CREATE TABLE up_option (
 	                       ID int not null auto_increment,
-	                       VALUE varchar(300),
+	                       TITLE varchar(300),
 	                       PRIMARY KEY (ID)
 );
 

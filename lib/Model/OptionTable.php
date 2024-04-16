@@ -51,7 +51,7 @@ class OptionTable extends DataManager
 					]
 			),
 			new StringField(
-				'VALUE', [
+				'TITLE', [
 						   'validation' => [__CLASS__, 'validateValue'],
 						   'title' => Loc::getMessage('OPTION_ENTITY_VALUE_FIELD'),
 					   ]

@@ -50,7 +50,7 @@ class FieldTable extends DataManager
 				]
 			),
 			new StringField(
-				'VALUE',
+				'TITLE',
 				[
 					'validation' => function()
 					{
