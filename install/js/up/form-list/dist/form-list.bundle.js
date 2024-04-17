@@ -40,14 +40,19 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "deleteForm",
 	    value: function deleteForm(formId) {
-	      var _this3 = this;
-	      console.log(formId);
-	      BX.ajax.runAction('up:forms.form.deleteForm', {
-	        data: {
-	          id: formId
+	      BX.ready(function () {
+	        var _BX$Main$gridManager$2,
+	          _this3 = this;
+	        var grid = (_BX$Main$gridManager$2 = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$2 === void 0 ? void 0 : _BX$Main$gridManager$2.instance;
+	        if (main_core.Type.isObject(grid)) {
+	          BX.ajax.runAction('up:forms.form.deleteForm', {
+	            data: {
+	              id: formId
+	            }
+	          }).then(function () {
+	            return _this3.reload();
+	          });
 	        }
-	      }).then(function () {
-	        return _this3.reload();
 	      });
 	    }
 	  }, {
@@ -74,8 +79,8 @@ this.BX.Up = this.BX.Up || {};
 	    key: "reload",
 	    value: function reload() {
 	      BX.ready(function () {
-	        var _BX$Main$gridManager$2;
-	        var grid = (_BX$Main$gridManager$2 = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$2 === void 0 ? void 0 : _BX$Main$gridManager$2.instance;
+	        var _BX$Main$gridManager$3;
+	        var grid = (_BX$Main$gridManager$3 = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$3 === void 0 ? void 0 : _BX$Main$gridManager$3.instance;
 	        if (main_core.Type.isObject(grid)) {
 	          grid.reload();
 	        }

@@ -16,6 +16,12 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 Toolbar::addFilter($arResult['FILTER_PARAMS']);
 
 $APPLICATION->IncludeComponent(
+	"bitrix:main.ui.filter",
+	"",
+	$arResult['FILTER_PARAMS']
+);
+
+$APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',
 	'',
 	[

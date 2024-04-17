@@ -6,7 +6,8 @@ use Up\Forms\Service\FormManager;
 
 return function (RoutingConfigurator $routes) {
 
-	$routes->get('/forms/', new PublicPageController('/local/modules/up.forms/views/main.php'));
+	$routes->any('/forms/', new PublicPageController('/local/modules/up.forms/views/main.php'));
+	// $routes->get('/forms/', new PublicPageController('/local/modules/up.forms/views/main.php'));
 
 	$routes->get('/test/', new PublicPageController('/local/modules/up.forms/views/test.php'));
 

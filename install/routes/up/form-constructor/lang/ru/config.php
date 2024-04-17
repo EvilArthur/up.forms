@@ -1,4 +1,0 @@
-<?php
-$MESS['UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_1'] = 'Текстовый ввод';
-$MESS['UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_2'] = 'Один из списка';
-$MESS['UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_3'] = 'Несколько из списка';

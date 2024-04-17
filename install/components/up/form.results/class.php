@@ -79,9 +79,9 @@ class FormResultsComponent extends CBitrixComponent
 			'OFFSET' => $nav->getOffset(),
 		];
 
-		$answers = ResponseRepository::getAnswersByFormId($this->arParams['ID'], $filter);
-		$rows = AnswerManager::prepareAnswersForGrid($answers, $this->arParams['NUM_OF_ITEMS_PER_PAGE']);
-		$nav->setRecordCount($nav->getOffset() + count($answers));
+		$responses = ResponseRepository::getResponsesByFormId($this->arParams['ID'], $filter);
+		$rows = AnswerManager::prepareResponsesForGrid($responses, $this->arParams['NUM_OF_ITEMS_PER_PAGE']);
+		$nav->setRecordCount($nav->getOffset() + count($responses));
 
 		$this->arResult['ROWS'] = $rows;
 		$this->arResult['NAV_OBJECT'] = $nav;

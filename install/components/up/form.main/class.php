@@ -21,7 +21,6 @@ class FormMainComponent extends CBitrixComponent
 			\CPullWatch::Add($USER->GetID(), 'FORMS-UPDATE');
 		}
 		$this->fetchAddButton();
-		$this->fetchActionPanel();
 
 		$this->fetchGridColumns();
 		$this->fetchFilterParams();
@@ -36,7 +35,10 @@ class FormMainComponent extends CBitrixComponent
 		$arParams['FILTER_ID'] = 'FORMS_LIST_GRID_FILTER';
 		$arParams['NAVIGATION_ID'] = 'FORMS_LIST_GRID_NAVIGATION';
 		$arParams['NUM_OF_ITEMS_PER_PAGE'] = 10;
-		$arParams['FILTERS'] = [['id' => 'Title', 'name' => 'Название формы']];
+		$arParams['FILTERS'] = [
+			['id' => 'TITLE', 'name' => 'Название формы'],
+		];
+		$arParams['ACTION_PANEL'] = $this->fetchActionPanel();
 		return $arParams;
 	}
 
@@ -67,7 +69,7 @@ class FormMainComponent extends CBitrixComponent
 			]
 		);
 
-		$this->arResult['ACTION_PANEL'] = [
+		return [
 			'GROUPS' => [
 				'TYPE' => [
 					'ITEMS' => [
@@ -87,7 +89,7 @@ class FormMainComponent extends CBitrixComponent
 	protected function fetchGridColumns()
 	{
 		$this->arResult['COLUMNS'] = [
-			['id' => 'Title', 'name' => 'Название формы', 'sort' => 'Title', 'default' => true],
+			['id' => 'TITLE', 'name' => 'Название формы', 'sort' => 'Title', 'default' => true],
 			['id' => 'DATE_CREATE', 'name' => 'Создано', 'default' => true],
 			['id' => 'STATUS', 'name' => 'Статус', 'default' => true],
 			['id' => 'USER_NAME', 'name' => 'Создал', 'default' => true],
@@ -109,8 +111,7 @@ class FormMainComponent extends CBitrixComponent
 	{
 		$gridOptions = new GridOptions($this->arParams['GRID_ID']);
 		$filterOptions = new FilterOptions($this->arParams['FILTER_ID']);
-		// $filterFields = $filterOptions->getFilter($this->arParams['FILTERS']);
-
+		$filterFields = $filterOptions->getFilter($this->arParams['FILTERS']);
 
 		$nav = new PageNavigation($this->arParams['NAVIGATION_ID']);
 		$nav->allowAllRecords(false)
@@ -120,6 +121,7 @@ class FormMainComponent extends CBitrixComponent
 		$filter = [
 			'LIMIT' => $nav->getLimit() + 1,
 			'OFFSET' => $nav->getOffset(),
+			'TITLE' => $filterFields['TITLE'],
 		];
 
 		$forms = FormRepository::getForms($filter);

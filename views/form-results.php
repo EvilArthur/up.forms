@@ -9,11 +9,11 @@ if (isset($_REQUEST['IFRAME']) && $_REQUEST['IFRAME'] == 'Y')
 	$APPLICATION->IncludeComponent(
 		'up:slider.wrapper',
 		'',
-		array(
+		[
 			'COMPONENT_NAME' => 'up:form.results',
 			'COMPONENT_TEMPLATE_NAME' => '',
 			'COMPONENT_PARAMS' => $componentParameters,
-		)
+		]
 	);
 }
 else

@@ -160,10 +160,12 @@ class FormRepository
 							->fetchAll();
 		}
 		return FormTable::query()
-						  ->setSelect(['ID', 'TITLE',])
-						  ->setLimit($filter['LIMIT'])
-						  ->setOffset($filter['OFFSET'])
-						  ->fetchAll();
+						->setSelect(['ID', 'TITLE',])
+						->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
+						->setLimit($filter['LIMIT'])
+						->setOffset($filter['OFFSET'])
+						->fetchAll();
+
 	}
 
 	public static function deleteForm(int $id): void

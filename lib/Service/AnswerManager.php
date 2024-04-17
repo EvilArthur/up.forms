@@ -2,37 +2,35 @@
 namespace Up\Forms\Service;
 
 use Bitrix\Main\UserTable;
+use Up\Forms\Model\EO_Subanswer;
 
 class AnswerManager
 {
-	public static function prepareAnswersForGrid($answers, int $countOfItemsOnPage)
+	public static function prepareResponsesForGrid($responses, int $countOfItemsOnPage)
 	{
 		$rows = [];
-		$userAnswers = [];
 
-		foreach ($answers as $answer)
+		foreach ($responses as $response)
 		{
-			$userId = $answer->getUserId();
-			$questionId = $answer->getQuestionId();
-			$userAnswer = $answer->getAnswer();
-
-			if (!isset($userAnswers[$userId]))
+			$row = [];
+			$row['USER'] = UserTable::getByPrimary(1)->fetchObject()->getName();
+			foreach ($response->getAnswer() as $answer)
 			{
-				$userAnswers[$userId] = [];
+				foreach ($answer->getSubanswer() as $subAnswer)
+				{
+					$row[$answer->getQuestionId()] .= $subAnswer->getValue();
+				}
 			}
 
-			$userAnswers[$userId][$questionId] = $userAnswer;
-		}
-		foreach ($userAnswers as $userId => $answers)
-		{
-			//TODO Убрать Получение пользователей из цикла
-			$answers['USER'] = UserTable::getByPrimary(1)->fetchObject()->getName();
-			$row = [
-				'id' => (int)$userId,
-				'columns' => $answers
+			$rows[] = [
+				'id' => (int)$response->getId(),
+				'columns' => $row
 			];
-			$rows[] = $row;
 		}
+
+
+
+
 		if (count($rows) > $countOfItemsOnPage)
 		{
 			array_pop($rows);

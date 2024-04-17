@@ -1,6 +1,9 @@
 <?php
 namespace Up\Forms\Repository;
 
+use Bitrix\Main\ORM\Query\Query;
+
+use Bitrix\Main\ORM\Query\QueryHelper;
 use Up\Forms\Model\AnswerTable;
 use Up\Forms\Model\FormTable;
 use Up\Forms\Model\ResponseTable;
@@ -30,32 +33,32 @@ Class ResponseRepository
 		return  $result->getErrors();
 	}
 
-	public static function getAnswersByFormId(int $id, array $filter = null)
+	public static function getResponsesByFormId(int $id, array $filter = null)
 	{
-		// if ($filter === null)
-		// {
-		// 	// $a =  FormTable::query()
-		// 	// 	->addSelect(['*', 'Chapter'])
-		// 	// 	->addSelect(['*', 'Question'])->exec();
-		// 	// $b = 0;
+		$query = new Query(ResponseTable::getEntity());
+
+		$query->addSelect('ANSWER');
+		$query->addSelect('ANSWER.SUBANSWER');
+		$query->setFilter(['=FORM_ID' => $id]);
+		$query->setLimit($filter['LIMIT']);
+		$query->setOffset($filter['OFFSET']);
+		$result = QueryHelper::decompose($query);
+
+		// $form = FormTable::getByPrimary(
+		// 	$id,
+		// 	[
+		// 		'select' =>
+		// 			[
+		// 				'TITLE',
+		// 				'RESPONSE',
+		// 				'RESPONSE.ANSWER',
+		// 				'RESPONSE.ANSWER.SUBANSWER'
+		// 			],
 		//
-		// }
-		return FormTable::getByPrimary($id)->fetchObject()->fillChapter()->fillQuestion()->fillAnswer();
+		//
+		// 	]
+		// )->fetchObject()->collectValues(recursive: true);
+
+		return $result;
 	}
 }
-
-/*
-[
-    {
-		"id": 32,
-        "answer": "123"
-    },
-    {
-		"id": 33,
-        "answer": "321"
-    },
-    {
-		"id": 34,
-        "answer": "14"
-    }
-]*/

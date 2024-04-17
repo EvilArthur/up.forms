@@ -12,7 +12,7 @@ class FormManager
 			$rows[] = [
 				'id' => (int)$form['ID'],
 				'columns' => [
-					'Title' => $form['Title'],
+					'TITLE' => $form['TITLE'],
 					'DATE_CREATE' => '2022-01-01',
 					'STATUS' => 'Active',
 					'USER_NAME' => 'Супер Админ'
@@ -36,6 +36,11 @@ class FormManager
 					[
 						'text' => 'Results',
 						'onclick' => 'FormList.showResults(' . $form['ID'] . ')',
+						'default' => true,
+					],
+					[
+						'text' => 'Reload page',
+						'onclick' => 'FormList.reload()',
 						'default' => true,
 					],
 				],
