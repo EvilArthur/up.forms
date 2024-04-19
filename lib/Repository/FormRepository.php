@@ -1,5 +1,4 @@
 <?php
-
 namespace Up\Forms\Repository;
 
 use Up\Forms\Model\ChapterTable;
@@ -15,8 +14,9 @@ class FormRepository
 		\db()->startTransaction();
 		try
 		{
+			global $USER;
 			$form = FormTable::createObject();
-			$form->setCreatorId(1);
+			$form->setCreatorId($USER->GetID());
 			$form->setTitle($formData['TITLE']);
 			foreach ($formData['CHAPTER'] as $chapterData)
 			{
@@ -168,19 +168,22 @@ class FormRepository
 		])->fetchObject();
 
 		return $form;
-		/*$form = FormTable::getById($id)->fetchObject();
-		$form->fillChapter()->fillQuestion()->fillOptions();
-		return $form;*/
 	}
 
 	public static function getForms(array $filter = null): array
 	{
 		if ($filter === null)
 		{
-			return FormTable::query()->setSelect(['ID', 'TITLE',])->fetchAll();
+			return FormTable::query()
+							->setSelect(['ID', 'TITLE', 'CREATOR_ID'])
+							->fetchAll();
 		}
-
-		return FormTable::query()->setSelect(['ID', 'TITLE',])->setLimit($filter['LIMIT'])->setOffset($filter['OFFSET'])
+		return FormTable::query()
+						->setSelect(['ID', 'TITLE', 'CREATOR_ID'])
+						->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
+						->whereIn('CREATOR_ID', $filter['USERS'])
+						->setLimit($filter['LIMIT'])
+						->setOffset($filter['OFFSET'])
 						->fetchAll();
 	}
 

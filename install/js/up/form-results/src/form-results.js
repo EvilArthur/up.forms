@@ -1,11 +1,69 @@
-import { Loc, Tag, Event } from 'main.core';
+import { Type } from 'main.core';
 
 export class FormResults
 {
 	constructor(options = {})
 	{
-		this.id = options.id;
-		console.log(this.id);
+		this.gridId = options.gridId;
+	}
+
+	deleteResponses()
+	{
+		const gridId = this.gridId;
+		BX.ready(async function()
+		{
+			const grid = BX.Main.gridManager.getById(gridId)?.instance;
+			if (Type.isObject(grid))
+			{
+				const rowsCollectionWrapper: BX.Grid.Rows = grid.getRows();
+				const selectedRowsIdsList: Array = rowsCollectionWrapper.getSelectedIds();
+				await BX.ajax.runAction(
+					'up:forms.response.deleteResponses',
+					{
+						data:
+							{
+								ids: selectedRowsIdsList,
+							},
+					},
+				)
+			}
+		});
+		this.reload();
+	}
+
+	deleteResponse(responseId)
+	{
+		const gridId = this.gridId;
+		BX.ready(async function()
+		{
+			const grid = BX.Main.gridManager.getById(gridId)?.instance;
+			if (Type.isObject(grid))
+			{
+				await BX.ajax.runAction(
+					'up:forms.response.deleteResponse',
+					{
+						data:
+							{
+								id: responseId,
+							},
+					},
+				)
+			}
+		});
+		this.reload();
+	}
+
+	reload()
+	{
+		const gridId = this.gridId;
+		BX.ready(function()
+		{
+			const grid = BX.Main.gridManager.getById(gridId)?.instance;
+			if (Type.isObject(grid))
+			{
+				grid.reload();
+			}
+		});
 	}
 
 }

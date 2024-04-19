@@ -1,6 +1,4 @@
-import { Event, Loc, Tag, Type } from 'main.core';
-import { GridManager, Grid } from 'main.ui.grid';
-
+import { Type } from 'main.core';
 export class FormList
 {
 	constructor(options = {})
@@ -31,7 +29,7 @@ export class FormList
 							ids: selectedRowsIdsList,
 						},
 					},
-				).then(() => this.reload());
+				)
 			}
 		})
 
@@ -39,15 +37,21 @@ export class FormList
 
 	deleteForm(formId)
 	{
-		console.log(formId);
-		BX.ajax.runAction(
-			'up:forms.form.deleteForm',
+		BX.ready(function()
+		{
+			const grid = BX.Main.gridManager.getById('FORMS_LIST_GRID')?.instance;
+			if (Type.isObject(grid))
 			{
-				data: {
-					id: formId,
-				},
-			},
-			).then(() => this.reload());
+				BX.ajax.runAction(
+					'up:forms.form.deleteForm',
+					{
+						data: {
+							id: formId,
+						},
+					},
+				)
+			}
+		})
 	}
 
 	openForm(formId)

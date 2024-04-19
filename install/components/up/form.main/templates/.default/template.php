@@ -34,6 +34,7 @@ $APPLICATION->IncludeComponent(
 		'SHOW_SELECTED_COUNTER'     => true,
 		'SHOW_TOTAL_COUNTER'        => false,
 		'SHOW_ACTION_PANEL'         => true,
+		'SHOW_GROUP_DELETE_BUTTON'  => true,
 		'ALLOW_COLUMNS_RESIZE'      => true,
 		'ALLOW_HORIZONTAL_SCROLL'   => true,
 		'ALLOW_PIN_HEADER'          => true,
@@ -47,11 +48,6 @@ $APPLICATION->IncludeComponent(
 		'ALLOW_SORT'                => true,
 		'ALLOW_COLUMNS_SORT'        => true,
 
-		// 'NAV_PARAM_NAME'
-		// 'CURRENT_PAGE'
-		// 'ENABLE_NEXT_PAGE'
-		// 'TOTAL_ROWS_COUNT'
-		// 'DEFAULT_PAGE_SIZE'
 	]
 );
 ?>
