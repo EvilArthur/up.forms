@@ -4,6 +4,23 @@ class FormComponent extends CBitrixComponent
 {
 	public function executeComponent()
 	{
+		$now = new DateTime();
+		$this->fetchLastTry();
+		$this->fetchFormSettings();
+		$this->prepareTemplateParams();
+		if (!is_null($this->arResult['max_try']) && $this->arResult['try'] >= $this->arResult['max_try'])
+		{
+			$this->setTemplateName('max.try');
+		}
+		if (!is_null($this->arResult['startTestTime']) && $now < $this->arResult['startTestTime'])
+		{
+			$this->setTemplateName('not.ready');
+		}
+		else if (!is_null($this->arResult['endTestTime']) && $now > $this->arResult['endTestTime'])
+		{
+			$this->setTemplateName('closed');
+		}
+
 		$this->includeComponentTemplate();
 	}
 
@@ -16,5 +33,40 @@ class FormComponent extends CBitrixComponent
 			$response->setStatus('404');
 		}
 		return $arParams;
+	}
+
+	protected function prepareTemplateParams()
+	{
+		$startTestTime = $this->arResult['settings']
+							->getByPrimary(['SETTINGS_ID' => 1, 'FORM_ID' => $this->arParams['ID']])
+							->getValue();
+		$this->arResult['startTestTime'] = $startTestTime === '' ? null : new DateTime($startTestTime);
+
+		$endTestTime = $this->arResult['settings']
+			->getByPrimary(['SETTINGS_ID' => 2, 'FORM_ID' => $this->arParams['ID']])
+			->getValue();
+		$this->arResult['endTestTime'] = $endTestTime === '' ? null : new DateTime($endTestTime);
+
+		$maxTry = $this->arResult['settings']
+			->getByPrimary(['SETTINGS_ID' => 5, 'FORM_ID' => $this->arParams['ID']])
+			->getValue();
+		$this->arResult['max_try'] = $maxTry === '' ? null : (int) $maxTry;
+
+		$timer = $this->arResult['settings']
+			->getByPrimary(['SETTINGS_ID' => 3, 'FORM_ID' => $this->arParams['ID']])
+			->getValue();
+		$this->arResult['timer'] = $timer === '' ? null : $timer;
+ 	}
+
+	protected function fetchFormSettings()
+	{
+		$settings = \Up\Forms\Repository\FormRepository::getFormSettings($this->arParams['ID']);
+		$this->arResult['settings'] = $settings;
+	}
+
+	protected function fetchLastTry()
+	{
+		$try = \Up\Forms\Repository\ResponseRepository::getLastTry($this->arParams['ID']);
+		$this->arResult['try'] = (int) $try;
 	}
 }

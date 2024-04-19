@@ -2,6 +2,7 @@
 namespace Up\Forms\Repository;
 
 use Up\Forms\Model\ChapterTable;
+use Up\Forms\Model\EO_FormFormSettings_Collection;
 use Up\Forms\Model\FormFormSettingsTable;
 use Up\Forms\Model\FormTable;
 use Up\Forms\Model\OptionTable;
@@ -203,6 +204,20 @@ class FormRepository
 		{
 			self::deleteForm($id);
 		}
+	}
+
+	public static function getFormSettings(int $id): EO_FormFormSettings_Collection
+	{
+		$settings = \Up\Forms\Model\FormFormSettingsTable::getByPrimary(['FORM_ID' => $id])->fetchCollection();
+		return $settings;
+	}
+
+	public static function getMaxNumberOfTry(int $id): ?int
+	{
+		$setting = FormFormSettingsTable::getByPrimary(['FORM_ID' => $id, 'SETTINGS_ID' => 5])->fetchObject();
+		$maxTry = $setting->getValue() === '' ? null : (int) $setting->getValue();
+
+		return $maxTry;
 	}
 }
 

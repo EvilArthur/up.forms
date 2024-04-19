@@ -14,11 +14,19 @@ Class ResponseRepository
 {
 	public static function saveResponse($responseData)
 	{
+
 		global $USER;
+		db()->lock('saveAnswer', 30);
+		$try = self::getLastTry($responseData['FORM_ID']);
+		$maxTry = FormRepository::getMaxNumberOfTry($responseData['FORM_ID']);
+		if (!is_null($maxTry) && $try >= $maxTry)
+		{
+			return ['Все попытки потрачены'];
+		}
 		$response = ResponseTable::createObject();
 		$response->setUserId($USER->GetID());
 		$response->setFormId($responseData['FORM_ID']);
-		$response->setTryNumber($responseData['TRY_NUMBER']);
+		$response->setTryNumber($try + 1);
 		foreach ($responseData['ANSWER'] as $answerData)
 		{
 			$answer = AnswerTable::createObject();
@@ -32,6 +40,7 @@ Class ResponseRepository
 			$response->addToAnswer($answer);
 		}
 		$result = $response->save();
+		db()->unlock('saveAnswer');
 		return  $result->getErrors();
 	}
 
@@ -68,5 +77,15 @@ Class ResponseRepository
 		{
 			self::deleteResponse($id);
 		}
+	}
+
+	public static function getLastTry($formID)
+	{
+		global $USER;
+		$try = ResponseTable::getList(['select' => ['LAST_TRY'],
+									   'filter' => ['USER_ID' => $USER->GetID(),
+										   			'FORM_ID' => $formID]]);
+		return $try->fetchAll()[0]['LAST_TRY'];
+
 	}
 }

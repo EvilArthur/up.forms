@@ -1,6 +1,7 @@
 <?php
 namespace Up\Forms\Model;
 
+use Bitrix\Main\Entity\ExpressionField;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\IntegerField;
@@ -80,6 +81,8 @@ class ResponseTable extends DataManager
 			(new OneToMany(
 				'ANSWER', AnswerTable::class, 'RESPONSE'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
+
+			(new ExpressionField('LAST_TRY', 'MAX(%s)', ['TRY_NUMBER']))
 		];
 	}
 }
