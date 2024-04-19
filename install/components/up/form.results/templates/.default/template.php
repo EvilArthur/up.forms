@@ -13,13 +13,15 @@ Extension::load('up.form-results');
 \CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
+if ($arParams['IS_SLIDER'] === 'Y')
+{
+	$APPLICATION->IncludeComponent(
+		'bitrix:ui.toolbar',
+		'',
+		[]
+	);
+}
 Toolbar::addFilter($arResult['FILTER_PARAMS']);
-
-$APPLICATION->IncludeComponent(
-	"bitrix:main.ui.filter",
-	"",
-	$arResult['FILTER_PARAMS']
-);
 
 $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',
@@ -28,6 +30,7 @@ $APPLICATION->IncludeComponent(
 		'GRID_ID' => $arParams['GRID_ID'],
 		'COLUMNS' => $arResult['COLUMNS'],
 		'ROWS' => $arResult['ROWS'],
+		'ACTION_PANEL' => $arResult['ACTION_PANEL'],
 		'AJAX_MODE' => 'Y',
 		'AJAX_OPTION_JUMP' => 'N',
 		'AJAX_OPTION_HISTORY' => 'N',
@@ -38,6 +41,7 @@ $APPLICATION->IncludeComponent(
 		'SHOW_SELECTED_COUNTER'     => true,
 		'SHOW_TOTAL_COUNTER'        => false,
 		'SHOW_ACTION_PANEL'         => true,
+		'SHOW_GROUP_DELETE_BUTTON'  => true,
 		'ALLOW_COLUMNS_RESIZE'      => true,
 		'ALLOW_HORIZONTAL_SCROLL'   => true,
 		'ALLOW_PIN_HEADER'          => true,
@@ -61,7 +65,8 @@ $APPLICATION->IncludeComponent(
 	BX.ready(function() {
 		window.FormResults = new BX.Up.Forms.FormResults({
 			container: document.getElementById('main-container'),
-			id: <?=$arParams['ID']?>
+			gridId: "<?=$arParams['GRID_ID']?>",
+
 		});
 	});
 </script>

@@ -19,8 +19,9 @@ class FormRepository
 		\db()->startTransaction();
 		try
 		{
+			global $USER;
 			$form = FormTable::createObject();
-			$form->setCreatorId(1);
+			$form->setCreatorId($USER->GetID());
 			$form->setTitle($formData['TITLE']);
 			foreach ($formData['CHAPTER'] as $chapterData)
 			{
@@ -146,9 +147,6 @@ class FormRepository
 		])->fetchObject();
 
 		return $form;
-		/*$form = FormTable::getById($id)->fetchObject();
-		$form->fillChapter()->fillQuestion()->fillOptions();
-		return $form;*/
 	}
 
 	public static function getForms(array $filter = null): array
@@ -156,16 +154,16 @@ class FormRepository
 		if ($filter === null)
 		{
 			return FormTable::query()
-							->setSelect(['ID', 'TITLE',])
+							->setSelect(['ID', 'TITLE', 'CREATOR_ID'])
 							->fetchAll();
 		}
 		return FormTable::query()
-						->setSelect(['ID', 'TITLE',])
+						->setSelect(['ID', 'TITLE', 'CREATOR_ID'])
 						->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
+						->whereIn('CREATOR_ID', $filter['USERS'])
 						->setLimit($filter['LIMIT'])
 						->setOffset($filter['OFFSET'])
 						->fetchAll();
-
 	}
 
 	public static function deleteForm(int $id): void

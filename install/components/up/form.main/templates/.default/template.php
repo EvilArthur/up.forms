@@ -23,7 +23,7 @@ $APPLICATION->IncludeComponent(
 		'GRID_ID' => $arParams['GRID_ID'],
 		'COLUMNS' => $arResult['COLUMNS'],
 		'ROWS' => $arResult['ROWS'],
-		'ACTION_PANEL' => $arParams['ACTION_PANEL'],
+		'ACTION_PANEL' => $arResult['ACTION_PANEL'],
 		'AJAX_MODE' => 'Y',
 		'AJAX_OPTION_JUMP' => 'N',
 		'AJAX_OPTION_HISTORY' => 'N',

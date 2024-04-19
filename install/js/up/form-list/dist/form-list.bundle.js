@@ -1,7 +1,7 @@
 /* eslint-disable */
 this.BX = this.BX || {};
 this.BX.Up = this.BX.Up || {};
-(function (exports,main_core,main_ui_grid) {
+(function (exports,main_core) {
 	'use strict';
 
 	var FormList = /*#__PURE__*/function () {
@@ -21,8 +21,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "deleteForms",
 	    value: function deleteForms() {
 	      BX.ready(function () {
-	        var _BX$Main$gridManager$,
-	          _this2 = this;
+	        var _BX$Main$gridManager$;
 	        var grid = (_BX$Main$gridManager$ = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$ === void 0 ? void 0 : _BX$Main$gridManager$.instance;
 	        if (main_core.Type.isObject(grid)) {
 	          var rowsCollectionWrapper = grid.getRows();
@@ -31,8 +30,6 @@ this.BX.Up = this.BX.Up || {};
 	            data: {
 	              ids: selectedRowsIdsList
 	            }
-	          }).then(function () {
-	            return _this2.reload();
 	          });
 	        }
 	      });
@@ -41,16 +38,13 @@ this.BX.Up = this.BX.Up || {};
 	    key: "deleteForm",
 	    value: function deleteForm(formId) {
 	      BX.ready(function () {
-	        var _BX$Main$gridManager$2,
-	          _this3 = this;
+	        var _BX$Main$gridManager$2;
 	        var grid = (_BX$Main$gridManager$2 = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$2 === void 0 ? void 0 : _BX$Main$gridManager$2.instance;
 	        if (main_core.Type.isObject(grid)) {
 	          BX.ajax.runAction('up:forms.form.deleteForm', {
 	            data: {
 	              id: formId
 	            }
-	          }).then(function () {
-	            return _this3.reload();
 	          });
 	        }
 	      });
@@ -230,4 +224,4 @@ this.BX.Up = this.BX.Up || {};
 
 	exports.FormList = FormList;
 
-}((this.BX.Up.Forms = this.BX.Up.Forms || {}),BX,BX));
+}((this.BX.Up.Forms = this.BX.Up.Forms || {}),BX));

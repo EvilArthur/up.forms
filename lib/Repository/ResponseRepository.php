@@ -1,6 +1,7 @@
 <?php
 namespace Up\Forms\Repository;
 
+use Bitrix\Lists\Api\Response\Response;
 use Bitrix\Main\ORM\Query\Query;
 
 use Bitrix\Main\ORM\Query\QueryHelper;
@@ -13,8 +14,9 @@ Class ResponseRepository
 {
 	public static function saveResponse($responseData)
 	{
+		global $USER;
 		$response = ResponseTable::createObject();
-		$response->setUserId($responseData['USER_ID']);
+		$response->setUserId($USER->GetID());
 		$response->setFormId($responseData['FORM_ID']);
 		$response->setTryNumber($responseData['TRY_NUMBER']);
 		foreach ($responseData['ANSWER'] as $answerData)
@@ -35,30 +37,36 @@ Class ResponseRepository
 
 	public static function getResponsesByFormId(int $id, array $filter = null)
 	{
-		$query = new Query(ResponseTable::getEntity());
 
+		$query = new Query(ResponseTable::getEntity());
 		$query->addSelect('ANSWER');
+		$query->addSelect('USER_ID');
 		$query->addSelect('ANSWER.SUBANSWER');
-		$query->setFilter(['=FORM_ID' => $id]);
+		$query->setFilter(
+			[
+				['=FORM_ID' => $id]
+			]
+		);
+		$query->whereIn('USER_ID', $filter['USERS']);
 		$query->setLimit($filter['LIMIT']);
 		$query->setOffset($filter['OFFSET']);
-		$result = QueryHelper::decompose($query);
 
-		// $form = FormTable::getByPrimary(
-		// 	$id,
-		// 	[
-		// 		'select' =>
-		// 			[
-		// 				'TITLE',
-		// 				'RESPONSE',
-		// 				'RESPONSE.ANSWER',
-		// 				'RESPONSE.ANSWER.SUBANSWER'
-		// 			],
-		//
-		//
-		// 	]
-		// )->fetchObject()->collectValues(recursive: true);
+		return QueryHelper::decompose($query);
+	}
 
-		return $result;
+	public static function deleteResponse(int $id)
+	{
+		$response = ResponseTable::getById($id)->fetchObject();
+		$answers = $response->fillAnswer()->fillSubanswer();
+
+		$response->delete();
+	}
+
+	public static function deleteResponses(array $ids)
+	{
+		foreach ($ids as $id)
+		{
+			self::deleteResponse($id);
+		}
 	}
 }

@@ -19,5 +19,5 @@ return function (RoutingConfigurator $routes) {
 	$routes->get('/form/edit/{id}/', new PublicPageController('/local/modules/up.forms/views/form-create.php'));
 	$routes->get('/form/edit/{id}/done/', new PublicPageController('/local/modules/up.forms/views/form-create-done.php'));
 
-	$routes->get('/form/results/{id}/', new PublicPageController('/local/modules/up.forms/views/form-results.php'));
+	$routes->any('/form/results/{id}/', new PublicPageController('/local/modules/up.forms/views/form-results.php'));
 };

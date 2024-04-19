@@ -1,6 +1,4 @@
-import { Event, Loc, Tag, Type } from 'main.core';
-import { GridManager, Grid } from 'main.ui.grid';
-
+import { Type } from 'main.core';
 export class FormList
 {
 	constructor(options = {})
@@ -31,7 +29,7 @@ export class FormList
 							ids: selectedRowsIdsList,
 						},
 					},
-				).then(() => this.reload());
+				)
 			}
 		})
 
@@ -51,7 +49,7 @@ export class FormList
 							id: formId,
 						},
 					},
-					).then(() => this.reload())
+				)
 			}
 		})
 	}
