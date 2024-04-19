@@ -1,5 +1,6 @@
 <?php
 
+use Bitrix\Main\Config\Option;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ModuleManager;
 
@@ -41,6 +42,7 @@ class up_forms extends CModule
 	{
 		global $DB;
 
+		Option::set('up.forms', '~database_schema_version', 1);
 		$DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . '/local/modules/up.forms/install/db/uninstall.sql');
 
 		ModuleManager::unRegisterModule($this->MODULE_ID);

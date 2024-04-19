@@ -77,6 +77,7 @@ this.BX.Up = this.BX.Up || {};
 	        var _BX$Main$gridManager$2;
 	        var grid = (_BX$Main$gridManager$2 = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$2 === void 0 ? void 0 : _BX$Main$gridManager$2.instance;
 	        if (main_core.Type.isObject(grid)) {
+	          console.log(grid);
 	          grid.reload();
 	        }
 	      });

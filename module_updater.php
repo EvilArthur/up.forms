@@ -28,7 +28,7 @@ function __formsMigrate(int $nextVersion, callable $callback)
 
 __formsMigrate(2, function($updater, $DB)
 {
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists(''))
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_field'))
 	{
 		$DB->query
 		("
@@ -36,6 +36,99 @@ __formsMigrate(2, function($updater, $DB)
 			VALUES('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_1'),
 				   ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_2'),
 				   ('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_TYPE_3');
+		");
+	}
+});
+
+__formsMigrate(3, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_form_form_settings'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_form_form_settings (
+	                        FORM_ID int not null,
+	                        SETTINGS_ID int not null,
+	                        VALUE varchar(30),
+	                        PRIMARY KEY (FORM_ID, SETTINGS_ID)
+			);
+		");
+	}
+});
+
+__formsMigrate(4, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_form_settings'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_form_settings (
+	                        ID int not null auto_increment,
+	                        TITLE varchar(30),
+	                        TYPE_ID int not null,
+	                        PRIMARY KEY (ID)
+			);
+		");
+	}
+});
+
+__formsMigrate(5, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_form_settings_type'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_form_settings_type (
+	                        ID int not null auto_increment,
+	                        TITLE varchar(30),
+	                        PRIMARY KEY (ID)
+			);
+		");
+	}
+});
+
+__formsMigrate(6, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form_settings_type'))
+	{
+		$DB->query
+		("
+			INSERT INTO up_form_settings_type (TITLE)
+			VALUES('datetime-local'),
+				   ('time'),
+				   ('checkbox'),
+				   ('number');
+		");
+	}
+});
+
+__formsMigrate(7, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form_settings_type'))
+	{
+		$DB->query
+		("
+			INSERT INTO up_form_settings_type (TITLE)
+			VALUES('datetime-local'),
+				   ('time'),
+				   ('checkbox'),
+				   ('number');
+		");
+	}
+});
+
+__formsMigrate(8, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form_settings_type'))
+	{
+		$DB->query
+		("
+			INSERT INTO up_form_settings(TITLE, TYPE_ID)
+			VALUES ('Время начала доступа к тесту', '1'),
+				   ('Время конца доступа к тесту', '1'),
+				   ('Таймер на прохождение', '2'),
+				   ('Анонимная форма', '3'),
+				   ('Количество попыток', '4')
 		");
 	}
 });

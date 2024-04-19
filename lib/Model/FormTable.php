@@ -1,6 +1,7 @@
 <?php
 namespace Up\Forms\Model;
 
+use Bitrix\Form\FormSettingsTable;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\IntegerField;
@@ -75,6 +76,10 @@ class FormTable extends DataManager
 				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 			(new OneToMany(
 				'RESPONSE', ResponseTable::class, 'FORM'
+			))
+				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
+			(new OneToMany(
+				'SETTINGS', FormFormSettingsTable::class, 'FORM'
 			))
 				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];

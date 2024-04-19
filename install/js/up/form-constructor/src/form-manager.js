@@ -57,4 +57,21 @@ export class FormManager
 				});
 		});
 	}
+
+	static getSettingsData()
+	{
+		return new Promise((resolve, reject) => {
+			BX.ajax.runAction(
+					'up:forms.FormCreate.getSettingsData')
+				.then((response) => {
+					const result = response.data.result;
+					console.log(result);
+					resolve(result);
+				})
+				.catch((error) => {
+					console.log(error);
+					reject(error);
+				});
+		});
+	}
 }

@@ -5,79 +5,27 @@ import { Question } from './question';
 
 export class Constructor
 {
-	constructor(id)
+	constructor(formData, fieldData)
 	{
-		this.id = id;
 		this.layout = {};
-		this.formData = {
-			CHAPTER: [],
-		};
 		this.titleObject = {value: ''}
-		this.fieldData = [];
+		this.fieldData = fieldData
 		this.questions = [];
-		this.chapters = [];
-		this.isLoading = true;
-		this.loadFormData();
-	}
+		this.formData = formData
 
-	async loadFormData()
-	{
-		this.fieldData = await FormManager.getFieldData();
-		console.log(this.fieldData);
-		if (this.id !== 0)
-		{
-			try
-			{
-				this.formData = await FormManager.getFormData(this.id);
-				this.titleObject.value = this.formData.TITLE
-				this.isLoading = false;
-				this.formData.CHAPTER[0].QUESTION.map((questionData) => {
-					let question = null;
-					console.log(questionData);
-					question = new Question(
-						questionData.CHAPTER_ID, questionData.FIELD_ID,
-						questionData.ID, questionData.POSITION,
-						questionData.TITLE, questionData.OPTION, this.fieldData);
-					this.questions.push(question);
-				});
-				this.layout.wrap = this.render();
-			}
-			catch (error)
-			{
-				console.log(error);
-			}
-		}
-		else
-		{
-			this.formData.CHAPTER[0] = {
-				'TITLE': 'Заголовок раздела',
-				'DESCRIPTION': 'Описание раздела',
-				'POSITION': 1,
-				'QUESTION': [],
-				'ID': null,
-			};
-			this.isLoading = false;
-			this.titleObject.value = 'Новая форма';
-			this.layout.wrap = this.render();
-		}
+		this.titleObject.value = this.formData.TITLE
+		formData.CHAPTER[0].QUESTION.map((questionData) => {
+			const question = new Question(
+				questionData.CHAPTER_ID, questionData.FIELD_ID,
+				questionData.ID, questionData.POSITION,
+				questionData.TITLE, questionData.OPTION, fieldData);
+			this.questions.push(question);
+		});
 	}
 
 	render()
 	{
-		let wrap;
-		if (this.isLoading)
-		{
-			wrap = Tag.render`
-			<div class="container d-flex justify-content-center">
-				<div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-					<span class="sr-only"></span>
-				</div>
-			</div>
-			`;
-		}
-		else
-		{
-			wrap = Tag.render`
+		const wrap = Tag.render`
 		<div class="container">
 			<div class="container d-flex justify-content-center">
 				${this.renderEditableTitle()}
@@ -88,12 +36,8 @@ export class Constructor
 				<button type="button" class="btn btn-primary mx-1">P</button>
 			</div>
 			${this.renderQuestionList()}
-			<div class="d-flex justify-content-center">
-				${this.renderSaveFormButton()}
-		 	</div>
 		</div>
 `;
-		}
 		this.layout.wrap?.replaceWith(wrap);
 		this.layout.wrap = wrap;
 		return this.layout.wrap;
@@ -134,37 +78,18 @@ export class Constructor
 		this.renderQuestionList();
 	}
 
-	renderSaveFormButton()
-	{
-		const wrap = Tag.render`
-			<button class="btn btn-primary">Сохранить</button>
-		`;
-		Event.bind(wrap, 'click', this.onSaveFormButtonClickHandler.bind(this));
-
-		return wrap;
-	}
-
-	onSaveFormButtonClickHandler()
+	getData()
 	{
 		const hardCodeChapter = this.formData.CHAPTER[0];
 		hardCodeChapter.QUESTION = this.questions.map((question) => question.getData());
 		const form = {
-			'ID': this.id,
 			'TITLE': this.titleObject.value,
 			'CREATOR_ID': 1,
 			'CHAPTER': [
 				hardCodeChapter,
 			],
 		};
-		console.log(form);
-		FormManager.saveFormData({ formData: form })
-			.then((response) => {
-				console.log(response);
-				BX.SidePanel.Instance.close();
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		return form;
 	}
 
 	renderEditableTitle(): HTMLElement
@@ -172,14 +97,8 @@ export class Constructor
 		const wrap = Tag.render`
 		<h1 class="text-center mt-5 mb-4">${this.titleObject.value}</h1>
 		`;
-		console.log(this.titleObject.value)
 		new EditableText(wrap, this.titleObject);
 		this.layout.title = wrap;
 		return this.layout.title;
-	}
-
-	getData()
-	{
-
 	}
 }

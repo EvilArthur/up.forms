@@ -62,3 +62,23 @@ CREATE TABLE up_sub_answer (
 	                        VALUE text,
 	                        PRIMARY KEY (ID)
 );
+
+CREATE TABLE up_form_form_settings (
+	                        FORM_ID int not null,
+	                        SETTINGS_ID int not null,
+	                        VALUE varchar(30),
+	                        PRIMARY KEY (FORM_ID, SETTINGS_ID)
+);
+
+CREATE TABLE up_form_settings (
+	                        ID int not null auto_increment,
+	                        TITLE varchar(30),
+	                        TYPE_ID int not null,
+	                        PRIMARY KEY (ID)
+);
+
+CREATE TABLE up_form_settings_type (
+	                        ID int not null auto_increment,
+	                        TITLE varchar(30),
+	                        PRIMARY KEY (ID)
+);

@@ -1,13 +1,9 @@
 <?php
+
 namespace Up\Forms\Repository;
 
-use Bitrix\Main\Config\Configuration;
-use Bitrix\Main\DB\Exception;
-use Bitrix\Main\ORM\Query\Query;
-use Bitrix\Tasks\Util\Db;
-use Up\Forms\Model\AnswerTable;
 use Up\Forms\Model\ChapterTable;
-use Up\Forms\Model\EO_Form;
+use Up\Forms\Model\FormFormSettingsTable;
 use Up\Forms\Model\FormTable;
 use Up\Forms\Model\OptionTable;
 use Up\Forms\Model\QuestionTable;
@@ -38,6 +34,7 @@ class FormRepository
 					$question->setTitle($questionData['TITLE']);
 					$question->setPosition($questionData['POSITION']);
 					$question->setFieldId($questionData['FIELD_ID']);
+					$options = OptionTable::createCollection();
 					foreach ($questionData['OPTION'] as $optionData)
 					{
 						if ($optionData === null)
@@ -46,17 +43,27 @@ class FormRepository
 						}
 						$option = OptionTable::createObject();
 						$option->setTitle($optionData['TITLE']);
-
-						$option->save();
-
+						$options->add($option);
+					}
+					$options->save(true);
+					foreach ($options as $option)
+					{
 						$question->addToOption($option);
 					}
 					$chapter->addToQuestion($question);
 				}
 				$form->addToChapter($chapter);
 			}
+			foreach ($formData['SETTINGS'] as $settingData)
+			{
+				$setting = FormFormSettingsTable::createObject();
+				$setting->setSettingsId($settingData['ID']);
+				$setting->setValue($settingData['VALUE']);
+				$form->addToSettings($setting);
+			}
 			$result = $form->save()->getErrors();
 			db()->commitTransaction();
+
 			return $result;
 		}
 		catch (\Throwable $error)
@@ -77,7 +84,8 @@ class FormRepository
 			$chapter = ChapterTable::wakeUpObject(
 				[
 					'ID' => $chapterData['ID'],
-				]);
+				]
+			);
 			$chapter->removeAllQuestion();
 			foreach ($chapterData['QUESTION'] as $questionData)
 			{
@@ -132,17 +140,31 @@ class FormRepository
 			}
 			$form->addToChapter($chapter);
 		}
+		$form->removeAllSettings();
+		foreach ($formData['SETTINGS'] as $settingData)
+		{
+			$setting = FormFormSettingsTable::wakeUpObject(
+				['FORM_ID' => $formData['ID'], 'SETTINGS_ID' => $settingData['ID']]
+			);
+			$setting->setValue($settingData['VALUE']);
+			$form->addToSettings($setting);
+		}
 		$result = $form->save();
+
 		return $result->getErrors();
 	}
 
 	public static function getForm(int $id)/*: EO_Form*/
 	{
-		$form = FormTable::getByPrimary($id, ['select' =>
-												  ['TITLE',
-												   'CHAPTER',
-												   'CHAPTER.QUESTION',
-												   'CHAPTER.QUESTION.OPTION']
+		$form = FormTable::getByPrimary($id, [
+			'select' => [
+				'TITLE',
+				'CHAPTER',
+				'CHAPTER.QUESTION',
+				'CHAPTER.QUESTION.OPTION',
+				'SETTINGS.SETTINGS_ID',
+				'SETTINGS.VALUE',
+			],
 		])->fetchObject();
 
 		return $form;
@@ -155,21 +177,17 @@ class FormRepository
 	{
 		if ($filter === null)
 		{
-			return FormTable::query()
-							->setSelect(['ID', 'TITLE',])
-							->fetchAll();
+			return FormTable::query()->setSelect(['ID', 'TITLE',])->fetchAll();
 		}
-		return FormTable::query()
-						  ->setSelect(['ID', 'TITLE',])
-						  ->setLimit($filter['LIMIT'])
-						  ->setOffset($filter['OFFSET'])
-						  ->fetchAll();
+
+		return FormTable::query()->setSelect(['ID', 'TITLE',])->setLimit($filter['LIMIT'])->setOffset($filter['OFFSET'])
+						->fetchAll();
 	}
 
 	public static function deleteForm(int $id): void
 	{
 		$form = FormTable::getById($id)->fetchObject();
-		$questions =  $form->fillChapter()->fillQuestion();
+		$questions = $form->fillChapter()->fillQuestion();
 		$questions->fillOption();
 		$questions->fillAnswer();
 

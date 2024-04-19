@@ -6,6 +6,7 @@ use Bitrix\Main\Engine\Controller;
 use Bitrix\Main\Loader;
 use Up\Forms\Repository\FieldRepository;
 use Up\Forms\Repository\FormRepository;
+use Up\Forms\Repository\FormSettingsRepository;
 
 class FormCreate extends Controller
 {
@@ -49,6 +50,13 @@ class FormCreate extends Controller
 	{
 		return [
 			'result' => FieldRepository::getFields(),
+		];
+	}
+
+	public function getSettingsDataAction()
+	{
+		return [
+			'result' => FormSettingsRepository::getSettings(),
 		];
 	}
 }

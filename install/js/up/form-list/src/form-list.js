@@ -77,6 +77,7 @@ export class FormList
 			const grid = BX.Main.gridManager.getById('FORMS_LIST_GRID')?.instance;
 			if (Type.isObject(grid))
 			{
+				console.log(grid);
 				grid.reload();
 			}
 		});
