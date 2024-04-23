@@ -1,7 +1,6 @@
 import { Event, Loc, Tag } from 'main.core';
 import { EditableText } from '../editable-text';
 
-
 export default class Question
 {
 	constructor(chapter_id, id, position, title, optionData, settingData, fieldData)
@@ -16,7 +15,7 @@ export default class Question
 		this.fieldData = fieldData;
 		this.isDeleted = false;
 		this.settingData = settingData;
-		this.isHaveRightAnswerObject = { value: settingData.IS_HAVE_RIGHT_ANSWER };
+		this.isHaveRightAnswerObject = { value: this.toBoolean(this.settingData.find(setting => setting.SETTINGS_ID === 1).VALUE) };
 		this.fieldId = null;
 	}
 
@@ -194,22 +193,24 @@ export default class Question
 		this.options.forEach((option) => {
 			if (!option)
 			{
-				return
+				return;
 			}
-			option.checked = false});
+			option.checked = false;
+		});
 		this.render();
 	}
 
 	getOptionData()
 	{
-		return this.options.map((options) => options?.getData())
+		return this.options.map((options) => options?.getData());
 	}
 
 	getSettingData()
 	{
-		return {
-			'IS_HAVE_RIGHT_ANSWER': this.isHaveRightAnswerObject.value
-		}
+		return [{
+			'SETTINGS_ID': 1,
+			'VALUE': this.isHaveRightAnswerObject.value,
+		}];
 	}
 
 	getData()
@@ -224,8 +225,21 @@ export default class Question
 			'FIELD_ID': this.fieldId,
 			'ID': this.id,
 			'OPTION': this.getOptionData(),
-			'SETTING' : this.getSettingData(),
+			'SETTINGS': this.getSettingData(),
 		};
 		return data;
+	}
+
+	toBoolean(variable)
+	{
+		if (variable === 'true' || variable === true)
+		{
+			return true;
+		}
+		else if (variable === 'false' || variable === false)
+		{
+			return false;
+		}
+		return variable
 	}
 }

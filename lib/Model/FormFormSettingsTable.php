@@ -56,7 +56,8 @@ class FormFormSettingsTable extends DataManager
 							 [
 								 'validation' => [__CLASS__, 'validateValue']
 							 ]
-			))->configureTitle(Loc::getMessage('FORM_FORM_SETTINGS_ENTITY_VALUE_FIELD')),
+			))->configureTitle(Loc::getMessage('FORM_FORM_SETTINGS_ENTITY_VALUE_FIELD'))
+			->configureNullable(),
 			(new Reference('FORM', FormTable::class, Join::on('this.FORM_ID', 'ref.ID'))),
 			(new Reference('SETTINGS', FormSettingsTable::class, Join::on('this.SETTINGS_ID', 'ref.ID')))
 		];

@@ -34,7 +34,7 @@ class QuestionQuestionSettingsTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'up_question_QUESTION_QUESTION_SETTINGS';
+		return 'up_question_question_settings';
 	}
 
 	/**

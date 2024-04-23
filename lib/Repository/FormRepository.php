@@ -6,6 +6,7 @@ use Up\Forms\Model\EO_FormFormSettings_Collection;
 use Up\Forms\Model\FormFormSettingsTable;
 use Up\Forms\Model\FormTable;
 use Up\Forms\Model\OptionTable;
+use Up\Forms\Model\QuestionQuestionSettingsTable;
 use Up\Forms\Model\QuestionTable;
 
 class FormRepository
@@ -43,22 +44,26 @@ class FormRepository
 						}
 						$option = OptionTable::createObject();
 						$option->setTitle($optionData['TITLE']);
+						$option->setIsRightAnswer($optionData['IS_RIGHT_ANSWER']);
 						$question->addToOption($option);
 					}
-					foreach ($questionData['SETTINGS'] as $settingData)
+					foreach ($questionData['SETTINGS'] as $questionSettingData)
 					{
-						continue;
+						$questionSetting = QuestionQuestionSettingsTable::createObject();
+						$questionSetting->setSettingsId($questionSettingData['SETTINGS_ID']);
+						$questionSetting->setValue($questionSettingData['VALUE']);
+						$question->addToSettings($questionSetting);
 					}
 					$chapter->addToQuestion($question);
 				}
 				$form->addToChapter($chapter);
 			}
-			foreach ($formData['SETTINGS'] as $settingData)
+			foreach ($formData['SETTINGS'] as $formSettingData)
 			{
-				$setting = FormFormSettingsTable::createObject();
-				$setting->setSettingsId($settingData['ID']);
-				$setting->setValue($settingData['VALUE']);
-				$form->addToSettings($setting);
+				$formSetting = FormFormSettingsTable::createObject();
+				$formSetting->setSettingsId($formSettingData['ID']);
+				$formSetting->setValue($formSettingData['VALUE']);
+				$form->addToSettings($formSetting);
 			}
 			$result = $form->save()->getErrors();
 			db()->commitTransaction();
@@ -104,11 +109,11 @@ class FormRepository
 						]
 					);
 					$question->removeAllOption();
+					$question->removeAllSettings();
 				}
 				$question->setTitle($questionData['TITLE']);
 				$question->setPosition($questionData['POSITION']);
 				$question->setFieldId($questionData['FIELD_ID']);
-				/*$options = OptionTable::createCollection();*/
 				foreach ($questionData['OPTION'] as $optionData)
 				{
 					if ($optionData === null)
@@ -129,24 +134,38 @@ class FormRepository
 
 					}
 					$option->setTitle($optionData['TITLE']);
+					$option->setIsRightAnswer($optionData['IS_RIGHT_ANSWER']);
 					$option->save();
-					/*$options->add($option);*/
 
 					$question->addToOption($option);
 				}
-				/*$question->set('Options', $options);*/
+				foreach ($questionData['SETTINGS'] as $questionSettingData)
+				{
+					if ($questionData['ID'] === null)
+					{
+						$questionSetting = QuestionQuestionSettingsTable::createObject();
+						$questionSetting->setSettingsId($questionSettingData['SETTINGS_ID']);
+					}
+					else
+					{
+						$questionSetting = QuestionQuestionSettingsTable::wakeUpObject(
+							['QUESTION_ID' => $questionData['ID'], 'SETTINGS_ID' => $questionSettingData['SETTINGS_ID']]);
+					}
+					$questionSetting->setValue($questionSettingData['VALUE']);
+					$question->addToSettings($questionSetting);
+				}
 				$chapter->addToQuestion($question);
 			}
 			$form->addToChapter($chapter);
 		}
 		$form->removeAllSettings();
-		foreach ($formData['SETTINGS'] as $settingData)
+		foreach ($formData['SETTINGS'] as $formSettingData)
 		{
-			$setting = FormFormSettingsTable::wakeUpObject(
-				['FORM_ID' => $formData['ID'], 'SETTINGS_ID' => $settingData['ID']]
+			$formSetting = FormFormSettingsTable::wakeUpObject(
+				['FORM_ID' => $formData['ID'], 'SETTINGS_ID' => $formSettingData['ID']]
 			);
-			$setting->setValue($settingData['VALUE']);
-			$form->addToSettings($setting);
+			$formSetting->setValue($formSettingData['VALUE']);
+			$form->addToSettings($formSetting);
 		}
 		$result = $form->save();
 
@@ -161,6 +180,7 @@ class FormRepository
 				'CHAPTER',
 				'CHAPTER.QUESTION',
 				'CHAPTER.QUESTION.OPTION',
+				'CHAPTER.QUESTION.SETTINGS',
 				'SETTINGS.SETTINGS_ID',
 				'SETTINGS.VALUE',
 			],

@@ -186,4 +186,16 @@ __formsMigrate(13, function($updater, $DB)
 	}
 });
 
+__formsMigrate(14, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_option'))
+	{
+
+		$DB->query
+		("
+			ALTER TABLE up_option
+			ADD IS_RIGHT_ANSWER varchar(30);
+		");
+	}
+});
 

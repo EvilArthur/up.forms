@@ -9,7 +9,8 @@ export class Checkbox extends Question
 		this.options = optionData.map((option) => {
 			if (option)
 			{
-				return new CheckboxOption(option.ID, option.TITLE, this.titleObject.value, option.IS_RIGHT_ANSWER, this.isHaveRightAnswerObject);
+				/*if (option.IS_RIGHT_ANSWER)*/
+				return new CheckboxOption(option.ID, option.TITLE, this.titleObject.value, this.toBoolean(option.IS_RIGHT_ANSWER), this.isHaveRightAnswerObject);
 			}
 		});
 		this.fieldId = 3

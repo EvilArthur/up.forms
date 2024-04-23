@@ -148,7 +148,6 @@ export class FormConstructor
 		form.SETTINGS = data;
 		form.ID = this.id;
 		console.log(form);
-		return
 		FormManager.saveFormData({ formData: form })
 			.then((response) => {
 				console.log(response);

@@ -14,11 +14,12 @@ export class ShortTextOption
 		let wrap
 		if (!this.isHaveRightAnswerObject.value)
 		{
-			wrap = Tag.render`<p class="text-decoration-underline mb-0">${this.title}</p>`;
+			wrap = Tag.render`<p class="text-decoration-underline mb-0">Короткий ответ</p>`;
 		}
 		else
 		{
-			wrap = Tag.render`<input class="form-control" type="text" placeholder="Введите правильный ответ">`;
+			wrap = Tag.render`<input class="form-control" type="text" placeholder="Введите правильный ответ" value="${this.title}">`;
+			Event.bind(wrap, 'change', () => {this.title = wrap.value})
 		}
 		this.field = wrap
 		return this.field;

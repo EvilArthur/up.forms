@@ -61,7 +61,9 @@ this.BX.Up = this.BX.Up || {};
 	    this.isDeleted = false;
 	    this.settingData = settingData;
 	    this.isHaveRightAnswerObject = {
-	      value: settingData.IS_HAVE_RIGHT_ANSWER
+	      value: this.toBoolean(this.settingData.find(function (setting) {
+	        return setting.SETTINGS_ID === 1;
+	      }).VALUE)
 	    };
 	    this.fieldId = null;
 	  }
@@ -201,9 +203,10 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "getSettingData",
 	    value: function getSettingData() {
-	      return {
-	        'IS_HAVE_RIGHT_ANSWER': this.isHaveRightAnswerObject.value
-	      };
+	      return [{
+	        'SETTINGS_ID': 1,
+	        'VALUE': this.isHaveRightAnswerObject.value
+	      }];
 	    }
 	  }, {
 	    key: "getData",
@@ -217,9 +220,19 @@ this.BX.Up = this.BX.Up || {};
 	        'FIELD_ID': this.fieldId,
 	        'ID': this.id,
 	        'OPTION': this.getOptionData(),
-	        'SETTING': this.getSettingData()
+	        'SETTINGS': this.getSettingData()
 	      };
 	      return data;
+	    }
+	  }, {
+	    key: "toBoolean",
+	    value: function toBoolean(variable) {
+	      if (variable === 'true' || variable === true) {
+	        return true;
+	      } else if (variable === 'false' || variable === false) {
+	        return false;
+	      }
+	      return variable;
 	    }
 	  }]);
 	  return Question;
@@ -237,11 +250,15 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(ShortTextOption, [{
 	    key: "render",
 	    value: function render() {
+	      var _this = this;
 	      var wrap;
 	      if (!this.isHaveRightAnswerObject.value) {
-	        wrap = main_core.Tag.render(_templateObject$2 || (_templateObject$2 = babelHelpers.taggedTemplateLiteral(["<p class=\"text-decoration-underline mb-0\">", "</p>"])), this.title);
+	        wrap = main_core.Tag.render(_templateObject$2 || (_templateObject$2 = babelHelpers.taggedTemplateLiteral(["<p class=\"text-decoration-underline mb-0\">\u041A\u043E\u0440\u043E\u0442\u043A\u0438\u0439 \u043E\u0442\u0432\u0435\u0442</p>"])));
 	      } else {
-	        wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["<input class=\"form-control\" type=\"text\" placeholder=\"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\">"])));
+	        wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["<input class=\"form-control\" type=\"text\" placeholder=\"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\" value=\"", "\">"])), this.title);
+	        main_core.Event.bind(wrap, 'change', function () {
+	          _this.title = wrap.value;
+	        });
 	      }
 	      this.field = wrap;
 	      return this.field;
@@ -404,7 +421,7 @@ this.BX.Up = this.BX.Up || {};
 	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Radio).call(this, chapterId, id, position, title, optionData, settingData, fieldData));
 	    _this.options = optionData.map(function (option) {
 	      if (option) {
-	        return new RadioOption(option.ID, option.TITLE, _this.titleObject.value, option.IS_RIGHT_ANSWER, _this.isHaveRightAnswerObject);
+	        return new RadioOption(option.ID, option.TITLE, _this.titleObject.value, _this.toBoolean(option.IS_RIGHT_ANSWER), _this.isHaveRightAnswerObject);
 	      }
 	    });
 	    _this.fieldId = 2;
@@ -450,7 +467,8 @@ this.BX.Up = this.BX.Up || {};
 	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Checkbox).call(this, chapterId, id, position, title, optionData, settingData, fieldData));
 	    _this.options = optionData.map(function (option) {
 	      if (option) {
-	        return new CheckboxOption(option.ID, option.TITLE, _this.titleObject.value, option.IS_RIGHT_ANSWER, _this.isHaveRightAnswerObject);
+	        /*if (option.IS_RIGHT_ANSWER)*/
+	        return new CheckboxOption(option.ID, option.TITLE, _this.titleObject.value, _this.toBoolean(option.IS_RIGHT_ANSWER), _this.isHaveRightAnswerObject);
 	      }
 	    });
 	    _this.fieldId = 3;
@@ -492,6 +510,7 @@ this.BX.Up = this.BX.Up || {};
 	var _templateObject$6, _templateObject2$3, _templateObject3$2, _templateObject4$2;
 	var Constructor = /*#__PURE__*/function () {
 	  function Constructor(formData, fieldData) {
+	    var _this = this;
 	    babelHelpers.classCallCheck(this, Constructor);
 	    this.layout = {};
 	    this.titleObject = {
@@ -500,14 +519,11 @@ this.BX.Up = this.BX.Up || {};
 	    this.fieldData = fieldData;
 	    this.questions = [];
 	    this.formData = formData;
-	    this.titleObject.value = this.formData.TITLE
-	    /*formData.CHAPTER[0].QUESTION.map((questionData) => {
-	    	const question = new Question(
-	    		questionData.CHAPTER_ID, questionData.FIELD_ID,
-	    		questionData.ID, questionData.POSITION,
-	    		questionData.TITLE, questionData.OPTION, fieldData);
-	    	this.questions.push(question);
-	    })*/;
+	    this.titleObject.value = this.formData.TITLE;
+	    formData.CHAPTER[0].QUESTION.map(function (questionData) {
+	      var question = questionFactory.createQuestion(questionData.FIELD_ID, questionData.CHAPTER_ID, questionData.ID, questionData.POSITION, questionData.TITLE, questionData.OPTION, questionData.SETTINGS, fieldData);
+	      _this.questions.push(question);
+	    });
 	  }
 	  babelHelpers.createClass(Constructor, [{
 	    key: "render",
@@ -521,15 +537,15 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderQuestionList",
 	    value: function renderQuestionList() {
-	      var _this = this,
+	      var _this2 = this,
 	        _this$layout$question;
 	      this.questionNumber = 1;
 	      var wrap = main_core.Tag.render(_templateObject2$3 || (_templateObject2$3 = babelHelpers.taggedTemplateLiteral(["\n\t\t<div class=\"container\">\n\t\t\t", "\n\t\t</div>\n\t\t"])), this.questions.map(function (question, index) {
-	        question.position = _this.questionNumber++;
+	        question.position = _this2.questionNumber++;
 	        var questionWrap = question.render();
 	        var typeSelect = question.layout.typeSelect;
 	        main_core.Event.bind(typeSelect, 'change', function () {
-	          return _this.changeQuestionType(question, index, parseInt(typeSelect.value));
+	          return _this2.changeQuestionType(question, index, parseInt(typeSelect.value));
 	        });
 	        return questionWrap;
 	      }));
@@ -544,7 +560,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (fieldId === 1) {
 	        options = [{
 	          'ID': null,
-	          'TITLE': 'Короткий ответ'
+	          'TITLE': ''
 	        }];
 	      } else if (question.fieldId === 1) {
 	        options = [{
@@ -570,9 +586,10 @@ this.BX.Up = this.BX.Up || {};
 	    value: function onAddQuestionButtonClickHandler() {
 	      this.questions.push(questionFactory.createQuestion(1, this.formData.CHAPTER[0].id, null, this.questionNumber++, 'Название', [{
 	        'ID': null,
-	        'TITLE': 'Короткий ответ'
+	        'TITLE': ''
 	      }], [{
-	        IS_HAVE_RIGHT_ANSWER: false
+	        'SETTINGS_ID': 1,
+	        'VALUE': false
 	      }], this.fieldData));
 	      this.renderQuestionList();
 	    }
@@ -1048,7 +1065,6 @@ this.BX.Up = this.BX.Up || {};
 	      form.SETTINGS = data;
 	      form.ID = this.id;
 	      console.log(form);
-	      return;
 	      FormManager.saveFormData({
 	        formData: form
 	      }).then(function (response) {

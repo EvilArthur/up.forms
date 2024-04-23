@@ -14,13 +14,13 @@ export class Constructor
 		this.formData = formData
 
 		this.titleObject.value = this.formData.TITLE
-		/*formData.CHAPTER[0].QUESTION.map((questionData) => {
-			const question = new Question(
-				questionData.CHAPTER_ID, questionData.FIELD_ID,
+		formData.CHAPTER[0].QUESTION.map((questionData) => {
+			const question = questionFactory.createQuestion(
+				questionData.FIELD_ID, questionData.CHAPTER_ID,
 				questionData.ID, questionData.POSITION,
-				questionData.TITLE, questionData.OPTION, fieldData);
+				questionData.TITLE, questionData.OPTION, questionData.SETTINGS, fieldData)
 			this.questions.push(question);
-		})*/;
+		})
 	}
 
 	render()
@@ -67,7 +67,7 @@ export class Constructor
 		let options
 		if (fieldId === 1)
 		{
-			options = [{'ID': null, 'TITLE':'Короткий ответ'}]
+			options = [{'ID': null, 'TITLE':''}]
 		}
 		else if(question.fieldId === 1)
 		{
@@ -98,8 +98,8 @@ export class Constructor
 	{
 		this.questions.push(questionFactory.createQuestion(
 			1, this.formData.CHAPTER[0].id, null, this.questionNumber++,
-			'Название', [{'ID': null, 'TITLE': 'Короткий ответ'}],
-			[{IS_HAVE_RIGHT_ANSWER: false}], this.fieldData,
+			'Название', [{'ID': null, 'TITLE': ''}],
+			[{'SETTINGS_ID': 1, 'VALUE': false}], this.fieldData,
 		));
 		this.renderQuestionList();
 	}

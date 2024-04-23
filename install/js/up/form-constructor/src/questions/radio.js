@@ -9,7 +9,7 @@ export class Radio extends Question
 		this.options = optionData.map((option) => {
 			if (option)
 			{
-				return new RadioOption(option.ID, option.TITLE, this.titleObject.value, option.IS_RIGHT_ANSWER, this.isHaveRightAnswerObject);
+				return new RadioOption(option.ID, option.TITLE, this.titleObject.value, this.toBoolean(option.IS_RIGHT_ANSWER), this.isHaveRightAnswerObject);
 			}
 		});
 		this.fieldId = 2

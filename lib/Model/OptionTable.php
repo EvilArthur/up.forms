@@ -65,6 +65,13 @@ class OptionTable extends DataManager
 					'title' => Loc::getMessage('OPTION_ENTITY_QUESTION_ID_FIELD'),
 				]
 			),
+			(new StringField('IS_RIGHT_ANSWER',
+							 [
+								 'validation' => [__CLASS__, 'validateIsRightAnswer']
+							 ]
+			))->configureTitle(Loc::getMessage('OPTION_ENTITY_IS_RIGHT_ANSWER_FIELD'))
+			->configureNullable(),
+
 			(new Reference(
 				'QUESTION',
 				QuestionTable::class,
@@ -82,6 +89,18 @@ class OptionTable extends DataManager
 	{
 		return [
 			new LengthValidator(null, 100),
+		];
+	}
+
+	/**
+	 * Returns validators for IS_RIGHT_ANSWER field.
+	 *
+	 * @return array
+	 */
+	public static function validateIsRightAnswer()
+	{
+		return [
+			new LengthValidator(null, 30),
 		];
 	}
 }
