@@ -7,8 +7,10 @@ use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\Relations\CascadePolicy;
 use Bitrix\Main\ORM\Fields\Relations\ManyToMany;
+use Bitrix\Main\ORM\Fields\Relations\Reference;
 use Bitrix\Main\ORM\Fields\StringField;
 use Bitrix\Main\ORM\Fields\Validators\LengthValidator;
+use Bitrix\Main\ORM\Query\Join;
 
 Loc::loadMessages(__FILE__);
 
@@ -56,9 +58,18 @@ class OptionTable extends DataManager
 						   'title' => Loc::getMessage('OPTION_ENTITY_VALUE_FIELD'),
 					   ]
 			),
-			(new ManyToMany('QUESTION', QuestionTable::class))
-				->configureTableName('up_question_option')
-				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW)
+			new IntegerField(
+				'QUESTION_ID',
+				[
+					'required' => true,
+					'title' => Loc::getMessage('OPTION_ENTITY_QUESTION_ID_FIELD'),
+				]
+			),
+			(new Reference(
+				'QUESTION',
+				QuestionTable::class,
+				Join::on('this.QUESTION_ID', 'ref.ID')
+			)),
 		];
 	}
 

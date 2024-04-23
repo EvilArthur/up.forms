@@ -1,5 +1,5 @@
 <?php
-namespace Up\Forms\Model;
+namespace Bitrix\Question;
 
 use Bitrix\Main\Localization\Loc,
 	Bitrix\Main\ORM\Data\DataManager,
@@ -7,8 +7,8 @@ use Bitrix\Main\Localization\Loc,
 	Bitrix\Main\ORM\Fields\StringField,
 	Bitrix\Main\ORM\Fields\Validators\LengthValidator;
 use Bitrix\Main\ORM\Fields\Relations\OneToMany;
-use Bitrix\Main\ORM\Fields\Relations\Reference;
-use Bitrix\Main\ORM\Query\Join;
+use Up\Forms\Model\FormFormSettingsTable;
+use Up\Forms\Model\QuestionQuestionSettingsTable;
 
 Loc::loadMessages(__FILE__);
 
@@ -19,13 +19,12 @@ Loc::loadMessages(__FILE__);
  * <ul>
  * <li> ID int mandatory
  * <li> TITLE string(30) optional
- * <li> TYPE_ID int mandatory
  * </ul>
  *
- * @package Bitrix\Form
+ * @package Bitrix\Question
  **/
 
-class FormSettingsTable extends DataManager
+class QuestionSettingsTable extends DataManager
 {
 	/**
 	 * Returns DB table name for entity.
@@ -34,7 +33,7 @@ class FormSettingsTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'up_form_settings';
+		return 'up_question_settings';
 	}
 
 	/**
@@ -47,20 +46,15 @@ class FormSettingsTable extends DataManager
 		return [
 			(new IntegerField('ID',
 							  []
-			))->configureTitle(Loc::getMessage('FORM_SETTINGS_ENTITY_ID_FIELD'))
+			))->configureTitle(Loc::getMessage('QUESTION_SETTINGS_ENTITY_ID_FIELD'))
 			  ->configurePrimary(true)
 			  ->configureAutocomplete(true),
 			(new StringField('TITLE',
 							 [
 								 'validation' => [__CLASS__, 'validateTitle']
 							 ]
-			))->configureTitle(Loc::getMessage('FORM_SETTINGS_ENTITY_TITLE_FIELD')),
-			(new IntegerField('TYPE_ID',
-							  []
-			))->configureTitle(Loc::getMessage('FORM_SETTINGS_ENTITY_TYPE_ID_FIELD'))
-			  ->configureRequired(true),
-			(new OneToMany('FORM', FormFormSettingsTable::class, 'SETTINGS')),
-			(new Reference('TYPE', FormSettingsTypeTable::class, Join::on('this.TYPE_ID', 'ref.ID'))),
+			))->configureTitle(Loc::getMessage('QUESTION_SETTINGS_ENTITY_TITLE_FIELD')),
+			(new OneToMany('QUESTION', QuestionQuestionSettingsTable::class, 'SETTINGS')),
 		];
 	}
 

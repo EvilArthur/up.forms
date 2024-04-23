@@ -8,23 +8,24 @@ use Bitrix\Main\Localization\Loc,
 	Bitrix\Main\ORM\Fields\Validators\LengthValidator;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
 use Bitrix\Main\ORM\Query\Join;
+use Bitrix\Question\QuestionSettingsTable;
 
 Loc::loadMessages(__FILE__);
 
 /**
- * Class FormSettingsTable
+ * Class QuestionSettingsTable
  *
  * Fields:
  * <ul>
- * <li> FORM_ID int mandatory
+ * <li> QUESTION_ID int mandatory
  * <li> SETTINGS_ID int mandatory
  * <li> VALUE string(30) optional
  * </ul>
  *
- * @package Bitrix\Form
+ * @package Bitrix\Question
  **/
 
-class FormFormSettingsTable extends DataManager
+class QuestionQuestionSettingsTable extends DataManager
 {
 	/**
 	 * Returns DB table name for entity.
@@ -33,7 +34,7 @@ class FormFormSettingsTable extends DataManager
 	 */
 	public static function getTableName()
 	{
-		return 'up_form_form_settings';
+		return 'up_question_QUESTION_QUESTION_SETTINGS';
 	}
 
 	/**
@@ -44,21 +45,22 @@ class FormFormSettingsTable extends DataManager
 	public static function getMap()
 	{
 		return [
-			(new IntegerField('FORM_ID',
+			(new IntegerField('QUESTION_ID',
 							  []
-			))->configureTitle(Loc::getMessage('FORM_FORM_SETTINGS_ENTITY_FORM_ID_FIELD'))
+			))->configureTitle(Loc::getMessage('QUESTION_QUESTION_SETTINGS_ENTITY_QUESTION_ID_FIELD'))
 			  ->configurePrimary(true),
 			(new IntegerField('SETTINGS_ID',
 							  []
-			))->configureTitle(Loc::getMessage('FORM_FORM_SETTINGS_ENTITY_SETTINGS_ID_FIELD'))
+			))->configureTitle(Loc::getMessage('QUESTION_QUESTION_SETTINGS_ENTITY_SETTINGS_ID_FIELD'))
 			  ->configurePrimary(true),
 			(new StringField('VALUE',
 							 [
 								 'validation' => [__CLASS__, 'validateValue']
 							 ]
-			))->configureTitle(Loc::getMessage('FORM_FORM_SETTINGS_ENTITY_VALUE_FIELD')),
-			(new Reference('FORM', FormTable::class, Join::on('this.FORM_ID', 'ref.ID'))),
-			(new Reference('SETTINGS', FormSettingsTable::class, Join::on('this.SETTINGS_ID', 'ref.ID')))
+			))->configureTitle(Loc::getMessage('QUESTION_QUESTION_SETTINGS_ENTITY_VALUE_FIELD')),
+
+			(new Reference('QUESTION', QuestionTable::class, Join::on('this.QUESTION_ID', 'ref.ID'))),
+			(new Reference('SETTINGS', QuestionSettingsTable::class, Join::on('this.SETTINGS_ID', 'ref.ID')))
 		];
 	}
 
