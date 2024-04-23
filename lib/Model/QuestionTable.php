@@ -110,9 +110,14 @@ class QuestionTable extends DataManager
 				'ANSWER', AnswerTable::class, 'QUESTION'
 			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 
-			(new ManyToMany('OPTION', OptionTable::class))
-				->configureTableName('up_question_option')
-				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW_ORPHANS)
+			(new OneToMany(
+				'OPTION', OptionTable::class, 'QUESTION'
+			))->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
+
+			(new OneToMany(
+				'SETTINGS', QuestionQuestionSettingsTable::class, 'QUESTION'
+			))
+				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];
 	}
 }

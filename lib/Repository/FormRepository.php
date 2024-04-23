@@ -35,7 +35,6 @@ class FormRepository
 					$question->setTitle($questionData['TITLE']);
 					$question->setPosition($questionData['POSITION']);
 					$question->setFieldId($questionData['FIELD_ID']);
-					$options = OptionTable::createCollection();
 					foreach ($questionData['OPTION'] as $optionData)
 					{
 						if ($optionData === null)
@@ -44,12 +43,11 @@ class FormRepository
 						}
 						$option = OptionTable::createObject();
 						$option->setTitle($optionData['TITLE']);
-						$options->add($option);
-					}
-					$options->save(true);
-					foreach ($options as $option)
-					{
 						$question->addToOption($option);
+					}
+					foreach ($questionData['SETTINGS'] as $settingData)
+					{
+						continue;
 					}
 					$chapter->addToQuestion($question);
 				}
