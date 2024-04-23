@@ -1,7 +1,7 @@
 import { Event, Tag } from 'main.core';
 import { EditableText } from './editable-text';
-import { FormManager } from './form-manager';
-import { Question } from './question';
+
+import { questionFactory} from './questions/questionFactory';
 
 export class Constructor
 {
@@ -14,13 +14,13 @@ export class Constructor
 		this.formData = formData
 
 		this.titleObject.value = this.formData.TITLE
-		formData.CHAPTER[0].QUESTION.map((questionData) => {
+		/*formData.CHAPTER[0].QUESTION.map((questionData) => {
 			const question = new Question(
 				questionData.CHAPTER_ID, questionData.FIELD_ID,
 				questionData.ID, questionData.POSITION,
 				questionData.TITLE, questionData.OPTION, fieldData);
 			this.questions.push(question);
-		});
+		})*/;
 	}
 
 	render()
@@ -48,15 +48,40 @@ export class Constructor
 		this.questionNumber = 1;
 		const wrap = Tag.render`
 		<div class="container">
-			${this.questions.map((question) => {
+			${this.questions.map((question, index) => {
 			question.position = this.questionNumber++;
-			return question.render();
+			const questionWrap = question.render();
+			const typeSelect = question.layout.typeSelect
+			Event.bind(typeSelect, 'change', () => this.changeQuestionType(question, index, parseInt(typeSelect.value)))
+			return questionWrap;
 		})}
 		</div>
 		`;
 		this.layout.questionList?.replaceWith(wrap);
 		this.layout.questionList = wrap;
 		return this.layout.questionList;
+	}
+
+	changeQuestionType(question, index, fieldId)
+	{
+		let options
+		if (fieldId === 1)
+		{
+			options = [{'ID': null, 'TITLE':'Короткий ответ'}]
+		}
+		else if(question.fieldId === 1)
+		{
+			options = [{'ID': null, 'TITLE': 'Новая опция'}]
+		}
+		else
+		{
+			options = question.getOptionData()
+		}
+		this.questions[index] = questionFactory.createQuestion(
+			fieldId, question.chapterId, question.id, question.position, question.titleObject.value,
+			options, question.getSettingData(), this.fieldData);
+		console.log(this.questions[index])
+		this.render();
 	}
 
 	renderAddQuestionButton()
@@ -71,9 +96,10 @@ export class Constructor
 
 	onAddQuestionButtonClickHandler()
 	{
-		this.questions.push(new Question(
-			this.formData.CHAPTER[0].id,
-			1, null, this.questionNumber++, 'Название', [], this.fieldData,
+		this.questions.push(questionFactory.createQuestion(
+			1, this.formData.CHAPTER[0].id, null, this.questionNumber++,
+			'Название', [{'ID': null, 'TITLE': 'Короткий ответ'}],
+			[{IS_HAVE_RIGHT_ANSWER: false}], this.fieldData,
 		));
 		this.renderQuestionList();
 	}

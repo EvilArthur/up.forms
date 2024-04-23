@@ -1,6 +1,4 @@
 import { Tag } from 'main.core';
-import { FormManager } from './form-manager';
-import { Question } from './question';
 import { Datetime } from './settings/datetime';
 import { Time } from './settings/time';
 import { Number } from './settings/number';

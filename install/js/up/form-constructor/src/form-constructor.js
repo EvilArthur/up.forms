@@ -2,7 +2,6 @@ import { Tag, Event } from 'main.core';
 import { Constructor } from './constructor';
 import {Settings} from './settings';
 import { FormManager } from './form-manager';
-import { Question } from './question';
 
 export class FormConstructor
 {
@@ -149,7 +148,7 @@ export class FormConstructor
 		form.SETTINGS = data;
 		form.ID = this.id;
 		console.log(form);
-
+		return
 		FormManager.saveFormData({ formData: form })
 			.then((response) => {
 				console.log(response);
