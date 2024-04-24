@@ -5,7 +5,7 @@ export class Checkbox extends Setting
 {
 	renderInput()
 	{
-		const checked = this.value ? 'checked' : '';
+		const checked = this.value === 'true' || this.value === true ? 'checked' : '';
 		const wrap = Tag.render`
 			<input class="form-check-input" type="checkbox" ${checked}>
 		`

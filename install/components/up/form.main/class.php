@@ -23,25 +23,7 @@ class FormMainComponent extends CBitrixComponent
 			\CPullWatch::Add($USER->GetID(), 'FORMS-UPDATE');
 		}
 
-		AddEventHandler('tasks', 'OnTaskAdd', 'onAfterUpdate');
 
-		function onAfterUpdate(int $taskId, array $arFields)
-		{
-			if (in_array('формы', $arFields['TAGS']) )
-			{
-				$pattern = '/\[URL=\/form\/view\/(\d+)\/]/';
-
-				if (preg_match($pattern, $arFields['DESCRIPTION'], $matches))
-				{
-					TaskRepository::createTask(
-						$taskId,
-						$arFields['RESPONSIBLE_ID'],
-						$arFields['CREATED_BY'],
-						$matches[1]
-					);
-				}
-			}
-		}
 
 		$this->fetchData();
 		$this->fetchAddButton();

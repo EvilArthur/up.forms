@@ -760,7 +760,7 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(Checkbox, [{
 	    key: "renderInput",
 	    value: function renderInput() {
-	      var checked = this.value ? 'checked' : '';
+	      var checked = this.value === 'true' || this.value === true ? 'checked' : '';
 	      var wrap = main_core.Tag.render(_templateObject$b || (_templateObject$b = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<input class=\"form-check-input\" type=\"checkbox\" ", ">\n\t\t"])), checked);
 	      this.input = wrap;
 	      return this.input;

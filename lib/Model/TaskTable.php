@@ -79,7 +79,7 @@ class TaskTable extends DataManager
 				]
 			),
 			new Reference(
-				'TASKS',
+				'FORM',
 				FormTable::class,
 				Join::on('this.FORM_ID', 'ref.ID')
 			),
