@@ -3,7 +3,7 @@
 use Bitrix\Main\Application;
 use Bitrix\Main\DB\Connection;
 use Bitrix\Main\Request;
-
+use Up\Forms\Repository\TaskRepository;
 
 AddEventHandler('tasks', 'OnTaskAdd', 'onAfterUpdate');
 

@@ -14,23 +14,24 @@ use Up\Forms\Model\FormTable;
 use Up\Forms\Model\OptionTable;
 use Up\Forms\Model\QuestionQuestionSettingsTable;
 use Up\Forms\Model\QuestionTable;
+use Bitrix\Main\Application;
 
 class FormRepository
 {
 	public static function createForm($formData)
 	{
-		\db()->startTransaction();
+		Application::getConnection()->startTransaction();
 		try
 		{
 			$form = self::fillFormByData($formData);
 			$result = $form->save();
-			db()->commitTransaction();
+			Application::getConnection()->commitTransaction();
 
 			return $result->getErrors();
 		}
 		catch (\Throwable $error)
 		{
-			db()->rollbackTransaction();
+			Application::getConnection()->rollbackTransaction();
 			throw $error;
 		}
 
@@ -38,20 +39,20 @@ class FormRepository
 
 	public static function saveForm($formData)
 	{
-		\db()->startTransaction();
+		Application::getConnection()->startTransaction();
 		try
 		{
 			self::deleteForm($formData['ID']);
 
 			$form = self::fillFormByData($formData);
 			$result = $form->save();
-			db()->commitTransaction();
+			Application::getConnection()->commitTransaction();
 
 			return $result->getErrors();
 		}
 		catch (\Throwable $error)
 		{
-			db()->rollbackTransaction();
+			Application::getConnection()->rollbackTransaction();
 			throw $error;
 		}
 	}
