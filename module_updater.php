@@ -102,7 +102,7 @@ __formsMigrate(6, function($updater, $DB)
 	}
 });
 
-__formsMigrate(7, function($updater, $DB)
+__formsMigrate(8, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form_settings_type'))
 	{
@@ -118,35 +118,88 @@ __formsMigrate(7, function($updater, $DB)
 	}
 });
 
-__formsMigrate(8, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_accepted_user'))
-	{
-		$DB->query
-		("
-			CREATE TABLE up_accepted_user (
-	                        ID int not null auto_increment,
-	                        PRIMARY KEY (ID)
-			);
-		");
-	}
-});
-
 __formsMigrate(9, function($updater, $DB)
 {
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_accepted_group'))
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_question_option'))
 	{
 		$DB->query
 		("
-			CREATE TABLE up_accepted_group (
-	                        ID int not null auto_increment,
-	                        PRIMARY KEY (ID)
-			);
+			DROP TABLE up_question_option;
 		");
 	}
 });
 
 __formsMigrate(10, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_option'))
+	{
+
+		$DB->query
+		("
+			ALTER TABLE up_option
+			ADD QUESTION_ID int not null;
+		");
+	}
+});
+
+__formsMigrate(11, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_question_settings'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_question_settings (
+	                        ID int not null auto_increment,
+	                        TITLE varchar(30),
+	                        PRIMARY KEY (ID)
+			);
+		");
+	}
+});
+
+__formsMigrate(12, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_question_question_settings'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_question_question_settings (
+	                        QUESTION_ID int not null,
+	                        SETTINGS_ID int not null,
+	                        VALUE varchar(30),
+	                        PRIMARY KEY (QUESTION_ID, SETTINGS_ID)
+			);
+		");
+	}
+});
+
+__formsMigrate(13, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_question_settings'))
+	{
+		$DB->query
+		("
+			INSERT INTO up_question_settings(TITLE)
+			VALUES ('Тип проверки'),
+				   ('Обязательный вопрос')
+		");
+	}
+});
+
+__formsMigrate(14, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_option'))
+	{
+
+		$DB->query
+		("
+			ALTER TABLE up_option
+			ADD IS_RIGHT_ANSWER varchar(30);
+		");
+	}
+});
+
+__formsMigrate(15, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_task'))
 	{
@@ -163,86 +216,3 @@ __formsMigrate(10, function($updater, $DB)
 		");
 	}
 });
-
-
-__formsMigrate(11, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_question_option'))
-	{
-		$DB->query
-		("
-			DROP TABLE up_question_option;
-		");
-	}
-});
-
-__formsMigrate(12, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_option'))
-	{
-
-		$DB->query
-		("
-			ALTER TABLE up_option
-			ADD QUESTION_ID int not null;
-		");
-	}
-});
-
-__formsMigrate(13, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_question_settings'))
-	{
-		$DB->query
-		("
-			CREATE TABLE up_question_settings (
-	                        ID int not null auto_increment,
-	                        TITLE varchar(30),
-	                        PRIMARY KEY (ID)
-			);
-		");
-	}
-});
-
-__formsMigrate(14, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_question_question_settings'))
-	{
-		$DB->query
-		("
-			CREATE TABLE up_question_question_settings (
-	                        QUESTION_ID int not null,
-	                        SETTINGS_ID int not null,
-	                        VALUE varchar(30),
-	                        PRIMARY KEY (QUESTION_ID, SETTINGS_ID)
-			);
-		");
-	}
-});
-
-__formsMigrate(15, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_question_settings'))
-	{
-		$DB->query
-		("
-			INSERT INTO up_question_settings(TITLE)
-			VALUES ('Тип проверки'),
-				   ('Обязательный вопрос')
-		");
-	}
-});
-
-__formsMigrate(16, function($updater, $DB)
-{
-	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_option'))
-	{
-
-		$DB->query
-		("
-			ALTER TABLE up_option
-			ADD IS_RIGHT_ANSWER varchar(30);
-		");
-	}
-});
-
