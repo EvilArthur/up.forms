@@ -226,7 +226,7 @@ class FormRepository
 
 	public static function getFormSettings(int $id): EO_FormFormSettings_Collection
 	{
-		$settings = \Up\Forms\Model\FormFormSettingsTable::getByPrimary(['FORM_ID' => $id])->fetchCollection();
+		$settings = FormFormSettingsTable::getByPrimary(['FORM_ID' => $id])->fetchCollection();
 		return $settings;
 	}
 

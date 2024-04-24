@@ -82,6 +82,10 @@ class FormTable extends DataManager
 				'SETTINGS', FormFormSettingsTable::class, 'FORM'
 			))
 				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
+			(new OneToMany(
+				'TASKS', TaskTable::class, 'FORM'
+			))
+				->configureCascadeDeletePolicy(CascadePolicy::FOLLOW),
 		];
 	}
 }

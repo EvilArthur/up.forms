@@ -5,7 +5,8 @@ export class FormList
 	{
 		this.gridId = options.gridId;
 		console.log(this.gridId)
-		BX.addCustomEvent('onPullEvent', (module_id, command, params) => {
+		BX.addCustomEvent('onPullEvent', (module_id, command, params) =>
+		{
 			if (command === 'update')
 			{
 				this.reload();
@@ -72,6 +73,38 @@ export class FormList
 	showResults(formId)
 	{
 		this.openSlider(`/form/results/${formId}/`);
+	}
+
+	createTask(formTitle, formId, userId)
+	{
+		console.log('hui');
+		BX.SidePanel.Instance.open(
+			"/company/personal/user/" + userId + "/tasks/task/edit/0/?SCOPE=tasks_grid",
+			{
+				requestMethod: "post",
+				requestParams:
+					{
+						'TITLE': 'Пройти форму - ' + formTitle,
+						'DESCRIPTION': `[URL=/form/view/` + formId + `/]Форма доступна по ссылке[/URL]`,
+						'TAGS': ['формы']
+					}
+			})
+	}
+
+
+	createFastTask(formTitle, formId, userId)
+	{
+		BX.ajax.runAction(
+			'up:forms.task.createFastTask',
+			{
+				data:
+					{
+						formTitle: formTitle,
+						formId: formId,
+						userId: userId
+					},
+			},
+		)
 	}
 
 	reload()

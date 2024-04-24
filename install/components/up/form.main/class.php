@@ -10,15 +10,37 @@ use Bitrix\Main\Grid\Options as GridOptions;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UI\PageNavigation;
 use Up\Forms\Repository\FormRepository;
+use Up\Forms\Repository\TaskRepository;
 
 class FormMainComponent extends CBitrixComponent
 {
 	public function executeComponent()
 	{
 		global $USER;
+		$this->arResult['USER_ID'] = $USER->GetID();
 		if(Loader::includeModule('pull'))
 		{
 			\CPullWatch::Add($USER->GetID(), 'FORMS-UPDATE');
+		}
+
+		AddEventHandler('tasks', 'OnTaskAdd', 'onAfterUpdate');
+
+		function onAfterUpdate(int $taskId, array $arFields)
+		{
+			if (in_array('формы', $arFields['TAGS']) )
+			{
+				$pattern = '/\[URL=\/form\/view\/(\d+)\/]/';
+
+				if (preg_match($pattern, $arFields['DESCRIPTION'], $matches))
+				{
+					TaskRepository::createTask(
+						$taskId,
+						$arFields['RESPONSIBLE_ID'],
+						$arFields['CREATED_BY'],
+						$matches[1]
+					);
+				}
+			}
 		}
 
 		$this->fetchData();
@@ -56,7 +78,7 @@ class FormMainComponent extends CBitrixComponent
 			[
 				'id' => 'createForm',
 				'click' => new JsCode("FormList.createForm()"),
-				'text' => 'Добавить форму',
+				'text' => 'Создать',
 			]
 		);
 
@@ -127,7 +149,7 @@ class FormMainComponent extends CBitrixComponent
 	{
 		$this->arResult['COLUMNS'] =
 			[
-				['id' => 'TITLE', 'name' => 'Название формы', 'sort' => 'Title', 'default' => true],
+				['id' => 'TITLE', 'name' => 'Название формы', 'default' => true],
 				['id' => 'DATE_CREATE', 'name' => 'Создано', 'default' => true],
 				['id' => 'STATUS', 'name' => 'Статус', 'default' => true],
 				['id' => 'USER_NAME', 'name' => 'Создал', 'default' => true],
@@ -162,7 +184,7 @@ class FormMainComponent extends CBitrixComponent
 			'LIMIT' => $this->arResult['NAV_OBJECT']->getLimit() + 1,
 			'OFFSET' => $this->arResult['NAV_OBJECT']->getOffset(),
 			'TITLE' => $filterFields['TITLE'],
-			'USERS' => $filterFields['USER']
+			'USERS' => $filterFields['USER'],
 		];
 	}
 
@@ -182,23 +204,33 @@ class FormMainComponent extends CBitrixComponent
 				],
 				'actions' => [
 					[
-						'text' => 'Open',
+						'text' => 'Открыть',
 						'onclick' => 'FormList.openForm(' . $form['ID'] . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Delete',
+						'text' => 'Удалить',
 						'onclick' => 'FormList.deleteForm(' . $form['ID'] . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Edit',
+						'text' => 'Редактировать',
 						'onclick' => 'FormList.editForm(' . $form['ID'] . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Results',
+						'text' => 'Результаты',
 						'onclick' => 'FormList.showResults(' . $form['ID'] . ')',
+						'default' => true,
+					],
+					[
+						'text' => 'Созать задачу',
+						'onclick' => 'FormList.createTask("' . $form['TITLE'] . '",' . $form['ID'] . ',' . $this->arResult['USER_ID'] . ')',
+						'default' => true,
+					],
+					[
+						'text' => 'Быстрая задача',
+						'onclick' => 'FormList.createFastTask("' . $form['TITLE'] . '",' . $form['ID'] . ',' . $this->arResult['USER_ID'] . ')',
 						'default' => true,
 					],
 				],

@@ -102,7 +102,7 @@ __formsMigrate(6, function($updater, $DB)
 	}
 });
 
-__formsMigrate(8, function($updater, $DB)
+__formsMigrate(7, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form_settings_type'))
 	{
@@ -118,7 +118,54 @@ __formsMigrate(8, function($updater, $DB)
 	}
 });
 
+__formsMigrate(8, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_accepted_user'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_accepted_user (
+	                        ID int not null auto_increment,
+	                        PRIMARY KEY (ID)
+			);
+		");
+	}
+});
+
 __formsMigrate(9, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_accepted_group'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_accepted_group (
+	                        ID int not null auto_increment,
+	                        PRIMARY KEY (ID)
+			);
+		");
+	}
+});
+
+__formsMigrate(10, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_task'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_task (
+				ID int not null auto_increment,
+				USER_ID int not null,
+				FORM_ID int not null,
+				TASK_ID int not null,
+				CREATOR_ID int not null,
+				PRIMARY KEY (ID)
+			);
+		");
+	}
+});
+
+
+__formsMigrate(11, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_question_option'))
 	{
@@ -129,7 +176,7 @@ __formsMigrate(9, function($updater, $DB)
 	}
 });
 
-__formsMigrate(10, function($updater, $DB)
+__formsMigrate(12, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_option'))
 	{
@@ -142,7 +189,7 @@ __formsMigrate(10, function($updater, $DB)
 	}
 });
 
-__formsMigrate(11, function($updater, $DB)
+__formsMigrate(13, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_question_settings'))
 	{
@@ -157,7 +204,7 @@ __formsMigrate(11, function($updater, $DB)
 	}
 });
 
-__formsMigrate(12, function($updater, $DB)
+__formsMigrate(14, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_question_question_settings'))
 	{
@@ -173,7 +220,7 @@ __formsMigrate(12, function($updater, $DB)
 	}
 });
 
-__formsMigrate(13, function($updater, $DB)
+__formsMigrate(15, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_question_settings'))
 	{
@@ -186,7 +233,7 @@ __formsMigrate(13, function($updater, $DB)
 	}
 });
 
-__formsMigrate(14, function($updater, $DB)
+__formsMigrate(16, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_option'))
 	{

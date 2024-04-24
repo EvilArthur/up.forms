@@ -7,10 +7,7 @@ use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\Relations\CascadePolicy;
 use Bitrix\Main\ORM\Fields\Relations\OneToMany;
 use Bitrix\Main\ORM\Fields\Relations\Reference;
-use Bitrix\Main\ORM\Fields\StringField;
-use Bitrix\Main\ORM\Fields\Validators\LengthValidator;
 use Bitrix\Main\ORM\Query\Join;
-use Bitrix\Pull\Protobuf\Response;
 
 /**
  * Class AnswerTable

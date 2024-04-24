@@ -1,12 +1,9 @@
 <?php
 namespace Up\Forms\Repository;
 
-use Bitrix\Lists\Api\Response\Response;
 use Bitrix\Main\ORM\Query\Query;
-
 use Bitrix\Main\ORM\Query\QueryHelper;
 use Up\Forms\Model\AnswerTable;
-use Up\Forms\Model\FormTable;
 use Up\Forms\Model\ResponseTable;
 use Up\Forms\Model\SubanswerTable;
 
@@ -51,6 +48,9 @@ Class ResponseRepository
 		$query->addSelect('ANSWER');
 		$query->addSelect('USER_ID');
 		$query->addSelect('ANSWER.SUBANSWER');
+		$query->addSelect('ANSWER.QUESTION');
+		$query->addSelect('ANSWER.QUESTION.OPTION');
+		$query->addSelect('ANSWER.QUESTION.FIELD');
 		$query->setFilter(
 			[
 				['=FORM_ID' => $id]
