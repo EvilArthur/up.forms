@@ -3,7 +3,7 @@
  * @var CMain $APPLICATION
  */
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetTitle("Forms");
+$APPLICATION->SetTitle("Формы");
 
 $APPLICATION->IncludeComponent('up:form.main', '');
 

@@ -8,8 +8,9 @@ use Bitrix\Main\Grid\Options as GridOptions;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UI\PageNavigation;
 use Bitrix\Main\Grid\Panel\Actions;
+
 use Up\Forms\Repository\ResponseRepository;
-use Up\Forms\Service\AnswerManager;
+
 
 class FormResultsComponent extends CBitrixComponent
 {
@@ -47,7 +48,6 @@ class FormResultsComponent extends CBitrixComponent
 			$this->arResult['USERS'][$user['ID']] = $user['NAME'];
 		}
 		$this->arResult['QUESTIONS'] = FormTable::getByPrimary($this->arParams['ID'])->fetchObject()->fillChapter()->fillQuestion();
-
 	}
 
 	protected function fetchActionPanel()
@@ -161,13 +161,27 @@ class FormResultsComponent extends CBitrixComponent
 		{
 			$row = [];
 			$row['USER'] = htmlspecialcharsbx($this->arResult['USERS'][$response->getUserId()]);
+
 			foreach ($response->getAnswer() as $answer)
 			{
-				foreach ($answer->getSubanswer() as $subAnswer)
+				$questionType = $answer->getQuestion()->getField()->getId();
+				if ($questionType == 2 || $questionType == 3)
 				{
-					$row[$answer->getQuestionId()] .= htmlspecialcharsbx($subAnswer->getValue());
+					foreach ($answer->getSubanswer() as $subAnswer)
+					{
+						$row[$answer->getQuestionId()] .= htmlspecialcharsbx($answer->getQuestion()->getOption()->getByPrimary($subAnswer->getValue())->getTitle()) . "<br>";
+					}
 				}
+				else
+				{
+					foreach ($answer->getSubanswer() as $subAnswer)
+					{
+						$row[$answer->getQuestionId()] = $subAnswer->getValue();
+					}
+				}
+
 			}
+
 
 			$rows[] = [
 				'id' => (int)$response->getId(),

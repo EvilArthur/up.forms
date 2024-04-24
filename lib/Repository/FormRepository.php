@@ -1,5 +1,4 @@
 <?php
-
 namespace Up\Forms\Repository;
 
 use Up\Forms\Model\ChapterTable;
@@ -78,14 +77,17 @@ class FormRepository
 	{
 		if ($filter === null)
 		{
-			return FormTable::query()->setSelect(['ID', 'TITLE', 'CREATOR_ID'])->fetchAll();
+			return FormTable::query()
+							->setSelect(['ID', 'TITLE', 'CREATOR_ID'])
+							->fetchAll();
 		}
-
-		return FormTable::query()->setSelect(['ID', 'TITLE', 'CREATOR_ID'])->whereLike(
-			'TITLE',
-			'%' . $filter['TITLE'] . '%'
-		)->whereIn('CREATOR_ID', $filter['USERS'])->setLimit($filter['LIMIT'])->setOffset($filter['OFFSET'])->fetchAll(
-		);
+		return FormTable::query()
+						->setSelect(['ID', 'TITLE', 'CREATOR_ID'])
+						->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
+						->whereIn('CREATOR_ID', $filter['USERS'])
+						->setLimit($filter['LIMIT'])
+						->setOffset($filter['OFFSET'])
+						->fetchAll();
 	}
 
 	public static function deleteForm(int $id): \Bitrix\Main\ORM\Data\Result
@@ -105,15 +107,14 @@ class FormRepository
 
 	public static function getFormSettings(int $id): EO_FormFormSettings_Collection
 	{
-		$settings = \Up\Forms\Model\FormFormSettingsTable::getByPrimary(['FORM_ID' => $id])->fetchCollection();
-
+		$settings = FormFormSettingsTable::getByPrimary(['FORM_ID' => $id])->fetchCollection();
 		return $settings;
 	}
 
 	public static function getMaxNumberOfTry(int $id): ?int
 	{
 		$setting = FormFormSettingsTable::getByPrimary(['FORM_ID' => $id, 'SETTINGS_ID' => 5])->fetchObject();
-		$maxTry = $setting->getValue() === '' ? null : (int)$setting->getValue();
+		$maxTry = $setting->getValue() === '' ? null : (int) $setting->getValue();
 
 		return $maxTry;
 	}

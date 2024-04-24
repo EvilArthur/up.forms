@@ -82,3 +82,12 @@ CREATE TABLE up_form_settings_type (
 	                        TITLE varchar(30),
 	                        PRIMARY KEY (ID)
 );
+
+CREATE TABLE up_task (
+	                       ID int not null auto_increment,
+	                       USER_ID int not null,
+	                       FORM_ID int not null,
+	                       TASK_ID int not null,
+	                       CREATOR_ID int not null,
+	                       PRIMARY KEY (ID)
+);
