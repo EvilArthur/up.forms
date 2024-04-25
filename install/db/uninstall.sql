@@ -1,1 +1,1 @@
-drop table if exists up_field, up_option, up_question_option, up_question, up_chapter, up_form, up_response, up_answer, up_sub_answer, up_form_form_settings, up_form_settings, up_form_settings_type, up_task;
+drop table if exists up_field, up_option, up_question_option, up_question, up_chapter, up_form, up_response, up_answer, up_sub_answer, up_form_form_settings, up_form_settings, up_form_settings_type, up_task, up_question_question_settings, up_question_settings;

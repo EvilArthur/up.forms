@@ -1,6 +1,8 @@
 <?php
 namespace Up\Forms\Repository;
 
+use Bitrix\Main\ORM\Query\Query;
+use Bitrix\Main\ORM\Query\QueryHelper;
 use Up\Forms\Model\ChapterTable;
 use Up\Forms\Model\EO_Chapter;
 use Up\Forms\Model\EO_Form;
@@ -14,6 +16,7 @@ use Up\Forms\Model\FormTable;
 use Up\Forms\Model\OptionTable;
 use Up\Forms\Model\QuestionQuestionSettingsTable;
 use Up\Forms\Model\QuestionTable;
+use Up\Forms\Model\ResponseTable;
 
 class FormRepository
 {
@@ -73,21 +76,33 @@ class FormRepository
 		return $form;
 	}
 
-	public static function getForms(array $filter = null): array
+	public static function getForms(array $filter = null): \Bitrix\Main\ORM\Objectify\Collection
 	{
-		if ($filter === null)
-		{
-			return FormTable::query()
-							->setSelect(['ID', 'TITLE', 'CREATOR_ID'])
-							->fetchAll();
-		}
-		return FormTable::query()
-						->setSelect(['ID', 'TITLE', 'CREATOR_ID'])
-						->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
-						->whereIn('CREATOR_ID', $filter['USERS'])
-						->setLimit($filter['LIMIT'])
-						->setOffset($filter['OFFSET'])
-						->fetchAll();
+		$query = new Query(FormTable::getEntity());
+		$query->addSelect('TITLE');
+		$query->addSelect('CREATOR_ID');
+		$query->addSelect('DATE');
+		$query->addSelect('IS_ACTIVE');
+		$query->addSelect('SETTINGS');
+		$query->addSelect('SETTINGS.SETTINGS');
+		$query->addSelect('SETTINGS.SETTINGS.TYPE');
+		$query->whereLike('TITLE', '%' . $filter['TITLE'] . '%');
+		$query->whereIn('CREATOR_ID', $filter['USERS']);
+		$query->setOrder($filter['SORT']);
+		$query->setLimit($filter['LIMIT']);
+		$query->setOffset($filter['OFFSET']);
+
+		return QueryHelper::decompose($query);
+
+
+		// return FormTable::query()
+		// 				->setSelect(['ID', 'TITLE', 'CREATOR_ID', 'DATE', 'IS_ACTIVE'])
+		// 				->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
+		// 				->whereIn('CREATOR_ID', $filter['USERS'])
+		// 				->setOrder($filter['SORT'])
+		// 				->setLimit($filter['LIMIT'])
+		// 				->setOffset($filter['OFFSET'])
+		// 				->fetchAll();
 	}
 
 	public static function deleteForm(int $id): \Bitrix\Main\ORM\Data\Result

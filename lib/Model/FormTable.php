@@ -4,11 +4,13 @@ namespace Up\Forms\Model;
 use Bitrix\Form\FormSettingsTable;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
+use Bitrix\Main\ORM\Fields\DatetimeField;
 use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\Relations\CascadePolicy;
 use Bitrix\Main\ORM\Fields\Relations\OneToMany;
 use Bitrix\Main\ORM\Fields\StringField;
 use Bitrix\Main\ORM\Fields\Validators\LengthValidator;
+use Bitrix\Main\Type\DateTime;
 
 /**
  * Class FormTable
@@ -68,6 +70,26 @@ class FormTable extends DataManager
 						];
 					},
 					'title' => Loc::getMessage('FORM_ENTITY_TITLE_FIELD'),
+				]
+			),
+			new IntegerField(
+				'IS_ACTIVE',
+				[
+					'default' => function ()
+					{
+						return '1';
+					},
+					'title' => Loc::getMessage('FORM_ENTITY_IS_ACTIVE_FIELD'),
+				]
+			),
+			new DatetimeField(
+				'DATE',
+				[
+					'default' => function()
+					{
+						return new DateTime();
+					},
+					'title' => Loc::getMessage('FORM_ENTITY_CREATED_AT_FIELD'),
 				]
 			),
 			(new OneToMany(

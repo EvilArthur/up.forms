@@ -133,7 +133,6 @@ __formsMigrate(10, function($updater, $DB)
 {
 	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_option'))
 	{
-
 		$DB->query
 		("
 			ALTER TABLE up_option
@@ -213,6 +212,19 @@ __formsMigrate(15, function($updater, $DB)
 				CREATOR_ID int not null,
 				PRIMARY KEY (ID)
 			);
+		");
+	}
+});
+
+__formsMigrate(16, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form'))
+	{
+		$DB->query
+		("
+			ALTER TABLE up_form
+				ADD IS_ACTIVE bool,
+				ADD DATE TIMESTAMP;
 		");
 	}
 });

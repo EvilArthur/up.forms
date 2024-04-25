@@ -9,6 +9,7 @@ use Bitrix\Main\Grid\Panel\Snippet\Onchange;
 use Bitrix\Main\Grid\Options as GridOptions;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UI\PageNavigation;
+use Up\Forms\Model\FormSettingsTable;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\TaskRepository;
 
@@ -52,6 +53,7 @@ class FormMainComponent extends CBitrixComponent
 		{
 			$this->arResult['USERS'][$user['ID']] = $user['NAME'];
 		}
+		$this->arResult['FORM_SETTINGS'] = FormSettingsTable::query()->setSelect(['ID', 'TITLE'])->fetchAll();
 	}
 
 	protected function fetchAddButton()
@@ -131,11 +133,15 @@ class FormMainComponent extends CBitrixComponent
 	{
 		$this->arResult['COLUMNS'] =
 			[
-				['id' => 'TITLE', 'name' => 'Название формы', 'default' => true],
-				['id' => 'DATE_CREATE', 'name' => 'Создано', 'default' => true],
-				['id' => 'STATUS', 'name' => 'Статус', 'default' => true],
-				['id' => 'USER_NAME', 'name' => 'Создал', 'default' => true],
+				['id' => 'TITLE', 'name' => 'Название формы', 'sort' => 'TITLE', 'default' => true],
+				['id' => 'DATE', 'name' => 'Последнее изменение', 'sort' => 'DATE', 'default' => true],
+				['id' => 'STATUS', 'name' => 'Статус', 'sort' => 'IS_ACTIVE', 'default' => true],
+				['id' => 'USER_NAME', 'name' => 'Создал', 'sort' => 'CREATOR_ID', 'default' => true],
 			];
+		foreach ($this->arResult['FORM_SETTINGS'] as $setting)
+		{
+			$this->arResult['COLUMNS'][] = ['id' => $setting['ID'], 'name' => $setting['TITLE'], 'default' => true];
+		}
 	}
 
 	protected function fetchGridRows()
@@ -158,8 +164,9 @@ class FormMainComponent extends CBitrixComponent
 
 	protected function fetchFilter()
 	{
-		// $gridOptions = new GridOptions($this->arParams['GRID_ID']);
+		$gridOptions = new GridOptions($this->arParams['GRID_ID']);
 		$filterOptions = new FilterOptions($this->arParams['FILTER_ID']);
+		$gridFields = $gridOptions->getSorting();
 		$filterFields = $filterOptions->getFilter($this->arResult['FILTERS']);
 
 		$this->arResult['FILTER'] = [
@@ -167,56 +174,77 @@ class FormMainComponent extends CBitrixComponent
 			'OFFSET' => $this->arResult['NAV_OBJECT']->getOffset(),
 			'TITLE' => $filterFields['TITLE'],
 			'USERS' => $filterFields['USER'],
+			'SORT' => $gridFields['sort']
 		];
 	}
 
-	protected function prepareFormsForGrid(array $forms)
+	protected function prepareFormsForGrid( $forms)
 	{
 		$rows = [];
 
 		foreach ($forms as $form)
 		{
+			$columns = [
+				'TITLE' => "<a href = '/form/view/" . $form->getId() . "/'>" . htmlspecialcharsbx($form->getTitle()) . "</a>",
+				'DATE' => $form->getDate()->format('d.M Y H:i'),
+				'STATUS' => 'Active',
+				'USER_NAME' => htmlspecialcharsbx($this->arResult['USERS'][$form->getCreatorId()]),
+			];
+			foreach ($form->getSettings() as $setting)
+			{
+				if($setting->getValue() == null)
+				{
+					$columns[$setting->getSettingsId()] = 'нет ограничений';
+				}
+				elseif($setting->getSettings()->getType()->getTitle() == 'datetime-local')
+				{
+					$columns[$setting->getSettingsId()] = date('d.M Y H:i', strtotime($setting->getValue())) ;
+				}
+				elseif ($setting->getSettings()->getType()->getTitle() == 'checkbox')
+				{
+					$columns[$setting->getSettingsId()] = ($setting->getValue() == 'false')? 'нет' : 'да';
+				}
+				else
+				{
+					$columns[$setting->getSettingsId()] =  $setting->getValue();
+				}
+
+			}
 			$rows[] = [
-				'id' => (int)$form['ID'],
-				'columns' => [
-					'TITLE' => htmlspecialcharsbx($form['TITLE']),
-					'DATE_CREATE' => '2022-01-01',
-					'STATUS' => 'Active',
-					'USER_NAME' => htmlspecialcharsbx($this->arResult['USERS'][$form['CREATOR_ID']]),
-				],
+				'id' => (int)$form->getId(),
+				'columns' => $columns,
 				'actions' => [
 					[
 						'text' => 'Открыть',
-						'onclick' => 'FormList.openForm(' . $form['ID'] . ')',
+						'onclick' => 'FormList.openForm(' . $form->getId() . ')',
 						'default' => true,
 					],
 					[
 						'text' => 'Удалить',
-						'onclick' => 'FormList.deleteForm(' . $form['ID'] . ')',
+						'onclick' => 'FormList.deleteForm(' . $form->getId() . ')',
 						'default' => true,
 					],
 					[
 						'text' => 'Редактировать',
-						'onclick' => 'FormList.editForm(' . $form['ID'] . ')',
+						'onclick' => 'FormList.editForm(' . $form->getId() . ')',
 						'default' => true,
 					],
 					[
 						'text' => 'Результаты',
-						'onclick' => 'FormList.showResults(' . $form['ID'] . ')',
+						'onclick' => 'FormList.showResults(' . $form->getId() . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Созать задачу',
-						'onclick' => 'FormList.createTask("' . $form['TITLE'] . '",' . $form['ID'] . ',' . $this->arResult['USER_ID'] . ')',
+						'text' => 'Создать задачу',
+						'onclick' => 'FormList.createTask("' . $form->getTitle() . '",' . $form->getId() . ',' . $this->arResult['USER_ID'] . ')',
 						'default' => true,
 					],
 					[
 						'text' => 'Быстрая задача',
-						'onclick' => 'FormList.createFastTask("' . $form['TITLE'] . '",' . $form['ID'] . ',' . $this->arResult['USER_ID'] . ')',
+						'onclick' => 'FormList.createFastTask("' . $form->getTitle() . '",' . $form->getId() . ',' . $this->arResult['USER_ID'] . ')',
 						'default' => true,
 					],
 				],
-
 			];
 		}
 
