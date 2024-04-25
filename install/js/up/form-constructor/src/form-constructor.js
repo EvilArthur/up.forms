@@ -9,6 +9,7 @@ export class FormConstructor
 	{
 		this.layout = {};
 		this.layout.wrap = options.container;
+		this.layout.error = null;
 		this.id = options.id;
 		if (!this.layout.wrap)
 		{
@@ -148,13 +149,33 @@ export class FormConstructor
 		form.SETTINGS = data;
 		form.ID = this.id;
 		console.log(form);
+		this.renderErrors([]);
 		FormManager.saveFormData({ formData: form })
 			.then((response) => {
 				console.log(response);
 				BX.SidePanel.Instance.close();
 			})
-			.catch((error) => {
-				console.log(error);
+			.catch((errors) => {
+				this.layout.wrap.prepend(this.renderErrors(errors))
+				console.log(errors);
 			});
+	}
+
+	renderErrors(errors)
+	{
+		const wrap = Tag.render`<div class="container">
+									${errors.map((error) => this.renderError(error.message))}
+								</div>`;
+		this.layout.error?.replaceWith(wrap);
+		this.layout.error = wrap;
+		return this.layout.error;
+	}
+
+	renderError(message)
+	{
+		const wrap = Tag.render`<div class="alert alert-danger" role="alert">
+								${message}
+							</div>`
+		return wrap;
 	}
 }

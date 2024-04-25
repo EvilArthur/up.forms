@@ -1,6 +1,7 @@
 <?php
 namespace Up\Forms\Repository;
 
+use Up\Forms\Exception\InvalidValueException;
 use Up\Forms\Model\ChapterTable;
 use Up\Forms\Model\EO_Chapter;
 use Up\Forms\Model\EO_Form;
@@ -120,6 +121,9 @@ class FormRepository
 		return $maxTry;
 	}
 
+	/**
+	 * @throws InvalidValueException
+	 */
 	private static function fillFormByData(array $formData): EO_Form
 	{
 		global $USER;
@@ -131,6 +135,10 @@ class FormRepository
 		}
 
 		$form->setCreatorId($USER->GetID());
+		if ($formData['TITLE'] === '')
+		{
+			throw new InvalidValueException('Название не может быть пустым');
+		}
 		$form->setTitle($formData['TITLE']);
 
 		foreach ($formData['CHAPTER'] as $chapterData)
@@ -183,6 +191,10 @@ class FormRepository
 		{
 			$question->setId($questionData['ID']);
 		}
+		if ($questionData['TITLE'] === '')
+		{
+			throw new InvalidValueException('Название вопроса не может быть пустым');
+		}
 		$question->setTitle($questionData['TITLE']);
 		$question->setPosition($questionData['POSITION']);
 		$question->setFieldId($questionData['FIELD_ID']);
@@ -214,6 +226,10 @@ class FormRepository
 			$option->setId($optionData['ID']);
 		}
 
+		if ($optionData['TITLE'] === '')
+		{
+			throw new InvalidValueException('Название опции не может быть пустым');
+		}
 		$option->setTitle($optionData['TITLE']);
 		$option->setIsRightAnswer($optionData['IS_RIGHT_ANSWER']);
 
@@ -242,9 +258,25 @@ class FormRepository
 		{
 			$setting->setFormId($formId);
 		}
-
+		if ($error = self::validateSetting($settingData['ID']))
+		{
+			throw new InvalidValueException($error);
+		}
 		$setting->setValue($settingData['VALUE']);
 		return $setting;
+	}
+
+	private static function validateSetting(int $id)
+	{
+		switch ($id)
+		{
+			case 1:
+			{
+				
+				break;
+			}
+		}
+		return null;
 	}
 }
 
