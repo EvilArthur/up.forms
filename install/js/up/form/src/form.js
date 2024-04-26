@@ -16,7 +16,12 @@ export class Form
 		this.startTime = options.values.startTime;
 		if (this.startTime)
 		{
-			this.timeIsUp = new Date() - this.startTime;
+			this.startTimer();
+			const timeRemaining = this.addTimeFromTimer(this.startTime, this.timer) - new Date();
+			this.timeIsUp = timeRemaining <= 0;
+		}
+		if (this.timeIsUp)
+		{
 			this.submitResponse();
 		}
 		this.try = options.values.try;
@@ -49,10 +54,6 @@ export class Form
 				});
 				console.log(this.questions);
 				this.layout.form = this.render();
-				if(this.isRenderedMainBody)
-				{
-					this.startTimer();
-				}
 			}
 			catch (error)
 			{
@@ -93,6 +94,7 @@ export class Form
 		}
 		else
 		{
+			this.startTimer();
 			wrap = Tag.render`
 			<div class="container">
 				<h1 class="text-center mt-5 mb-4">${this.formData.TITLE}</h1>

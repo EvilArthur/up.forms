@@ -302,6 +302,7 @@ class FormRepository
 				{
 					throw new InvalidValueException('Дата создания задана неверно');
 				}
+				break;
 			case 2:
 			{
 				$date = \DateTime::createFromFormat('Y-m-d\TH:i', $value);
@@ -341,6 +342,7 @@ class FormRepository
 				{
 					throw new InvalidValueException('Количество попыток должно быть больше 0');
 				}
+				break;
 			}
 		}
 	}

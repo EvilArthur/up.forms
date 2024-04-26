@@ -186,7 +186,7 @@ class FormMainComponent extends CBitrixComponent
 		{
 			$columns = [
 				'TITLE' => "<a href = '/form/view/" . $form->getId() . "/'>" . htmlspecialcharsbx($form->getTitle()) . "</a>",
-				'DATE' => $form->getDate()->format('d.M Y H:i'),
+				'DATE' => $form->getDate()?->format('d.M Y H:i'),
 				'STATUS' => 'Active',
 				'USER_NAME' => htmlspecialcharsbx($this->arResult['USERS'][$form->getCreatorId()]),
 			];

@@ -361,7 +361,11 @@ this.BX.Up = this.BX.Up || {};
 	    this.isCompleted = false;
 	    this.startTime = options.values.startTime;
 	    if (this.startTime) {
-	      this.timeIsUp = new Date() - this.startTime;
+	      this.startTimer();
+	      var timeRemaining = this.addTimeFromTimer(this.startTime, this.timer) - new Date();
+	      this.timeIsUp = timeRemaining <= 0;
+	    }
+	    if (this.timeIsUp) {
 	      this.submitResponse();
 	    }
 	    this["try"] = options.values["try"];
@@ -382,7 +386,7 @@ this.BX.Up = this.BX.Up || {};
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
 	              if (!(this.id !== 0)) {
-	                _context.next = 16;
+	                _context.next = 15;
 	                break;
 	              }
 	              _context.prev = 1;
@@ -398,20 +402,17 @@ this.BX.Up = this.BX.Up || {};
 	              });
 	              console.log(this.questions);
 	              this.layout.form = this.render();
-	              if (this.isRenderedMainBody) {
-	                this.startTimer();
-	              }
-	              _context.next = 16;
+	              _context.next = 15;
 	              break;
-	            case 13:
-	              _context.prev = 13;
+	            case 12:
+	              _context.prev = 12;
 	              _context.t0 = _context["catch"](1);
 	              console.log(_context.t0);
-	            case 16:
+	            case 15:
 	            case "end":
 	              return _context.stop();
 	          }
-	        }, _callee, this, [[1, 13]]);
+	        }, _callee, this, [[1, 12]]);
 	      }));
 	      function loadFormData() {
 	        return _loadFormData.apply(this, arguments);
@@ -430,6 +431,7 @@ this.BX.Up = this.BX.Up || {};
 	      } else if (this.timeIsUp) {
 	        wrap = main_core.Tag.render(_templateObject3$2 || (_templateObject3$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t\t<div class=\"d-flex justify-content-center\"><h2 class =\"text-center\">\u0412\u0440\u0435\u043C\u044F \u0432\u044B\u0448\u043B\u043E!</h2></div>\n\t\t\t\t</div>"])), this.formData.TITLE);
 	      } else {
+	        this.startTimer();
 	        wrap = main_core.Tag.render(_templateObject4$1 || (_templateObject4$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>"])), this.formData.TITLE, this.renderTimer(), this.renderQuestionList(), this.renderSubmitButton());
 	        this.isRenderedMainBody = true;
 	      }
