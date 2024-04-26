@@ -9,6 +9,18 @@ this.BX.Up = this.BX.Up || {};
 	    var _this = this;
 	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    babelHelpers.classCallCheck(this, FormList);
+	    if (options.action) {
+	      var newUrl = '/forms/';
+	      history.pushState({
+	        path: newUrl
+	      }, 'Формы', newUrl);
+	      if (options.action === 'create') {
+	        this.openSlider('/form/create/');
+	      }
+	      if (options.action === 'edit' && options.formId) {
+	        this.openSlider('/form/edit/'.concat(options.formId, '/'));
+	      }
+	    }
 	    this.gridId = options.gridId;
 	    console.log(this.gridId);
 	    BX.addCustomEvent('onPullEvent', function (module_id, command, params) {

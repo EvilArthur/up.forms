@@ -138,12 +138,13 @@ export class FormConstructor
 	renderSaveButton()
 	{
 		const wrap = Tag.render`<button class="btn btn-primary">Сохранить</button>`
-		Event.bind(wrap, 'click', this.onSaveButtonClickHandler.bind(this));
+		Event.bind(wrap, 'click', () => this.onSaveButtonClickHandler(wrap));
 		return wrap;
 	}
 
-	onSaveButtonClickHandler()
+	onSaveButtonClickHandler(button)
 	{
+		button.classList.add('disabled')
 		const data = this.settings.getData();
 		const form = this.construct.getData();
 		form.SETTINGS = data;
@@ -157,6 +158,7 @@ export class FormConstructor
 			})
 			.catch((errors) => {
 				this.layout.wrap.prepend(this.renderErrors(errors))
+				button.classList.remove('disabled')
 				console.log(errors);
 			});
 	}

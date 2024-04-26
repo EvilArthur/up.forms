@@ -5,7 +5,10 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 \Bitrix\Main\UI\Extension::load('up.form');
 $values = [
 	'id' => $arParams['ID'],
-	'timer' => $arResult['timer'],
+	'timer' => $arResult['TIMER'],
+	'maxTry' => $arResult['MAX_TRY'],
+	'try' => $arResult['TRY'],
+	'startTime' => $arResult['START_RESPONSE_TIME'],
 ]
 ?>
 

@@ -10,7 +10,19 @@ export class Form
 		this.id = options.values.id;
 		this.layout.wrap = options.container;
 		this.timer = options.values.timer;
+		this.isRenderedMainBody = false;
+		this.isCompleted = false;
 
+		this.startTime = options.values.startTime;
+		if (this.startTime)
+		{
+			this.timeIsUp = new Date() - this.startTime;
+			this.submitResponse();
+		}
+		this.try = options.values.try;
+		this.maxTry = options.values.maxTry;
+
+		this.isStarted = this.startTime ? true : false;
 		this.questions = [];
 		this.formData = {};
 		this.isLoading = true;
@@ -37,7 +49,10 @@ export class Form
 				});
 				console.log(this.questions);
 				this.layout.form = this.render();
-				this.startTimer();
+				if(this.isRenderedMainBody)
+				{
+					this.startTimer();
+				}
 			}
 			catch (error)
 			{
@@ -59,6 +74,23 @@ export class Form
 			</div>
 			`;
 		}
+		else if (!this.isStarted)
+		{
+			wrap = Tag.render`
+				<div class="container">
+					<h1 class="text-center mt-5 mb-4">${this.formData.TITLE}</h1>
+					${this.renderTriesRemaining()}
+					<div class="d-flex justify-content-center">${this.renderStartButton()}</div>
+				</div>`;
+		}
+		else if(this.timeIsUp)
+		{
+			wrap = Tag.render`
+				<div class="container">
+					<h1 class="text-center mt-5 mb-4">${this.formData.TITLE}</h1>
+					<div class="d-flex justify-content-center"><h2 class ="text-center">Время вышло!</h2></div>
+				</div>`;
+		}
 		else
 		{
 			wrap = Tag.render`
@@ -67,8 +99,8 @@ export class Form
 				${this.renderTimer()}
 				${this.renderQuestionList()}
 				${this.renderSubmitButton()}
-			</div>
-		`;
+			</div>`;
+			this.isRenderedMainBody = true;
 		}
 		this.layout.form?.replaceWith(wrap);
 		this.layout.form = wrap;
@@ -92,9 +124,44 @@ export class Form
 		const wrap = Tag.render`
 			<button class="btn btn-primary">Подтвердить</button>
 		`;
-		Event.bind(wrap, 'click', this.onSubmitButtonClickHandler.bind(this));
-
+		Event.bind(wrap, 'click', this.submitResponse.bind(this));
+		this.layout.submitButton = wrap;
 		return wrap;
+	}
+
+	submitResponse()
+	{
+		this.isCompleted = true;
+		let answers = [];
+		if (this.isRenderedMainBody)
+		{
+			this.layout.submitButton.classList.add('disabled');
+			answers = this.questions.map((question) => {
+				return question.getAnswer();
+			});
+		}
+
+		const data = {
+			'FORM_ID': this.id,
+			'ANSWER': answers,
+			'IS_COMPLETED': true,
+		};
+		console.log(data);
+		FormManager.saveAnswerData(data)
+			.then((response) => {
+				if (!this.timeIsUp)
+				{
+					BX.SidePanel.Instance.close();
+					BX.SidePanel.Instance.destroy('/form/results/${formId}/');
+				}
+				else
+				{
+					this.render();
+				}
+
+				console.log(response);
+			})
+			.catch((error) => console.log(error));
 	}
 
 	renderTimer()
@@ -103,8 +170,10 @@ export class Form
 		{
 			const wrap = Tag.render`<div class="container text-center mt-4">
 										<div id="timer" class="display-6">${this.renderTime()}</div>
-									</div>`
-			return wrap;
+									</div>`;
+			this.layout.timer?.replaceWith(wrap);
+			this.layout.timer = wrap;
+			return this.layout.timer;
 		}
 		else
 		{
@@ -114,60 +183,74 @@ export class Form
 
 	renderTime()
 	{
-		const wrap = Tag.render`<p></p>`
+		const wrap = Tag.render`<p>${this.timer}:00</p>`;
 		this.layout.time = wrap;
-		return this.layout.time
+		return this.layout.time;
 	}
 
-	onSubmitButtonClickHandler()
+	renderTriesRemaining()
 	{
-		const answers = this.questions.map((question) => {
-			return question.getAnswer();
-		})
-		const data = {
-			'FORM_ID': this.id,
-			'USER_ID': 1,
-			'ANSWER': answers,
+		if (!this.maxTry)
+		{
+			return null;
 		}
-		console.log(data)
-		FormManager.saveAnswerData(data)
-			.then((response) => {
-				BX.SidePanel.Instance.close();
-				console.log(response);
-			})
-			.catch((error) => console.log(error));
+		const wrap = Tag.render`<h2 class ="text-center">У вас осталось попыток: ${this.maxTry - this.try}</h2>`;
+		return wrap;
+	}
+
+	renderStartButton()
+	{
+		const wrap = Tag.render`
+			<button class="btn btn-primary">Начать</button>
+		`;
+		Event.bind(wrap, 'click', () => this.onStartButtonClickHandler(wrap));
+		return wrap;
+	}
+
+	async onStartButtonClickHandler(button)
+	{
+		this.isStarted = true;
+		button.classList.add('disabled');
+		this.startTime = await FormManager.createResponse(this.id)
+		console.log(this.startTime);
+		console.log(new Date(this.startTime * 1000));
+		this.startTimer();
+		this.render();
+
 	}
 
 	startTimer()
 	{
 		if (this.timer)
 		{
-			this.startTime = localStorage.getItem('timerStartTime');
-			if (!this.startTime)
-			{
-				this.startTime = this.addTimeToCurrent(this.timer);
-			}
-			this.updateTimer(this.startTime);
+			const endTime = this.addTimeFromTimer(this.startTime, this.timer);
+			this.renderTimer();
+			this.updateTimer(endTime);
 		}
 	}
 
-	addTimeToCurrent(additionalTime) {
-		const [hours, minutes] = additionalTime.split(':').map(Number);
-
-		const now = new Date();
-
+	addTimeFromTimer(time, timer)
+	{
+		const jsTimeStamp = time * 1000;
+		const [hours, minutes] = timer.split(':').map(Number);
 		const totalMinutesCombined = hours * 60 + minutes;
-		const newDate = new Date(now.getTime() + totalMinutesCombined * 60000); // 60000 миллисекунд в минуте
-		console.log(newDate)
+		const newDate = new Date(jsTimeStamp + totalMinutesCombined * 60000);
+		console.log(newDate);
 		return newDate;
 	}
 
-	updateTimer(startTime)
+	updateTimer(endTime)
 	{
-		const remainingTime =  startTime - new Date();
+		const remainingTime = endTime - new Date();
+		console.log(remainingTime);
+		if (this.isCompleted)
+		{
+			return;
+		}
 		if (remainingTime <= 0)
 		{
-			this.onSubmitButtonClickHandler();
+			this.timeIsUp = true;
+			this.submitResponse(this.layout.submitButton);
 		}
 		else
 		{
@@ -180,7 +263,7 @@ export class Form
 			const formattedMinutes = String(minutes).padStart(2, '0');
 
 			this.layout.time.innerText = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
-			setTimeout(() => this.updateTimer(startTime), 1000);
+			setTimeout(() => this.updateTimer(endTime), 1000);
 		}
 	}
 }

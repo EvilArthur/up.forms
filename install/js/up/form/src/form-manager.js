@@ -42,4 +42,26 @@ export class FormManager
 				});
 		})
 	}
+
+	static createResponse(id)
+	{
+		console.log(1);
+		return new Promise((resolve, reject) => {
+			BX.ajax.runAction(
+					'up:forms.Form.createResponse',
+					{
+						data: {
+							formId: id
+						},
+					})
+				.then((response) => {
+					const startTime = response.data.startTime;
+					resolve(startTime);
+				})
+				.catch((error) => {
+					console.log(error);
+					reject(error);
+				});
+		})
+	}
 }

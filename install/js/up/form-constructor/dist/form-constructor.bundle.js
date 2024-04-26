@@ -38,6 +38,9 @@ this.BX.Up = this.BX.Up || {};
 	      var newTitle = this.input.value;
 	      this.element.innerText = newTitle;
 	      this.textObject.value = newTitle;
+	      if (this.input.value === '') {
+	        return;
+	      }
 	      this.input.replaceWith(this.element);
 	    }
 	  }]);
@@ -1054,14 +1057,18 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderSaveButton",
 	    value: function renderSaveButton() {
+	      var _this = this;
 	      var wrap = main_core.Tag.render(_templateObject7$1 || (_templateObject7$1 = babelHelpers.taggedTemplateLiteral(["<button class=\"btn btn-primary\">\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C</button>"])));
-	      main_core.Event.bind(wrap, 'click', this.onSaveButtonClickHandler.bind(this));
+	      main_core.Event.bind(wrap, 'click', function () {
+	        return _this.onSaveButtonClickHandler(wrap);
+	      });
 	      return wrap;
 	    }
 	  }, {
 	    key: "onSaveButtonClickHandler",
-	    value: function onSaveButtonClickHandler() {
-	      var _this = this;
+	    value: function onSaveButtonClickHandler(button) {
+	      var _this2 = this;
+	      button.classList.add('disabled');
 	      var data = this.settings.getData();
 	      var form = this.construct.getData();
 	      form.SETTINGS = data;
@@ -1074,17 +1081,18 @@ this.BX.Up = this.BX.Up || {};
 	        console.log(response);
 	        BX.SidePanel.Instance.close();
 	      })["catch"](function (errors) {
-	        _this.layout.wrap.prepend(_this.renderErrors(errors));
+	        _this2.layout.wrap.prepend(_this2.renderErrors(errors));
+	        button.classList.remove('disabled');
 	        console.log(errors);
 	      });
 	    }
 	  }, {
 	    key: "renderErrors",
 	    value: function renderErrors(errors) {
-	      var _this2 = this,
+	      var _this3 = this,
 	        _this$layout$error;
 	      var wrap = main_core.Tag.render(_templateObject8$1 || (_templateObject8$1 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t</div>"])), errors.map(function (error) {
-	        return _this2.renderError(error.message);
+	        return _this3.renderError(error.message);
 	      }));
 	      (_this$layout$error = this.layout.error) === null || _this$layout$error === void 0 ? void 0 : _this$layout$error.replaceWith(wrap);
 	      this.layout.error = wrap;
