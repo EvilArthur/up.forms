@@ -3,6 +3,10 @@ namespace Up\Forms\Repository;
 
 use Bitrix\Main\ORM\Query\Query;
 use Bitrix\Main\ORM\Query\QueryHelper;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\SystemException;
+use http\Exception\InvalidArgumentException;
+use Up\Forms\Exception\InvalidValueException;
 use Up\Forms\Model\ChapterTable;
 use Up\Forms\Model\EO_Chapter;
 use Up\Forms\Model\EO_Form;
@@ -37,7 +41,6 @@ class FormRepository
 			Application::getConnection()->rollbackTransaction();
 			throw $error;
 		}
-
 	}
 
 	public static function saveForm($formData)
@@ -130,11 +133,14 @@ class FormRepository
 	public static function getMaxNumberOfTry(int $id): ?int
 	{
 		$setting = FormFormSettingsTable::getByPrimary(['FORM_ID' => $id, 'SETTINGS_ID' => 5])->fetchObject();
-		$maxTry = $setting->getValue() === '' ? null : (int) $setting->getValue();
+		$maxTry = $setting->getValue();
 
-		return $maxTry;
+		return $maxTry ? (int) $maxTry : null;
 	}
 
+	/**
+	 * @throws InvalidValueException
+	 */
 	private static function fillFormByData(array $formData): EO_Form
 	{
 		global $USER;
@@ -146,6 +152,10 @@ class FormRepository
 		}
 
 		$form->setCreatorId($USER->GetID());
+		if ($formData['TITLE'] === '')
+		{
+			throw new InvalidValueException('Название не может быть пустым');
+		}
 		$form->setTitle($formData['TITLE']);
 
 		foreach ($formData['CHAPTER'] as $chapterData)
@@ -178,6 +188,10 @@ class FormRepository
 		$chapter->setTitle($chapterData['TITLE']);
 		$chapter->setDescription($chapterData['DESCRIPTION']);
 
+		if (empty($chapterData['QUESTION']))
+		{
+			throw new InvalidValueException('Нельзя создать форму без вопросов');
+		}
 		foreach ($chapterData['QUESTION'] as $questionData)
 		{
 			if ($questionData === null)
@@ -191,12 +205,19 @@ class FormRepository
 		return $chapter;
 	}
 
+	/**
+	 * @throws InvalidValueException
+	 */
 	private static function fillQuestionByData(array $questionData): EO_Question
 	{
 		$question = QuestionTable::createObject();
 		if (!is_null($questionData['ID']))
 		{
 			$question->setId($questionData['ID']);
+		}
+		if ($questionData['TITLE'] === '')
+		{
+			throw new InvalidValueException('Название вопроса не может быть пустым');
 		}
 		$question->setTitle($questionData['TITLE']);
 		$question->setPosition($questionData['POSITION']);
@@ -208,6 +229,7 @@ class FormRepository
 			{
 				continue;
 			}
+			self::validateOptionData($optionData, $questionData['FIELD_ID']);
 			$option = self::fillOptionByData($optionData);
 			$question->addToOption($option);
 		}
@@ -229,6 +251,10 @@ class FormRepository
 			$option->setId($optionData['ID']);
 		}
 
+		if ($optionData['TITLE'] === '')
+		{
+
+		}
 		$option->setTitle($optionData['TITLE']);
 		$option->setIsRightAnswer($optionData['IS_RIGHT_ANSWER']);
 
@@ -257,9 +283,77 @@ class FormRepository
 		{
 			$setting->setFormId($formId);
 		}
+		self::validateSettingData($settingData['ID'], $settingData['VALUE']);
 
 		$setting->setValue($settingData['VALUE']);
 		return $setting;
+	}
+
+	private static function validateSettingData(int $id, ?string $value)
+	{
+		if (is_null($value))
+		{
+			return;
+		}
+		switch ($id)
+		{
+			case 1:
+				if (\DateTime::createFromFormat('Y-m-d\TH:i', $value) === false)
+				{
+					throw new InvalidValueException('Дата создания задана неверно');
+				}
+			case 2:
+			{
+				$date = \DateTime::createFromFormat('Y-m-d\TH:i', $value);
+				if ($date === false)
+				{
+					throw new InvalidValueException('Дата завершения задана неверно');
+				}
+				if ($date < new \DateTime())
+				{
+					throw new InvalidValueException('Дата завершения теста не может быть раньше текущей даты');
+				}
+				break;
+			}
+			case 3:
+			{
+				if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d$/', $value))
+				{
+					throw new InvalidValueException('Таймер задан неверно');
+				}
+				if ($value === '00:00')
+				{
+					throw new InvalidValueException('Таймер не может быть меньше минуты');
+				}
+				break;
+			}
+			case 4:
+			{
+				if ($value !== 'true' && $value !== 'false')
+				{
+					throw new InvalidArgumentException('Что-то пошло не так');
+				}
+				break;
+			}
+			case 5:
+			{
+				if ((int) $value <= 0)
+				{
+					throw new InvalidValueException('Количество попыток должно быть больше 0');
+				}
+			}
+		}
+	}
+
+	/**
+	 * @throws InvalidValueException
+	 */
+	private static function validateOptionData(array $data, int $questionFieldId)
+	{
+		if ($data['TITLE'] === '' && $questionFieldId !== 1)
+		{
+			throw new InvalidValueException('Название опции не может быть пустым');
+		}
 	}
 }
 

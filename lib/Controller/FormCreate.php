@@ -2,8 +2,10 @@
 
 namespace Up\Forms\Controller;
 
+use Bitrix\Bizproc\Error;
 use Bitrix\Main\Engine\Controller;
 use Bitrix\Main\Loader;
+use Up\Forms\Exception\InvalidValueException;
 use Up\Forms\Repository\FieldRepository;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\FormSettingsRepository;
@@ -12,18 +14,27 @@ class FormCreate extends Controller
 {
 	public function saveFormDataAction($formData)
 	{
-		if ((int) $formData['ID'] === 0)
+		try
 		{
-			$result = [
-				'result' => FormRepository::createForm($formData),
-			];
+			if ((int) $formData['ID'] === 0)
+			{
+				$result = [
+					'result' => FormRepository::createForm($formData),
+				];
+			}
+			else
+			{
+				$result = [
+					'result' => FormRepository::saveForm($formData),
+				];
+			}
 		}
-		else
+		catch (InvalidValueException $e)
 		{
-			$result = [
-				'result' => FormRepository::saveForm($formData),
-			];
+			$this->addError(new Error($e->getMessage()));
+			return null;
 		}
+
 
 		if(Loader::includeModule('pull'))
 		{

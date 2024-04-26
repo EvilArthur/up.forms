@@ -228,3 +228,16 @@ __formsMigrate(16, function($updater, $DB)
 		");
 	}
 });
+__formsMigrate(17, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_response'))
+	{
+		$DB->query
+		("
+			ALTER TABLE up_response
+			ADD COMPLETED bool,
+			ADD START_TIME timestamp,
+			ADD COMPLETED_TIME timestamp null;
+		");
+	}
+});

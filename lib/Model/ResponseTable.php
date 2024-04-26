@@ -4,6 +4,7 @@ namespace Up\Forms\Model;
 use Bitrix\Main\Entity\ExpressionField;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
+use Bitrix\Main\ORM\Fields\DatetimeField;
 use Bitrix\Main\ORM\Fields\IntegerField;
 use Bitrix\Main\ORM\Fields\Relations\CascadePolicy;
 use Bitrix\Main\ORM\Fields\Relations\OneToMany;
@@ -73,6 +74,16 @@ class ResponseTable extends DataManager
 					'title' => Loc::getMessage('RESPONSE_ENTITY_TRY_NUMBER_FIELD'),
 				]
 			),
+			(new IntegerField('COMPLETED',
+							  []
+			))->configureTitle(Loc::getMessage('RESPONSE_ENTITY_COMPLETED_FIELD')),
+			(new DatetimeField('START_TIME',
+							   []
+			))->configureTitle(Loc::getMessage('RESPONSE_ENTITY_START_TIME_FIELD')),
+			(new DatetimeField('COMPLETED_TIME',
+							   []
+			))->configureTitle(Loc::getMessage('RESPONSE_ENTITY_COMPLETED_TIME_FIELD')),
+
 			new Reference(
 				'FORM',
 				FormTable::class,

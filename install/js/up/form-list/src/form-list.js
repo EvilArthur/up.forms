@@ -3,6 +3,19 @@ export class FormList
 {
 	constructor(options = {})
 	{
+		if (options.action)
+		{
+			const newUrl = '/forms/'
+			history.pushState({ path: newUrl }, 'Формы', newUrl);
+			if (options.action === 'create')
+			{
+				this.openSlider('/form/create/');
+			}
+			if (options.action === 'edit' && options.formId)
+			{
+				this.openSlider('/form/edit/' . concat(options.formId, '/'));
+			}
+		}
 		this.gridId = options.gridId;
 		console.log(this.gridId)
 		BX.addCustomEvent('onPullEvent', (module_id, command, params) =>

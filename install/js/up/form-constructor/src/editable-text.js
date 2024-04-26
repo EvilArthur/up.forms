@@ -38,6 +38,10 @@ export class EditableText
 		const newTitle = this.input.value;
 		this.element.innerText = newTitle;
 		this.textObject.value = newTitle;
+		if (this.input.value === '')
+		{
+			return;
+		}
 		this.input.replaceWith(this.element);
 	}
 }

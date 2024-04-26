@@ -9,6 +9,7 @@ export class FormConstructor
 	{
 		this.layout = {};
 		this.layout.wrap = options.container;
+		this.layout.error = null;
 		this.id = options.id;
 		if (!this.layout.wrap)
 		{
@@ -137,24 +138,46 @@ export class FormConstructor
 	renderSaveButton()
 	{
 		const wrap = Tag.render`<button class="btn btn-primary">Сохранить</button>`
-		Event.bind(wrap, 'click', this.onSaveButtonClickHandler.bind(this));
+		Event.bind(wrap, 'click', () => this.onSaveButtonClickHandler(wrap));
 		return wrap;
 	}
 
-	onSaveButtonClickHandler()
+	onSaveButtonClickHandler(button)
 	{
+		button.classList.add('disabled')
 		const data = this.settings.getData();
 		const form = this.construct.getData();
 		form.SETTINGS = data;
 		form.ID = this.id;
 		console.log(form);
+		this.renderErrors([]);
 		FormManager.saveFormData({ formData: form })
 			.then((response) => {
 				console.log(response);
 				BX.SidePanel.Instance.close();
 			})
-			.catch((error) => {
-				console.log(error);
+			.catch((errors) => {
+				this.layout.wrap.prepend(this.renderErrors(errors))
+				button.classList.remove('disabled')
+				console.log(errors);
 			});
+	}
+
+	renderErrors(errors)
+	{
+		const wrap = Tag.render`<div class="container">
+									${errors.map((error) => this.renderError(error.message))}
+								</div>`;
+		this.layout.error?.replaceWith(wrap);
+		this.layout.error = wrap;
+		return this.layout.error;
+	}
+
+	renderError(message)
+	{
+		const wrap = Tag.render`<div class="alert alert-danger" role="alert">
+								${message}
+							</div>`
+		return wrap;
 	}
 }

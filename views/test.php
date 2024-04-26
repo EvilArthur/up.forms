@@ -7,8 +7,8 @@ use Bitrix\Main\Config\Option;
 
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $APPLICATION->SetTitle("Forms");
-
-Option::set('up.forms', '~database_schema_version', 1);
+// echo '<pre>';
+/*Option::set('up.forms', '~database_schema_version', 16);*/
 var_dump(Option::get('up.forms', '~database_schema_version'));
-
+// var_dump(\Up\Forms\Repository\FormRepository::getForm(48));
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
