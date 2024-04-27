@@ -7,14 +7,14 @@
  */
 
 use Bitrix\Main\UI\Extension;
+use Bitrix\UI\Toolbar\ButtonLocation;
 use Bitrix\UI\Toolbar\Facade\Toolbar;
 
 Extension::load('up.form-list');
 \CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-
-Toolbar::addButton($arResult['ADD_BUTTON']);
+Toolbar::addButton($arResult['ADD_BUTTON'], ButtonLocation::AFTER_TITLE);
 Toolbar::addFilter($arResult['FILTER_PARAMS']);
 
 $APPLICATION->IncludeComponent(
@@ -59,9 +59,7 @@ $APPLICATION->IncludeComponent(
 	BX.ready(function() {
 		window.FormList = new BX.Up.Forms.FormList({
 			container: document.getElementById('main-container'),
-			gridId: "<?=$arResult['GRID_ID']?>",
-			<?= $arParams['ACTION'] ? "action: '{$arParams['ACTION']}'," : '' ?>
-			<?= $arParams['FORM_ID'] ? "formId: '{$arParams['FORM_ID']}'," : '' ?>
+			gridId: "<?=$arResult['GRID_ID']?>"
 		});
 	});
 </script>

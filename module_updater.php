@@ -241,3 +241,16 @@ __formsMigrate(17, function($updater, $DB)
 		");
 	}
 });
+
+
+__formsMigrate(18, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form_settings_type'))
+	{
+		$DB->query
+		("
+			INSERT INTO up_form_settings(TITLE, TYPE_ID)
+			VALUE ('Форма активна', '3');
+		");
+	}
+});

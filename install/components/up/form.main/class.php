@@ -19,6 +19,7 @@ class FormMainComponent extends CBitrixComponent
 	{
 		global $USER;
 		$this->arResult['USER_ID'] = $USER->GetID();
+
 		if(Loader::includeModule('pull'))
 		{
 			\CPullWatch::Add($USER->GetID(), 'FORMS-UPDATE');
@@ -58,6 +59,7 @@ class FormMainComponent extends CBitrixComponent
 
 	protected function fetchAddButton()
 	{
+		// $addButton = new \Bitrix\UI\Buttons\CreateButton();
 		$addButton = AddButton::create(
 			[
 				'id' => 'createForm',
@@ -65,6 +67,8 @@ class FormMainComponent extends CBitrixComponent
 				'text' => 'Создать',
 			]
 		);
+		// $addButton->set
+		// $splitButton = new Bitrix\UI\Buttons\Split\CreateButton();
 
 		$this->arResult['ADD_BUTTON'] = $addButton;
 	}
@@ -135,7 +139,6 @@ class FormMainComponent extends CBitrixComponent
 			[
 				['id' => 'TITLE', 'name' => 'Название формы', 'sort' => 'TITLE', 'default' => true],
 				['id' => 'DATE', 'name' => 'Последнее изменение', 'sort' => 'DATE', 'default' => true],
-				['id' => 'STATUS', 'name' => 'Статус', 'sort' => 'IS_ACTIVE', 'default' => true],
 				['id' => 'USER_NAME', 'name' => 'Создал', 'sort' => 'CREATOR_ID', 'default' => true],
 			];
 		foreach ($this->arResult['FORM_SETTINGS'] as $setting)

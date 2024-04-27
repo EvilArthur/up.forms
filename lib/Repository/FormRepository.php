@@ -1,9 +1,10 @@
 <?php
 namespace Up\Forms\Repository;
 
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\ORM\Query\Query;
 use Bitrix\Main\ORM\Query\QueryHelper;
-use Bitrix\Main\ArgumentException;
 use Bitrix\Main\SystemException;
 use http\Exception\InvalidArgumentException;
 use Up\Forms\Exception\InvalidValueException;
@@ -63,50 +64,55 @@ class FormRepository
 		}
 	}
 
-	public static function getForm(int $id)/*: EO_Form*/
+	public static function getForm(int $id, $filter = null)/*: EO_Form*/
 	{
 		$form = FormTable::getByPrimary($id, [
 			'select' => [
 				'TITLE',
 				'CHAPTER',
-				'CHAPTER.QUESTION',
-				'CHAPTER.QUESTION.OPTION',
-				'CHAPTER.QUESTION.SETTINGS',
 				'SETTINGS.SETTINGS_ID',
 				'SETTINGS.VALUE',
 			],
 		])->fetchObject();
 
+		$questions = QuestionRepository::getQuestionsByChapterId($id, $filter);
+
+		foreach ($questions as $question)
+		{
+			$form->getChapter()->getByPrimary($id)->addToQuestion($question);
+			$question->unsetChapter();
+			$question->setChapterId($id);
+		}
+
 		return $form;
 	}
 
-	public static function getForms(array $filter = null): \Bitrix\Main\ORM\Objectify\Collection
+	public static function getForms(array $filter = null)
 	{
 		$query = new Query(FormTable::getEntity());
-		$query->addSelect('TITLE');
-		$query->addSelect('CREATOR_ID');
-		$query->addSelect('DATE');
-		$query->addSelect('IS_ACTIVE');
-		$query->addSelect('SETTINGS');
-		$query->addSelect('SETTINGS.SETTINGS');
-		$query->addSelect('SETTINGS.SETTINGS.TYPE');
-		$query->whereLike('TITLE', '%' . $filter['TITLE'] . '%');
-		$query->whereIn('CREATOR_ID', $filter['USERS']);
-		$query->setOrder($filter['SORT']);
-		$query->setLimit($filter['LIMIT']);
-		$query->setOffset($filter['OFFSET']);
+		$query->addSelect('TITLE')
+			  ->addSelect('CREATOR_ID')
+			  ->addSelect('DATE')
+			  ->addSelect('IS_ACTIVE')
+			  ->addSelect('SETTINGS')
+			  ->addSelect('SETTINGS.SETTINGS')
+			  ->addSelect('SETTINGS.SETTINGS.TYPE')
+			  ->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
+			  ->whereIn('CREATOR_ID', $filter['USERS'])
+			  ->setOrder($filter['SORT'])
+			  ->setLimit($filter['LIMIT'])
+			  ->setOffset($filter['OFFSET']);
 
-		return QueryHelper::decompose($query);
+		return QueryHelper::decompose($query, false);
 
 
-		// return FormTable::query()
+		// return QueryHelper::decompose(FormTable::query()
 		// 				->setSelect(['ID', 'TITLE', 'CREATOR_ID', 'DATE', 'IS_ACTIVE'])
 		// 				->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
 		// 				->whereIn('CREATOR_ID', $filter['USERS'])
 		// 				->setOrder($filter['SORT'])
 		// 				->setLimit($filter['LIMIT'])
-		// 				->setOffset($filter['OFFSET'])
-		// 				->fetchAll();
+		// 				->setOffset($filter['OFFSET']), false, true);
 	}
 
 	public static function deleteForm(int $id): \Bitrix\Main\ORM\Data\Result

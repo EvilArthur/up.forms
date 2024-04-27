@@ -35,12 +35,9 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onEditableTextEndChangeHandler",
 	    value: function onEditableTextEndChangeHandler() {
-	      var newTitle = this.input.value.trim();
+	      var newTitle = this.input.value;
 	      this.element.innerText = newTitle;
 	      this.textObject.value = newTitle;
-	      if (newTitle === '') {
-	        return;
-	      }
 	      this.input.replaceWith(this.element);
 	    }
 	  }]);
@@ -74,10 +71,6 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableLabel",
 	    value: function renderEditableLabel() {
-	      console.log(this.labelObject.value);
-	      if (this.labelObject.value === '') {
-	        this.labelObject.value = 'Новая опция';
-	      }
 	      var wrap = main_core.Tag.render(_templateObject2 || (_templateObject2 = babelHelpers.taggedTemplateLiteral(["<label class=\"form-check-label\">", "</label>"])), this.labelObject.value);
 	      new EditableText(wrap, this.labelObject);
 	      return wrap;
@@ -251,10 +244,10 @@ this.BX.Up = this.BX.Up || {};
 	    this.layout.wrap = null;
 	    this.layout.input = null;
 	    this.title = title;
-	    this.chapter_id = parseInt(chapter_id);
-	    this.field_id = parseInt(field_id);
-	    this.id = parseInt(id);
-	    this.position = parseInt(position);
+	    this.chapter_id = chapter_id;
+	    this.field_id = field_id;
+	    this.id = id;
+	    this.position = position;
 	    this.options = optionData;
 	    this.field = null;
 	  }
@@ -297,10 +290,14 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(FormManager, null, [{
 	    key: "getFormData",
 	    value: function getFormData(id) {
+	      var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+	      var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.FormCreate.getFormData', {
 	          data: {
-	            id: id
+	            id: id,
+	            limit: limit,
+	            offset: offset
 	          }
 	        }).then(function (response) {
 	          var result = response.data.result;
@@ -329,29 +326,11 @@ this.BX.Up = this.BX.Up || {};
 	        });
 	      });
 	    }
-	  }, {
-	    key: "createResponse",
-	    value: function createResponse(id) {
-	      console.log(1);
-	      return new Promise(function (resolve, reject) {
-	        BX.ajax.runAction('up:forms.Form.createResponse', {
-	          data: {
-	            formId: id
-	          }
-	        }).then(function (response) {
-	          var startTime = response.data.startTime;
-	          resolve(startTime);
-	        })["catch"](function (error) {
-	          console.log(error);
-	          reject(error);
-	        });
-	      });
-	    }
 	  }]);
 	  return FormManager;
 	}();
 
-	var _templateObject$5, _templateObject2$2, _templateObject3$2, _templateObject4$1, _templateObject5$1, _templateObject6, _templateObject7, _templateObject8, _templateObject9, _templateObject10;
+	var _templateObject$5, _templateObject2$2, _templateObject3$2, _templateObject4$1, _templateObject5$1, _templateObject6, _templateObject7, _templateObject8, _templateObject9;
 	function _regeneratorRuntime() { /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, defineProperty = Object.defineProperty || function (obj, key, desc) { obj[key] = desc.value; }, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return defineProperty(generator, "_invoke", { value: makeInvokeMethod(innerFn, self, context) }), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == babelHelpers["typeof"](value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; defineProperty(this, "_invoke", { value: function value(method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; } function maybeInvokeDelegate(delegate, context) { var methodName = context.method, method = delegate.iterator[methodName]; if (undefined === method) return context.delegate = null, "throw" === methodName && delegate.iterator["return"] && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method) || "return" !== methodName && (context.method = "throw", context.arg = new TypeError("The iterator does not provide a '" + methodName + "' method")), ContinueSentinel; var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, defineProperty(Gp, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), defineProperty(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (val) { var object = Object(val), keys = []; for (var key in object) keys.push(key); return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, "catch": function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 	var Form = /*#__PURE__*/function () {
 	  function Form() {
@@ -361,27 +340,25 @@ this.BX.Up = this.BX.Up || {};
 	    this.id = options.values.id;
 	    this.layout.wrap = options.container;
 	    this.timer = options.values.timer;
-	    this.isRenderedMainBody = false;
-	    this.isCompleted = false;
-	    this.startTime = options.values.startTime;
-	    if (this.startTime && this.timer) {
-	      this.startTimer();
-	      var timeRemaining = this.addTimeFromTimer(this.startTime, this.timer) - new Date();
-	      this.timeIsUp = timeRemaining <= 0;
-	    }
-	    if (this.timeIsUp) {
-	      this.submitResponse();
-	    }
-	    this["try"] = options.values["try"];
-	    this.maxTry = options.values.maxTry;
-	    this.isStarted = this.startTime ? true : false;
+	    this.currentNumOfItems = 0;
+	    this.numOfItemsPerPage = 10;
+	    this.limit = this.numOfItemsPerPage + 1;
+	    this.offset = 0;
+	    this.currentPage = 1;
 	    this.questions = [];
 	    this.formData = {};
 	    this.isLoading = true;
-	    this.layout.wrap.append(this.render());
-	    this.loadFormData();
+	    this.reload();
 	  }
 	  babelHelpers.createClass(Form, [{
+	    key: "reload",
+	    value: function reload() {
+	      this.questions = [];
+	      this.formData = {};
+	      this.layout.wrap.append(this.render());
+	      this.loadFormData();
+	    }
+	  }, {
 	    key: "loadFormData",
 	    value: function () {
 	      var _loadFormData = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -389,13 +366,13 @@ this.BX.Up = this.BX.Up || {};
 	        return _regeneratorRuntime().wrap(function _callee$(_context) {
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
-	              if (!(parseInt(this.id) !== 0)) {
-	                _context.next = 15;
+	              if (!(this.id !== 0)) {
+	                _context.next = 18;
 	                break;
 	              }
 	              _context.prev = 1;
 	              _context.next = 4;
-	              return FormManager.getFormData(this.id);
+	              return FormManager.getFormData(this.id, this.limit, this.offset);
 	            case 4:
 	              this.formData = _context.sent;
 	              this.isLoading = false;
@@ -404,19 +381,24 @@ this.BX.Up = this.BX.Up || {};
 	                var question = new Question(questionData.CHAPTER_ID, questionData.FIELD_ID, questionData.ID, questionData.POSITION, questionData.TITLE, questionData.OPTION);
 	                _this.questions.push(question);
 	              });
+	              this.currentNumOfItems = this.questions.length;
+	              if (this.currentNumOfItems === this.numOfItemsPerPage + 1) {
+	                this.questions.pop();
+	              }
 	              console.log(this.questions);
 	              this.layout.form = this.render();
-	              _context.next = 15;
+	              this.startTimer();
+	              _context.next = 18;
 	              break;
-	            case 12:
-	              _context.prev = 12;
+	            case 15:
+	              _context.prev = 15;
 	              _context.t0 = _context["catch"](1);
 	              console.log(_context.t0);
-	            case 15:
+	            case 18:
 	            case "end":
 	              return _context.stop();
 	          }
-	        }, _callee, this, [[1, 12]]);
+	        }, _callee, this, [[1, 15]]);
 	      }));
 	      function loadFormData() {
 	        return _loadFormData.apply(this, arguments);
@@ -430,24 +412,57 @@ this.BX.Up = this.BX.Up || {};
 	      var wrap;
 	      if (this.isLoading) {
 	        wrap = main_core.Tag.render(_templateObject$5 || (_templateObject$5 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container d-flex justify-content-center\">\n\t\t\t\t<div class=\"spinner-border\" style=\"width: 3rem; height: 3rem;\" role=\"status\">\n\t\t\t\t\t<span class=\"sr-only\"></span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t"])));
-	      } else if (!this.isStarted) {
-	        wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t\t", "\n\t\t\t\t\t<div class=\"d-flex justify-content-center\">", "</div>\n\t\t\t\t</div>"])), this.formData.TITLE, this.renderTriesRemaining(), this.renderStartButton());
-	      } else if (this.timeIsUp) {
-	        wrap = main_core.Tag.render(_templateObject3$2 || (_templateObject3$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t\t<div class=\"d-flex justify-content-center\"><h2 class =\"text-center\">\u0412\u0440\u0435\u043C\u044F \u0432\u044B\u0448\u043B\u043E!</h2></div>\n\t\t\t\t</div>"])), this.formData.TITLE);
 	      } else {
-	        this.startTimer();
-	        wrap = main_core.Tag.render(_templateObject4$1 || (_templateObject4$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>"])), this.formData.TITLE, this.renderTimer(), this.renderQuestionList(), this.renderSubmitButton());
-	        this.isRenderedMainBody = true;
+	        wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>\n\t\t"])), this.formData.TITLE, this.renderTimer(), this.renderQuestionList(), this.renderSubmitButton(), this.renderPagination());
 	      }
 	      (_this$layout$form = this.layout.form) === null || _this$layout$form === void 0 ? void 0 : _this$layout$form.replaceWith(wrap);
 	      this.layout.form = wrap;
 	      return this.layout.form;
 	    }
 	  }, {
+	    key: "renderPagination",
+	    value: function renderPagination() {
+	      var wrap = main_core.Tag.render(_templateObject3$2 || (_templateObject3$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<nav aria-label=\"Page navigation example\">\n\t\t\t\t\t<ul class=\"pagination\">\n\t\t\t\t\t\t", "\n\t\t\t\t\t\t", "\n\t\t\t\t\t</ul>\n\t\t\t\t</nav>\n\t\t\t"])), this.renderPreviousPageButton(), this.renderNextPageButton());
+	      return wrap;
+	    }
+	  }, {
+	    key: "renderNextPageButton",
+	    value: function renderNextPageButton() {
+	      if (this.currentNumOfItems === this.numOfItemsPerPage + 1) {
+	        var wrap = main_core.Tag.render(_templateObject4$1 || (_templateObject4$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"page-item\">\n\t\t\t\t\t\n\t\t\t\t\t\t<button aria-hidden=\"true\">&raquo;</button>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t\t"])));
+	        main_core.Event.bind(wrap, 'click', this.onNextPageButtonClickHandler.bind(this));
+	        return wrap;
+	      }
+	    }
+	  }, {
+	    key: "renderPreviousPageButton",
+	    value: function renderPreviousPageButton() {
+	      if (this.currentPage > 1) {
+	        var wrap = main_core.Tag.render(_templateObject5$1 || (_templateObject5$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"page-item\">\n\t\t\t\t\t\n\t\t\t\t\t\t<button aria-hidden=\"true\">&laquo;</button>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t\t"])));
+	        main_core.Event.bind(wrap, 'click', this.onPreviousPageButtonClickHandler.bind(this));
+	        return wrap;
+	      }
+	    }
+	  }, {
+	    key: "onNextPageButtonClickHandler",
+	    value: function onNextPageButtonClickHandler() {
+	      this.limit += 10;
+	      this.offset += 10;
+	      this.currentPage += 1;
+	      this.reload();
+	    }
+	  }, {
+	    key: "onPreviousPageButtonClickHandler",
+	    value: function onPreviousPageButtonClickHandler() {
+	      this.limit -= 10;
+	      this.offset -= 10;
+	      this.currentPage -= 1;
+	      this.reload();
+	    }
+	  }, {
 	    key: "renderQuestionList",
 	    value: function renderQuestionList() {
-	      console.log(this.questions);
-	      var wrap = main_core.Tag.render(_templateObject5$1 || (_templateObject5$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t<form>\n\t\t\t", "\n\t\t</form>\n\t\t"])), this.questions.map(function (question) {
+	      var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t<form>\n\t\t\t", "\n\t\t</form>\n\t\t"])), this.questions.map(function (question) {
 	        return question.render();
 	      }));
 	      return wrap;
@@ -455,50 +470,16 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderSubmitButton",
 	    value: function renderSubmitButton() {
-	      var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"btn btn-primary\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</button>\n\t\t"])));
-	      main_core.Event.bind(wrap, 'click', this.submitResponse.bind(this));
-	      this.layout.submitButton = wrap;
+	      var wrap = main_core.Tag.render(_templateObject7 || (_templateObject7 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"btn btn-primary\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</button>\n\t\t"])));
+	      main_core.Event.bind(wrap, 'click', this.onSubmitButtonClickHandler.bind(this));
 	      return wrap;
-	    }
-	  }, {
-	    key: "submitResponse",
-	    value: function submitResponse() {
-	      var _this2 = this;
-	      this.isCompleted = true;
-	      var answers = [];
-	      if (this.isRenderedMainBody) {
-	        this.layout.submitButton.classList.add('disabled');
-	        answers = this.questions.map(function (question) {
-	          return question.getAnswer();
-	        });
-	      }
-	      var data = {
-	        'FORM_ID': this.id,
-	        'ANSWER': answers,
-	        'IS_COMPLETED': true
-	      };
-	      console.log(data);
-	      FormManager.saveAnswerData(data).then(function (response) {
-	        if (!_this2.timeIsUp) {
-	          BX.SidePanel.Instance.close();
-	          BX.SidePanel.Instance.destroy('/form/results/${formId}/');
-	        } else {
-	          _this2.render();
-	        }
-	        console.log(response);
-	      })["catch"](function (error) {
-	        return console.log(error);
-	      });
 	    }
 	  }, {
 	    key: "renderTimer",
 	    value: function renderTimer() {
 	      if (this.timer) {
-	        var _this$layout$timer;
-	        var wrap = main_core.Tag.render(_templateObject7 || (_templateObject7 = babelHelpers.taggedTemplateLiteral(["<div class=\"container text-center mt-4\">\n\t\t\t\t\t\t\t\t\t\t<div id=\"timer\" class=\"display-6\">", "</div>\n\t\t\t\t\t\t\t\t\t</div>"])), this.renderTime());
-	        (_this$layout$timer = this.layout.timer) === null || _this$layout$timer === void 0 ? void 0 : _this$layout$timer.replaceWith(wrap);
-	        this.layout.timer = wrap;
-	        return this.layout.timer;
+	        var wrap = main_core.Tag.render(_templateObject8 || (_templateObject8 = babelHelpers.taggedTemplateLiteral(["<div class=\"container text-center mt-4\">\n\t\t\t\t\t\t\t\t\t\t<div id=\"timer\" class=\"display-6\">", "</div>\n\t\t\t\t\t\t\t\t\t</div>"])), this.renderTime());
+	        return wrap;
 	      } else {
 	        return '';
 	      }
@@ -506,91 +487,60 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderTime",
 	    value: function renderTime() {
-	      var wrap = main_core.Tag.render(_templateObject8 || (_templateObject8 = babelHelpers.taggedTemplateLiteral(["<p>", ":00</p>"])), this.timer);
+	      var wrap = main_core.Tag.render(_templateObject9 || (_templateObject9 = babelHelpers.taggedTemplateLiteral(["<p></p>"])));
 	      this.layout.time = wrap;
 	      return this.layout.time;
 	    }
 	  }, {
-	    key: "renderTriesRemaining",
-	    value: function renderTriesRemaining() {
-	      if (!this.maxTry) {
-	        return null;
-	      }
-	      var wrap = main_core.Tag.render(_templateObject9 || (_templateObject9 = babelHelpers.taggedTemplateLiteral(["<h2 class =\"text-center\">\u0423 \u0432\u0430\u0441 \u043E\u0441\u0442\u0430\u043B\u043E\u0441\u044C \u043F\u043E\u043F\u044B\u0442\u043E\u043A: ", "</h2>"])), this.maxTry - this["try"]);
-	      return wrap;
-	    }
-	  }, {
-	    key: "renderStartButton",
-	    value: function renderStartButton() {
-	      var _this3 = this;
-	      var wrap = main_core.Tag.render(_templateObject10 || (_templateObject10 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"btn btn-primary\">\u041D\u0430\u0447\u0430\u0442\u044C</button>\n\t\t"])));
-	      main_core.Event.bind(wrap, 'click', function () {
-	        return _this3.onStartButtonClickHandler(wrap);
+	    key: "onSubmitButtonClickHandler",
+	    value: function onSubmitButtonClickHandler() {
+	      var answers = this.questions.map(function (question) {
+	        return question.getAnswer();
 	      });
-	      return wrap;
+	      var data = {
+	        'FORM_ID': this.id,
+	        'USER_ID': 1,
+	        'ANSWER': answers
+	      };
+	      console.log(data);
+	      FormManager.saveAnswerData(data).then(function (response) {
+	        BX.SidePanel.Instance.close();
+	        console.log(response);
+	      })["catch"](function (error) {
+	        return console.log(error);
+	      });
 	    }
-	  }, {
-	    key: "onStartButtonClickHandler",
-	    value: function () {
-	      var _onStartButtonClickHandler = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(button) {
-	        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-	          while (1) switch (_context2.prev = _context2.next) {
-	            case 0:
-	              this.isStarted = true;
-	              button.classList.add('disabled');
-	              _context2.next = 4;
-	              return FormManager.createResponse(this.id);
-	            case 4:
-	              this.startTime = _context2.sent;
-	              console.log(this.startTime);
-	              console.log(new Date(this.startTime * 1000));
-	              this.startTimer();
-	              this.render();
-	            case 9:
-	            case "end":
-	              return _context2.stop();
-	          }
-	        }, _callee2, this);
-	      }));
-	      function onStartButtonClickHandler(_x) {
-	        return _onStartButtonClickHandler.apply(this, arguments);
-	      }
-	      return onStartButtonClickHandler;
-	    }()
 	  }, {
 	    key: "startTimer",
 	    value: function startTimer() {
 	      if (this.timer) {
-	        var endTime = this.addTimeFromTimer(this.startTime, this.timer);
-	        this.renderTimer();
-	        this.updateTimer(endTime);
+	        this.startTime = localStorage.getItem('timerStartTime');
+	        if (!this.startTime) {
+	          this.startTime = this.addTimeToCurrent(this.timer);
+	        }
+	        this.updateTimer(this.startTime);
 	      }
 	    }
 	  }, {
-	    key: "addTimeFromTimer",
-	    value: function addTimeFromTimer(time, timer) {
-	      var jsTimeStamp = time * 1000;
-	      var _timer$split$map = timer.split(':').map(Number),
-	        _timer$split$map2 = babelHelpers.slicedToArray(_timer$split$map, 2),
-	        hours = _timer$split$map2[0],
-	        minutes = _timer$split$map2[1];
+	    key: "addTimeToCurrent",
+	    value: function addTimeToCurrent(additionalTime) {
+	      var _additionalTime$split = additionalTime.split(':').map(Number),
+	        _additionalTime$split2 = babelHelpers.slicedToArray(_additionalTime$split, 2),
+	        hours = _additionalTime$split2[0],
+	        minutes = _additionalTime$split2[1];
+	      var now = new Date();
 	      var totalMinutesCombined = hours * 60 + minutes;
-	      var newDate = new Date(jsTimeStamp + totalMinutesCombined * 60000);
+	      var newDate = new Date(now.getTime() + totalMinutesCombined * 60000); // 60000 миллисекунд в минуте
 	      console.log(newDate);
 	      return newDate;
 	    }
 	  }, {
 	    key: "updateTimer",
-	    value: function updateTimer(endTime) {
-	      var _this4 = this;
-	      var remainingTime = endTime - new Date();
-	      console.log(remainingTime);
-	      if (this.isCompleted) {
-	        return;
-	      }
+	    value: function updateTimer(startTime) {
+	      var _this2 = this;
+	      var remainingTime = startTime - new Date();
 	      if (remainingTime <= 0) {
-	        this.timeIsUp = true;
-	        this.submitResponse(this.layout.submitButton);
+	        this.onSubmitButtonClickHandler();
 	      } else {
 	        var seconds = Math.floor(remainingTime / 1000) % 60;
 	        var minutes = Math.floor(remainingTime / (1000 * 60) % 60);
@@ -600,7 +550,7 @@ this.BX.Up = this.BX.Up || {};
 	        var formattedMinutes = String(minutes).padStart(2, '0');
 	        this.layout.time.innerText = "".concat(formattedHours, ":").concat(formattedMinutes, ":").concat(formattedSeconds);
 	        setTimeout(function () {
-	          return _this4.updateTimer(endTime);
+	          return _this2.updateTimer(startTime);
 	        }, 1000);
 	      }
 	    }

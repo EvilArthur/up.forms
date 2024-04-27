@@ -84,10 +84,11 @@ Class ResponseRepository
 			]
 		);
 		$query->whereIn('USER_ID', $filter['USERS']);
+		$query->setOrder($filter['SORT']);
 		$query->setLimit($filter['LIMIT']);
 		$query->setOffset($filter['OFFSET']);
 
-		return QueryHelper::decompose($query);
+		return QueryHelper::decompose($query, false, true);
 	}
 
 	public static function deleteResponse(int $id): void

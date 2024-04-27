@@ -107,7 +107,7 @@ class FormResultsComponent extends CBitrixComponent
 
 	protected function fetchGridColumns()
 	{
-		$columns[] = ['id' => 'USER', 'name' => 'Пользователь', 'default' => true];
+		$columns[] = ['id' => 'USER', 'name' => 'Пользователь', 'default' => true, 'sort' => 'USER_ID'];
 
 		foreach ($this->arResult['QUESTIONS'] as $question)
 		{
@@ -142,14 +142,16 @@ class FormResultsComponent extends CBitrixComponent
 
 	protected function fetchFilter()
 	{
-		// $gridOptions = new GridOptions($this->arParams['GRID_ID']);
+		$gridOptions = new GridOptions($this->arParams['GRID_ID']);
+		$gridFields = $gridOptions->getSorting();
 		$filterOptions = new FilterOptions($this->arParams['FILTER_ID']);
 		$filterFields = $filterOptions->getFilter($this->arResult['FILTERS']);
 
 		$this->arResult['FILTER'] = [
 			'LIMIT' => $this->arResult['NAV_OBJECT']->getLimit() + 1,
 			'OFFSET' => $this->arResult['NAV_OBJECT']->getOffset(),
-			'USERS' => $filterFields['USER']
+			'USERS' => $filterFields['USER'],
+			'SORT' => $gridFields['sort']
 		];
 	}
 
