@@ -869,7 +869,6 @@ this.BX.Up = this.BX.Up || {};
 	          }
 	        }).then(function (response) {
 	          var result = response.data.result;
-	          console.log(result);
 	          resolve(result);
 	        })["catch"](function (error) {
 	          console.log(error);
