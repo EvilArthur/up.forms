@@ -32,7 +32,7 @@ class Form extends Controller
 		FormRepository::deleteForm($id);
 	}
 
-	public function deleteFormsAction(int $ids): void
+	public function deleteFormsAction(array $ids): void
 	{
 		if(Loader::includeModule('pull'))
 		{

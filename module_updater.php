@@ -254,3 +254,20 @@ __formsMigrate(18, function($updater, $DB)
 		");
 	}
 });
+
+__formsMigrate(19, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form'))
+	{
+		$DB->query
+		("
+			ALTER TABLE up_form
+				DROP COLUMN IS_ACTIVE;
+		");
+		$DB->query
+		("
+			ALTER TABLE up_form
+				MODIFY COLUMN DATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+		");
+	}
+});

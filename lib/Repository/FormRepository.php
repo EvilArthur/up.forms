@@ -93,7 +93,6 @@ class FormRepository
 		$query->addSelect('TITLE')
 			  ->addSelect('CREATOR_ID')
 			  ->addSelect('DATE')
-			  ->addSelect('IS_ACTIVE')
 			  ->addSelect('SETTINGS')
 			  ->addSelect('SETTINGS.SETTINGS')
 			  ->addSelect('SETTINGS.SETTINGS.TYPE')

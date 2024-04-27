@@ -72,16 +72,6 @@ class FormTable extends DataManager
 					'title' => Loc::getMessage('FORM_ENTITY_TITLE_FIELD'),
 				]
 			),
-			new IntegerField(
-				'IS_ACTIVE',
-				[
-					'default' => function ()
-					{
-						return '1';
-					},
-					'title' => Loc::getMessage('FORM_ENTITY_IS_ACTIVE_FIELD'),
-				]
-			),
 			new DatetimeField(
 				'DATE',
 				[
