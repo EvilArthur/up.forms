@@ -15,7 +15,7 @@ export default class Question
 		this.fieldData = fieldData;
 		this.isDeleted = false;
 		this.settingData = settingData;
-		this.isHaveRightAnswerObject = { value: this.toBoolean(this.settingData.find(setting => setting.SETTINGS_ID === 1).VALUE) };
+		this.isHaveRightAnswerObject = { value: this.toBoolean(this.settingData.find(setting => Number(setting.SETTINGS_ID) === 1).VALUE) };
 		this.fieldId = null;
 	}
 

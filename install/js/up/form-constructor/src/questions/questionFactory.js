@@ -3,7 +3,9 @@ import { Radio } from './radio';
 import { Checkbox } from './checkbox';
 
 export class questionFactory {
-	static createQuestion(fieldId, chapterId, id, position, title, options, settings, fieldData) {
+	static createQuestion(fieldId, chapterId, id, position, title, options, settings, fieldData)
+	{
+		fieldId = Number(fieldId);
 		switch (fieldId) {
 			case 1:
 				return new ShortText(chapterId, id, position, title, options, settings, fieldData);

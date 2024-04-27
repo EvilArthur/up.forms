@@ -65,7 +65,7 @@ this.BX.Up = this.BX.Up || {};
 	    this.settingData = settingData;
 	    this.isHaveRightAnswerObject = {
 	      value: this.toBoolean(this.settingData.find(function (setting) {
-	        return setting.SETTINGS_ID === 1;
+	        return Number(setting.SETTINGS_ID) === 1;
 	      }).VALUE)
 	    };
 	    this.fieldId = null;
@@ -501,6 +501,7 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(questionFactory, null, [{
 	    key: "createQuestion",
 	    value: function createQuestion(fieldId, chapterId, id, position, title, options, settings, fieldData) {
+	      fieldId = Number(fieldId);
 	      switch (fieldId) {
 	        case 1:
 	          return new ShortText(chapterId, id, position, title, options, settings, fieldData);
@@ -736,7 +737,7 @@ this.BX.Up = this.BX.Up || {};
 	}(Setting);
 
 	var _templateObject$a;
-	var Number = /*#__PURE__*/function (_Setting) {
+	var Number$1 = /*#__PURE__*/function (_Setting) {
 	  babelHelpers.inherits(Number, _Setting);
 	  function Number() {
 	    babelHelpers.classCallCheck(this, Number);
@@ -819,7 +820,7 @@ this.BX.Up = this.BX.Up || {};
 	      } else if (parseInt(settingData.TYPE_ID) === 3) {
 	        setting = new Checkbox$1(settingData.ID, settingData.TITLE, settingValue);
 	      } else if (parseInt(settingData.TYPE_ID) === 4) {
-	        setting = new Number(settingData.ID, settingData.TITLE, settingValue);
+	        setting = new Number$1(settingData.ID, settingData.TITLE, settingValue);
 	      }
 	      _this.settings.push(setting);
 	    });

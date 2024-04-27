@@ -6,6 +6,7 @@ export class ShortText extends Question
 	constructor(chapterId, id, position, title, optionData, settingData, fieldData)
 	{
 		super(chapterId, id, position, title, optionData, settingData, fieldData);
+
 		this.options = optionData.map((option) => {
 			if (option)
 			{
