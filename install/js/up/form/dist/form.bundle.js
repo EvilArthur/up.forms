@@ -251,10 +251,10 @@ this.BX.Up = this.BX.Up || {};
 	    this.layout.wrap = null;
 	    this.layout.input = null;
 	    this.title = title;
-	    this.chapter_id = chapter_id;
-	    this.field_id = field_id;
-	    this.id = id;
-	    this.position = position;
+	    this.chapter_id = parseInt(chapter_id);
+	    this.field_id = parseInt(field_id);
+	    this.id = parseInt(id);
+	    this.position = parseInt(position);
 	    this.options = optionData;
 	    this.field = null;
 	  }
@@ -389,7 +389,7 @@ this.BX.Up = this.BX.Up || {};
 	        return _regeneratorRuntime().wrap(function _callee$(_context) {
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
-	              if (!(this.id !== 0)) {
+	              if (!(parseInt(this.id) !== 0)) {
 	                _context.next = 15;
 	                break;
 	              }
@@ -446,6 +446,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderQuestionList",
 	    value: function renderQuestionList() {
+	      console.log(this.questions);
 	      var wrap = main_core.Tag.render(_templateObject5$1 || (_templateObject5$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t<form>\n\t\t\t", "\n\t\t</form>\n\t\t"])), this.questions.map(function (question) {
 	        return question.render();
 	      }));

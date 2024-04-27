@@ -37,7 +37,7 @@ export class Form
 
 	async loadFormData()
 	{
-		if (this.id !== 0)
+		if (parseInt(this.id) !== 0)
 		{
 			try
 			{
@@ -111,6 +111,7 @@ export class Form
 
 	renderQuestionList()
 	{
+		console.log(this.questions);
 		const wrap = Tag.render`
 		<form>
 			${this.questions.map((question) => {

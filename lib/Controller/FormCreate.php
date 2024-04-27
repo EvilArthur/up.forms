@@ -52,8 +52,10 @@ class FormCreate extends Controller
 	{
 
 		$id = (int) $id;
+		$formData = FormRepository::getForm($id)->collectValues(recursive: true);
+		$formData = $this->xssEscape($formData);
 		return [
-			'result' => FormRepository::getForm($id)->collectValues(recursive: true),
+			'result' => $formData,
 		];
 	}
 
@@ -69,5 +71,20 @@ class FormCreate extends Controller
 		return [
 			'result' => FormSettingsRepository::getSettings(),
 		];
+	}
+
+
+	private function xssEscape(array $rawData)
+	{
+		foreach ($rawData as $key => $data)
+		{
+			if (is_array($data))
+			{
+				$rawData[$key] = $this->xssEscape($data);
+				continue;
+			}
+			$rawData[$key] = htmlspecialcharsbx($data);
+		}
+		return $rawData;
 	}
 }

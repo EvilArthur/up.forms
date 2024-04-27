@@ -12,10 +12,10 @@ export class Question
 		this.layout.wrap = null;
 		this.layout.input = null;
 		this.title = title;
-		this.chapter_id = chapter_id;
-		this.field_id = field_id;
-		this.id = id;
-		this.position = position;
+		this.chapter_id = parseInt(chapter_id);
+		this.field_id = parseInt(field_id);
+		this.id = parseInt(id);
+		this.position = parseInt(position);
 		this.options = optionData;
 		this.field = null
 	}
