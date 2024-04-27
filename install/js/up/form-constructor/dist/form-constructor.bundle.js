@@ -581,7 +581,7 @@ this.BX.Up = this.BX.Up || {};
 	      }
 	      this.questions[index] = questionFactory.createQuestion(fieldId, question.chapterId, question.id, question.position, question.titleObject.value, options, question.getSettingData(), this.fieldData);
 	      console.log(this.questions[index]);
-	      this.render();
+	      this.renderQuestionList();
 	    }
 	  }, {
 	    key: "renderAddQuestionButton",

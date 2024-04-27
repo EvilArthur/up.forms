@@ -81,7 +81,7 @@ export class Constructor
 			fieldId, question.chapterId, question.id, question.position, question.titleObject.value,
 			options, question.getSettingData(), this.fieldData);
 		console.log(this.questions[index])
-		this.render();
+		this.renderQuestionList();
 	}
 
 	renderAddQuestionButton()
