@@ -33,6 +33,10 @@ export class Option
 
 	renderEditableLabel()
 	{
+		if (this.labelObject.value === '')
+		{
+			this.labelObject.value = 'Новая опция';
+		}
 		const wrap = Tag.render`<label class="form-check-label">${this.labelObject.value}</label>`;
 		new EditableText(wrap, this.labelObject);
 		return wrap;

@@ -35,10 +35,10 @@ export class EditableText
 	}
 
 	onEditableTextEndChangeHandler() {
-		const newTitle = this.input.value;
+		const newTitle = this.input.value.trim();
 		this.element.innerText = newTitle;
 		this.textObject.value = newTitle;
-		if (this.input.value === '')
+		if (newTitle === '')
 		{
 			return;
 		}

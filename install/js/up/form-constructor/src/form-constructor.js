@@ -154,7 +154,10 @@ export class FormConstructor
 		FormManager.saveFormData({ formData: form })
 			.then((response) => {
 				console.log(response);
+				const url = BX.SidePanel.Instance.getCurrentUrl();
 				BX.SidePanel.Instance.close();
+				setTimeout(() => BX.SidePanel.Instance.destroy(url), 1000);
+
 			})
 			.catch((errors) => {
 				this.layout.wrap.prepend(this.renderErrors(errors))

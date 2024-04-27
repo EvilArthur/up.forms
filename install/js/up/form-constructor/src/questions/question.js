@@ -74,6 +74,10 @@ export default class Question
 
 	renderEditableTitle(): HTMLElement
 	{
+		if (this.titleObject.value === '')
+		{
+			this.titleObject.value = 'Название';
+		}
 		const wrap = Tag.render`
 		<h3 class="form-label">${this.titleObject.value}</h3>
 		`;

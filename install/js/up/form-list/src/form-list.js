@@ -100,7 +100,8 @@ export class FormList
 						'TITLE': 'Пройти форму - ' + formTitle,
 						'DESCRIPTION': `[URL=/form/view/` + formId + `/]Форма доступна по ссылке[/URL]`,
 						'TAGS': ['формы']
-					}
+					},
+				cacheable: false,
 			})
 	}
 

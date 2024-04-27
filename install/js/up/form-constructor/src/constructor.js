@@ -120,6 +120,10 @@ export class Constructor
 
 	renderEditableTitle(): HTMLElement
 	{
+		if (this.titleObject.value === '')
+		{
+			this.titleObject.value = 'Новая форма';
+		}
 		const wrap = Tag.render`
 		<h1 class="text-center mt-5 mb-4">${this.titleObject.value}</h1>
 		`;

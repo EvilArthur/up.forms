@@ -35,10 +35,10 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onEditableTextEndChangeHandler",
 	    value: function onEditableTextEndChangeHandler() {
-	      var newTitle = this.input.value;
+	      var newTitle = this.input.value.trim();
 	      this.element.innerText = newTitle;
 	      this.textObject.value = newTitle;
-	      if (this.input.value === '') {
+	      if (newTitle === '') {
 	        return;
 	      }
 	      this.input.replaceWith(this.element);
@@ -98,6 +98,9 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableTitle",
 	    value: function renderEditableTitle() {
+	      if (this.titleObject.value === '') {
+	        this.titleObject.value = 'Название';
+	      }
 	      var wrap = main_core.Tag.render(_templateObject4 || (_templateObject4 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h3 class=\"form-label\">", "</h3>\n\t\t"])), this.titleObject.value);
 	      new EditableText(wrap, this.titleObject);
 	      this.layout.title = wrap;
@@ -339,6 +342,9 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableLabel",
 	    value: function renderEditableLabel() {
+	      if (this.labelObject.value === '') {
+	        this.labelObject.value = 'Новая опция';
+	      }
 	      var wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["<label class=\"form-check-label\">", "</label>"])), this.labelObject.value);
 	      new EditableText(wrap, this.labelObject);
 	      return wrap;
@@ -613,6 +619,9 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableTitle",
 	    value: function renderEditableTitle() {
+	      if (this.titleObject.value === '') {
+	        this.titleObject.value = 'Новая форма';
+	      }
 	      var wrap = main_core.Tag.render(_templateObject4$2 || (_templateObject4$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t"])), this.titleObject.value);
 	      new EditableText(wrap, this.titleObject);
 	      this.layout.title = wrap;
@@ -1079,7 +1088,11 @@ this.BX.Up = this.BX.Up || {};
 	        formData: form
 	      }).then(function (response) {
 	        console.log(response);
+	        var url = BX.SidePanel.Instance.getCurrentUrl();
 	        BX.SidePanel.Instance.close();
+	        setTimeout(function () {
+	          return BX.SidePanel.Instance.destroy(url);
+	        }, 1000);
 	      })["catch"](function (errors) {
 	        _this2.layout.wrap.prepend(_this2.renderErrors(errors));
 	        button.classList.remove('disabled');

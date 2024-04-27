@@ -91,7 +91,8 @@ this.BX.Up = this.BX.Up || {};
 	          'TITLE': 'Пройти форму - ' + formTitle,
 	          'DESCRIPTION': "[URL=/form/view/" + formId + "/]\u0424\u043E\u0440\u043C\u0430 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430 \u043F\u043E \u0441\u0441\u044B\u043B\u043A\u0435[/URL]",
 	          'TAGS': ['формы']
-	        }
+	        },
+	        cacheable: false
 	      });
 	    }
 	  }, {
