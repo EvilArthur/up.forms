@@ -6,22 +6,6 @@ use Up\Forms\Model\QuestionTable;
 
 Class QuestionRepository
 {
-	// public static function getQuestionsByFormId(int $formId)
-	// {
-	// 	$form = FormTable::getByPrimary($formId, [
-	// 		'select' =>
-	// 			[
-	// 				'TITLE',
-	// 				'CHAPTER',
-	// 				'CHAPTER.QUESTION',
-	// 				'CHAPTER.QUESTION.OPTION',
-	// 				'CHAPTER.QUESTION.FIELD',
-	// 			],
-	// 	])->fetchObject()->collectValues(recursive: true);
-	//
-	// 	return $form;
-	// }
-
 	public static function getQuestionsByChapterId(int $chapterId, $filter = null)
 	{
 		if($filter === null)
