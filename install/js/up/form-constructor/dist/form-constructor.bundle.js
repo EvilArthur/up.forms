@@ -1098,10 +1098,13 @@ this.BX.Up = this.BX.Up || {};
 	        console.log(response);
 	        var url = BX.SidePanel.Instance.getCurrentUrl();
 	        BX.SidePanel.Instance.close();
-	        /*setTimeout(() => BX.SidePanel.Instance.destroy(url), 1000);*/
+	        setTimeout(function () {
+	          return BX.SidePanel.Instance.destroy(url);
+	        }, 1000);
 	      })["catch"](function (errors) {
 	        _this2.layout.wrap.prepend(_this2.renderErrors(errors));
-	        button.classList.remove('disabled');
+	        button.wrap.classList.remove('disabled');
+	        button.isActive = true;
 	        console.log(errors);
 	      });
 	    }
