@@ -35,10 +35,10 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onEditableTextEndChangeHandler",
 	    value: function onEditableTextEndChangeHandler() {
-	      var newTitle = this.input.value;
+	      var newTitle = this.input.value.trim();
 	      this.element.innerText = newTitle;
 	      this.textObject.value = newTitle;
-	      if (this.input.value === '') {
+	      if (newTitle === '') {
 	        return;
 	      }
 	      this.input.replaceWith(this.element);
@@ -74,6 +74,10 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableLabel",
 	    value: function renderEditableLabel() {
+	      console.log(this.labelObject.value);
+	      if (this.labelObject.value === '') {
+	        this.labelObject.value = 'Новая опция';
+	      }
 	      var wrap = main_core.Tag.render(_templateObject2 || (_templateObject2 = babelHelpers.taggedTemplateLiteral(["<label class=\"form-check-label\">", "</label>"])), this.labelObject.value);
 	      new EditableText(wrap, this.labelObject);
 	      return wrap;
@@ -360,7 +364,7 @@ this.BX.Up = this.BX.Up || {};
 	    this.isRenderedMainBody = false;
 	    this.isCompleted = false;
 	    this.startTime = options.values.startTime;
-	    if (this.startTime) {
+	    if (this.startTime && this.timer) {
 	      this.startTimer();
 	      var timeRemaining = this.addTimeFromTimer(this.startTime, this.timer) - new Date();
 	      this.timeIsUp = timeRemaining <= 0;

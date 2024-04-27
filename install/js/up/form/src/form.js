@@ -14,7 +14,7 @@ export class Form
 		this.isCompleted = false;
 
 		this.startTime = options.values.startTime;
-		if (this.startTime)
+		if (this.startTime && this.timer)
 		{
 			this.startTimer();
 			const timeRemaining = this.addTimeFromTimer(this.startTime, this.timer) - new Date();
