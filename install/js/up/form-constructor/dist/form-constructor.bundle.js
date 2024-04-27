@@ -1068,16 +1068,24 @@ this.BX.Up = this.BX.Up || {};
 	    value: function renderSaveButton() {
 	      var _this = this;
 	      var wrap = main_core.Tag.render(_templateObject7$1 || (_templateObject7$1 = babelHelpers.taggedTemplateLiteral(["<button class=\"btn btn-primary\">\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C</button>"])));
+	      this.layout.saveButtonObject = {
+	        isActive: true,
+	        wrap: wrap
+	      };
 	      main_core.Event.bind(wrap, 'click', function () {
-	        return _this.onSaveButtonClickHandler(wrap);
+	        return _this.onSaveButtonClickHandler(_this.layout.saveButtonObject);
 	      });
-	      return wrap;
+	      return this.layout.saveButtonObject.wrap;
 	    }
 	  }, {
 	    key: "onSaveButtonClickHandler",
 	    value: function onSaveButtonClickHandler(button) {
 	      var _this2 = this;
-	      button.classList.add('disabled');
+	      if (!button.isActive) {
+	        return;
+	      }
+	      button.wrap.classList.add('disabled');
+	      button.isActive = false;
 	      var data = this.settings.getData();
 	      var form = this.construct.getData();
 	      form.SETTINGS = data;
@@ -1090,9 +1098,7 @@ this.BX.Up = this.BX.Up || {};
 	        console.log(response);
 	        var url = BX.SidePanel.Instance.getCurrentUrl();
 	        BX.SidePanel.Instance.close();
-	        setTimeout(function () {
-	          return BX.SidePanel.Instance.destroy(url);
-	        }, 1000);
+	        /*setTimeout(() => BX.SidePanel.Instance.destroy(url), 1000);*/
 	      })["catch"](function (errors) {
 	        _this2.layout.wrap.prepend(_this2.renderErrors(errors));
 	        button.classList.remove('disabled');

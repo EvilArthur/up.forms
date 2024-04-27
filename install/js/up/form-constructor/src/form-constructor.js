@@ -138,13 +138,21 @@ export class FormConstructor
 	renderSaveButton()
 	{
 		const wrap = Tag.render`<button class="btn btn-primary">Сохранить</button>`
-		Event.bind(wrap, 'click', () => this.onSaveButtonClickHandler(wrap));
-		return wrap;
+		this.layout.saveButtonObject = {isActive: true,
+			wrap: wrap}
+		Event.bind(wrap, 'click', () => this.onSaveButtonClickHandler(this.layout.saveButtonObject));
+
+		return this.layout.saveButtonObject.wrap;
 	}
 
 	onSaveButtonClickHandler(button)
 	{
-		button.classList.add('disabled')
+		if (!button.isActive)
+		{
+			return;
+		}
+		button.wrap.classList.add('disabled');
+		button.isActive = false;
 		const data = this.settings.getData();
 		const form = this.construct.getData();
 		form.SETTINGS = data;
@@ -156,7 +164,7 @@ export class FormConstructor
 				console.log(response);
 				const url = BX.SidePanel.Instance.getCurrentUrl();
 				BX.SidePanel.Instance.close();
-				setTimeout(() => BX.SidePanel.Instance.destroy(url), 1000);
+				/*setTimeout(() => BX.SidePanel.Instance.destroy(url), 1000);*/
 
 			})
 			.catch((errors) => {
