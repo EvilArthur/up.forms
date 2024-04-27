@@ -849,14 +849,17 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(FormManager, null, [{
 	    key: "getFormData",
 	    value: function getFormData(id) {
+	      var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+	      var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.FormCreate.getFormData', {
 	          data: {
-	            id: id
+	            id: id,
+	            limit: limit,
+	            offset: offset
 	          }
 	        }).then(function (response) {
 	          var result = response.data.result;
-	          console.log(result);
 	          resolve(result);
 	        })["catch"](function (error) {
 	          console.log(error);

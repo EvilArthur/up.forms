@@ -11,9 +11,22 @@ export class Form
 		this.layout.wrap = options.container;
 		this.timer = options.values.timer;
 
+		this.currentNumOfItems = 0;
+		this.numOfItemsPerPage = 10;
+		this.limit = this.numOfItemsPerPage + 1;
+		this.offset = 0;
+		this.currentPage = 1;
+
 		this.questions = [];
 		this.formData = {};
 		this.isLoading = true;
+		this.reload();
+	}
+
+	reload()
+	{
+		this.questions = [];
+		this.formData = {};
 		this.layout.wrap.append(this.render());
 		this.loadFormData();
 	}
@@ -24,7 +37,7 @@ export class Form
 		{
 			try
 			{
-				this.formData = await FormManager.getFormData(this.id);
+				this.formData = await FormManager.getFormData(this.id, this.limit, this.offset);
 				this.isLoading = false;
 				console.log(this.formData);
 				this.formData.CHAPTER[0].QUESTION.map((questionData) => {
@@ -35,6 +48,11 @@ export class Form
 
 					this.questions.push(question);
 				});
+				this.currentNumOfItems = this.questions.length;
+				if (this.currentNumOfItems === this.numOfItemsPerPage + 1)
+				{
+					this.questions.pop();
+				}
 				console.log(this.questions);
 				this.layout.form = this.render();
 				this.startTimer();
@@ -67,12 +85,80 @@ export class Form
 				${this.renderTimer()}
 				${this.renderQuestionList()}
 				${this.renderSubmitButton()}
+				${this.renderPagination()}
 			</div>
 		`;
 		}
 		this.layout.form?.replaceWith(wrap);
 		this.layout.form = wrap;
 		return this.layout.form;
+	}
+
+	renderPagination()
+	{
+		const wrap = Tag.render
+			`
+				<nav aria-label="Page navigation example">
+					<ul class="pagination">
+						${this.renderPreviousPageButton()}
+						${this.renderNextPageButton()}
+					</ul>
+				</nav>
+			`;
+		return wrap;
+	}
+
+	renderNextPageButton()
+	{
+		if (this.currentNumOfItems === this.numOfItemsPerPage + 1)
+		{
+			const wrap = Tag.render
+				`
+				<li class="page-item">
+					
+						<button aria-hidden="true">&raquo;</button>
+					
+				</li>
+				`;
+			Event.bind(wrap, 'click', this.onNextPageButtonClickHandler.bind(this));
+			return wrap;
+		}
+	}
+
+	renderPreviousPageButton()
+	{
+		if (this.currentPage > 1)
+		{
+			const wrap = Tag.render
+				`
+				<li class="page-item">
+					
+						<button aria-hidden="true">&laquo;</button>
+					
+				</li>
+				`;
+			Event.bind(wrap, 'click', this.onPreviousPageButtonClickHandler.bind(this));
+			return wrap;
+		}
+	}
+
+	onNextPageButtonClickHandler()
+	{
+		this.limit += 10;
+		this.offset += 10;
+		this.currentPage += 1;
+
+		this.reload();
+	}
+
+
+	onPreviousPageButtonClickHandler()
+	{
+		this.limit -= 10;
+		this.offset -= 10;
+		this.currentPage -= 1;
+
+		this.reload()
 	}
 
 	renderQuestionList()

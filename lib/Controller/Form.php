@@ -51,6 +51,5 @@ class Form extends Controller
 		[
 			'result' => ResponseRepository::saveResponse($answers)
 		];
-
 	}
 }

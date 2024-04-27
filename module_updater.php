@@ -223,8 +223,19 @@ __formsMigrate(16, function($updater, $DB)
 		$DB->query
 		("
 			ALTER TABLE up_form
-				ADD IS_ACTIVE bool,
 				ADD DATE TIMESTAMP;
+		");
+	}
+});
+
+__formsMigrate(17, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form_settings_type'))
+	{
+		$DB->query
+		("
+			INSERT INTO up_form_settings(TITLE, TYPE_ID)
+			VALUE ('Форма активна', '3');
 		");
 	}
 });

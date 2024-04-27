@@ -37,13 +37,27 @@ class FormCreate extends Controller
 		return $result;
 	}
 
-	public function getFormDataAction($id)
+	public function getFormDataAction($id, $limit = 0, $offset = 0)
 	{
-
 		$id = (int) $id;
-		return [
-			'result' => FormRepository::getForm($id)->collectValues(recursive: true),
-		];
+		$limit = (int) $limit;
+		$offset = (int) $offset;
+		if ($limit === 0 & $offset === 0)
+		{
+			$filter = null;
+		}
+		else
+		{
+			$filter =
+				[
+					'LIMIT' => $limit,
+					'OFFSET' => $offset,
+				];
+		}
+		return
+			[
+				'result' => FormRepository::getForm($id, $filter)->collectValues(recursive: true),
+			];
 	}
 
 	public function getFieldDataAction()

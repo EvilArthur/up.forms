@@ -1,24 +1,48 @@
 <?php
 namespace Up\Forms\Repository;
 
-use Up\Forms\Model\FormTable;
-
+use Bitrix\Main\ORM\Query\QueryHelper;
+use Up\Forms\Model\QuestionTable;
 
 Class QuestionRepository
 {
-	public static function GetQuestionsByFormId(int $formId)
-	{
-		$form = FormTable::getByPrimary($formId, [
-			'select' =>
-				[
-					'TITLE',
-					'CHAPTER',
-					'CHAPTER.QUESTION',
-					'CHAPTER.QUESTION.OPTION',
-					'CHAPTER.QUESTION.FIELD'
-				]
-		])->fetchObject()->collectValues(recursive: true);
+	// public static function getQuestionsByFormId(int $formId)
+	// {
+	// 	$form = FormTable::getByPrimary($formId, [
+	// 		'select' =>
+	// 			[
+	// 				'TITLE',
+	// 				'CHAPTER',
+	// 				'CHAPTER.QUESTION',
+	// 				'CHAPTER.QUESTION.OPTION',
+	// 				'CHAPTER.QUESTION.FIELD',
+	// 			],
+	// 	])->fetchObject()->collectValues(recursive: true);
+	//
+	// 	return $form;
+	// }
 
-		return $form;
+	public static function getQuestionsByChapterId(int $chapterId, $filter = null)
+	{
+		if($filter === null)
+		{
+			return QueryHelper::decompose
+			(
+				QuestionTable::query()
+							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION','OPTION', 'SETTINGS'])
+							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
+			);
+		}
+		else
+		{
+			return QueryHelper::decompose
+			(
+				QuestionTable::query()
+							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION','OPTION', 'SETTINGS'])
+							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
+							 ->setLimit($filter['LIMIT'])
+							 ->setOffset($filter['OFFSET'])
+			);
+		}
 	}
 }

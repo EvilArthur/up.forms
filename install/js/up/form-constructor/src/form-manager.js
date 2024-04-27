@@ -1,18 +1,19 @@
 export class FormManager
 {
-	static getFormData(id)
+	static getFormData(id, limit = 0, offset = 0)
 	{
 		return new Promise((resolve, reject) => {
 			BX.ajax.runAction(
 					'up:forms.FormCreate.getFormData',
 					{
 						data: {
-							id: id
+							id: id,
+							limit: limit,
+							offset: offset
 						},
 					})
 				.then((response) => {
 					const result = response.data.result;
-					console.log(result);
 					resolve(result);
 				})
 				.catch((error) => {
