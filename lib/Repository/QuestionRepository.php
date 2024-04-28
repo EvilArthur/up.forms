@@ -15,6 +15,8 @@ Class QuestionRepository
 				QuestionTable::query()
 							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION','OPTION', 'SETTINGS'])
 							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
+							 ->setOrder(['POSITION' => 'asc']),
+				false
 			);
 		}
 		else
@@ -24,8 +26,10 @@ Class QuestionRepository
 				QuestionTable::query()
 							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION','OPTION', 'SETTINGS'])
 							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
+							 ->setOrder(['POSITION' => 'asc'])
 							 ->setLimit($filter['LIMIT'])
-							 ->setOffset($filter['OFFSET'])
+							 ->setOffset($filter['OFFSET']),
+			false
 			);
 		}
 	}
