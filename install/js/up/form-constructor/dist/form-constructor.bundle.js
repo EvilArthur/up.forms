@@ -769,7 +769,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "renderInput",
 	    value: function renderInput() {
 	      var _this = this;
-	      var wrap = main_core.Tag.render(_templateObject$a || (_templateObject$a = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<input type=\"number\" class=\"form-control w-25\" value=\"", "\">\n\t\t"])), this.value != null ? this.value : '');
+	      var wrap = main_core.Tag.render(_templateObject$a || (_templateObject$a = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<input type=\"number\" class=\"form-control w-25\" min=\"1\" value=\"", "\">\n\t\t"])), this.value != null ? this.value : '');
 	      main_core.Event.bind(wrap, 'change', function () {
 	        return _this.onChangeInputHandler(wrap);
 	      });
@@ -826,8 +826,6 @@ this.BX.Up = this.BX.Up || {};
 	    babelHelpers.classCallCheck(this, Settings);
 	    this.layout = {};
 	    this.settings = [];
-	    console.log(formSetting);
-	    console.log(allSettings);
 	    this.allSettings = allSettings;
 	    this.allSettings.map(function (settingData) {
 	      var _formSetting$find;
@@ -857,7 +855,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderSettingList",
 	    value: function renderSettingList() {
-	      var wrap = main_core.Tag.render(_templateObject2$4 || (_templateObject2$4 = babelHelpers.taggedTemplateLiteral(["<div>\n\t\t\t", "\n\t\t</div>"])), this.settings.map(function (setting) {
+	      var wrap = main_core.Tag.render(_templateObject2$4 || (_templateObject2$4 = babelHelpers.taggedTemplateLiteral(["\n\t\t<div>\n\t\t\t", "\n\t\t</div>"])), this.settings.map(function (setting) {
 	        return setting.render();
 	      }));
 	      return wrap;

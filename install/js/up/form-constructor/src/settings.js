@@ -10,8 +10,6 @@ export class Settings
 	{
 		this.layout = {};
 		this.settings = [];
-		console.log(formSetting);
-		console.log(allSettings);
 		this.allSettings = allSettings;
 		this.allSettings.map((settingData) => {
 			let setting;
@@ -49,7 +47,8 @@ export class Settings
 
 	renderSettingList()
 	{
-		const wrap = Tag.render`<div>
+		const wrap = Tag.render`
+		<div>
 			${this.settings.map((setting) => setting.render())}
 		</div>`;
 

@@ -178,7 +178,7 @@ class FormResultsComponent extends CBitrixComponent
 				{
 					foreach ($answer->getSubanswer() as $subAnswer)
 					{
-						$row[$answer->getQuestionId()] = $subAnswer->getValue();
+						$row[$answer->getQuestionId()] = htmlspecialcharsbx($subAnswer->getValue());
 					}
 				}
 
