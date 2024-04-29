@@ -75,13 +75,21 @@ class FormRepository
 			],
 		])->fetchObject();
 
-		$questions = QuestionRepository::getQuestionsByChapterId($id, $filter);
+
+		$chapters = $form->getChapter();
+		$chapterId = 0;
+		foreach ($chapters as $chapter)
+		{
+			$chapterId = $chapter->getId();
+		}
+
+		$questions = QuestionRepository::getQuestionsByChapterId($chapterId, $filter);
 
 		foreach ($questions as $question)
 		{
-			$form->getChapter()->getByPrimary($id)->addToQuestion($question);
+			$form->getChapter()->getByPrimary($chapterId)->addToQuestion($question);
 			$question->unsetChapter();
-			$question->setChapterId($id);
+			$question->setChapterId($chapterId);
 		}
 
 		return $form;
