@@ -1,26 +1,26 @@
 import { Event, Tag } from 'main.core';
 import { EditableText } from './editable-text';
 
-import { questionFactory} from './questions/questionFactory';
+import { questionFactory } from './questions/questionFactory';
 
 export class Constructor
 {
 	constructor(formData, fieldData)
 	{
 		this.layout = {};
-		this.titleObject = {value: ''}
-		this.fieldData = fieldData
+		this.titleObject = { value: '' };
+		this.fieldData = fieldData;
 		this.questions = [];
-		this.formData = formData
+		this.formData = formData;
 
-		this.titleObject.value = this.formData.TITLE
+		this.titleObject.value = this.formData.TITLE;
 		formData.CHAPTER[0].QUESTION.map((questionData) => {
 			const question = questionFactory.createQuestion(
 				questionData.FIELD_ID, questionData.CHAPTER_ID,
 				questionData.ID, questionData.POSITION,
-				questionData.TITLE, questionData.OPTION, questionData.SETTINGS, fieldData)
+				questionData.TITLE, questionData.OPTION, questionData.SETTINGS, fieldData);
 			this.questions.push(question);
-		})
+		});
 	}
 
 	render()
@@ -51,8 +51,8 @@ export class Constructor
 			${this.questions.map((question, index) => {
 			question.position = this.questionNumber++;
 			const questionWrap = question.render();
-			const typeSelect = question.layout.typeSelect
-			Event.bind(typeSelect, 'change', () => this.changeQuestionType(question, index, parseInt(typeSelect.value)))
+			const typeSelect = question.layout.typeSelect;
+			Event.bind(typeSelect, 'change', () => this.changeQuestionType(index, parseInt(typeSelect.value)));
 			return questionWrap;
 		})}
 		</div>
@@ -62,26 +62,37 @@ export class Constructor
 		return this.layout.questionList;
 	}
 
-	changeQuestionType(question, index, fieldId)
+	changeQuestionType(index, fieldId)
 	{
-		let options
+		const question = this.questions[index];
+		console.log(this.questions[index]);
+		console.log(this.questions);
+		let options;
+		console.log(fieldId);
 		if (fieldId === 1)
 		{
-			options = [{'ID': null, 'TITLE':''}]
+			options = [{ 'ID': null, 'TITLE': '' }];
 		}
-		else if(question.fieldId === 1)
+		else if (question.fieldId === 1)
 		{
-			options = [{'ID': null, 'TITLE': 'Новая опция'}]
+			options = [{ 'ID': null, 'TITLE': 'Новая опция' }];
 		}
 		else
 		{
-			options = question.getOptionData()
+			options = question.getOptionData();
 		}
-		this.questions[index] = questionFactory.createQuestion(
+
+		const oldWrap = this.questions[index].layout.wrap;
+		const typeChangedQuestion = questionFactory.createQuestion(
 			fieldId, question.chapterId, question.id, question.position, question.titleObject.value,
 			options, question.getSettingData(), this.fieldData);
-		console.log(this.questions[index])
-		this.renderQuestionList();
+		this.questions[index] = typeChangedQuestion;
+		
+		console.log(typeChangedQuestion);
+		const newWrap = typeChangedQuestion.render();
+		const typeSelect = typeChangedQuestion.layout.typeSelect;
+		Event.bind(typeSelect, 'change', () => this.changeQuestionType(index, parseInt(typeSelect.value)));
+		oldWrap.replaceWith(newWrap);
 	}
 
 	renderAddQuestionButton()
@@ -98,8 +109,8 @@ export class Constructor
 	{
 		this.questions.push(questionFactory.createQuestion(
 			1, this.formData.CHAPTER[0].id, null, this.questionNumber++,
-			'Название', [{'ID': null, 'TITLE': ''}],
-			[{'SETTINGS_ID': 1, 'VALUE': false}], this.fieldData,
+			'Название', [{ 'ID': null, 'TITLE': '' }],
+			[{ 'SETTINGS_ID': 1, 'VALUE': false }], this.fieldData,
 		));
 		this.renderQuestionList();
 	}
@@ -128,7 +139,7 @@ export class Constructor
 		<h1 class="text-center mt-5 mb-4">${this.titleObject.value}</h1>
 		`;
 		new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
-		this.layout.title?.replaceWith(wrap)
+		this.layout.title?.replaceWith(wrap);
 		this.layout.title = wrap;
 		return this.layout.title;
 	}

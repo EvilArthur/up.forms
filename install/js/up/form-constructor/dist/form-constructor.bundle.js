@@ -575,7 +575,7 @@ this.BX.Up = this.BX.Up || {};
 	        var questionWrap = question.render();
 	        var typeSelect = question.layout.typeSelect;
 	        main_core.Event.bind(typeSelect, 'change', function () {
-	          return _this2.changeQuestionType(question, index, parseInt(typeSelect.value));
+	          return _this2.changeQuestionType(index, parseInt(typeSelect.value));
 	        });
 	        return questionWrap;
 	      }));
@@ -585,8 +585,13 @@ this.BX.Up = this.BX.Up || {};
 	    }
 	  }, {
 	    key: "changeQuestionType",
-	    value: function changeQuestionType(question, index, fieldId) {
+	    value: function changeQuestionType(index, fieldId) {
+	      var _this3 = this;
+	      var question = this.questions[index];
+	      console.log(this.questions[index]);
+	      console.log(this.questions);
 	      var options;
+	      console.log(fieldId);
 	      if (fieldId === 1) {
 	        options = [{
 	          'ID': null,
@@ -600,9 +605,16 @@ this.BX.Up = this.BX.Up || {};
 	      } else {
 	        options = question.getOptionData();
 	      }
-	      this.questions[index] = questionFactory.createQuestion(fieldId, question.chapterId, question.id, question.position, question.titleObject.value, options, question.getSettingData(), this.fieldData);
-	      console.log(this.questions[index]);
-	      this.renderQuestionList();
+	      var oldWrap = this.questions[index].layout.wrap;
+	      var typeChangedQuestion = questionFactory.createQuestion(fieldId, question.chapterId, question.id, question.position, question.titleObject.value, options, question.getSettingData(), this.fieldData);
+	      this.questions[index] = typeChangedQuestion;
+	      console.log(typeChangedQuestion);
+	      var newWrap = typeChangedQuestion.render();
+	      var typeSelect = typeChangedQuestion.layout.typeSelect;
+	      main_core.Event.bind(typeSelect, 'change', function () {
+	        return _this3.changeQuestionType(index, parseInt(typeSelect.value));
+	      });
+	      oldWrap.replaceWith(newWrap);
 	    }
 	  }, {
 	    key: "renderAddQuestionButton",

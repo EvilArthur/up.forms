@@ -24,7 +24,7 @@ Class QuestionRepository
 			return QueryHelper::decompose
 			(
 				QuestionTable::query()
-							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION','OPTION', 'SETTINGS'])
+							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION', 'OPTION', 'SETTINGS'])
 							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
 							 ->setOrder(['POSITION' => 'asc'])
 							 ->setLimit($filter['LIMIT'])
