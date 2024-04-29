@@ -109,7 +109,7 @@ export class Constructor
 		const hardCodeChapter = this.formData.CHAPTER[0];
 		hardCodeChapter.QUESTION = this.questions.map((question) => question.getData());
 		const form = {
-			'TITLE': this.titleObject.value,
+			'TITLE': this.layout.title.innerText,
 			'CREATOR_ID': 1,
 			'CHAPTER': [
 				hardCodeChapter,
@@ -127,7 +127,8 @@ export class Constructor
 		const wrap = Tag.render`
 		<h1 class="text-center mt-5 mb-4">${this.titleObject.value}</h1>
 		`;
-		new EditableText(wrap, this.titleObject);
+		new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
+		this.layout.title?.replaceWith(wrap)
 		this.layout.title = wrap;
 		return this.layout.title;
 	}

@@ -4,12 +4,26 @@ this.BX.Up = this.BX.Up || {};
 (function (exports,main_core) {
 	'use strict';
 
+	function escape(string) {
+	  var htmlEscapes = {
+	    '&': '&amp;',
+	    '<': '&lt;',
+	    '>': '&gt;',
+	    '"': '&quot;',
+	    "'": '&#39;'
+	  };
+	  return string.replace(/[&<>"']/g, function (match) {
+	    return htmlEscapes[match];
+	  });
+	}
+
 	var _templateObject;
 	var EditableText = /*#__PURE__*/function () {
-	  function EditableText(element, textObject) {
+	  function EditableText(element, textObject, renderFunction) {
 	    babelHelpers.classCallCheck(this, EditableText);
 	    this.element = element;
 	    this.textObject = textObject;
+	    this.renderFunction = renderFunction;
 	    this.setupEditHandler();
 	  }
 	  babelHelpers.createClass(EditableText, [{
@@ -35,13 +49,12 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onEditableTextEndChangeHandler",
 	    value: function onEditableTextEndChangeHandler() {
-	      var newTitle = this.input.value.trim();
-	      this.element.innerText = newTitle;
+	      var newTitle = escape(this.input.value.trim());
 	      this.textObject.value = newTitle;
 	      if (newTitle === '') {
 	        return;
 	      }
-	      this.input.replaceWith(this.element);
+	      this.input.replaceWith(this.renderFunction());
 	    }
 	  }]);
 	  return EditableText;
