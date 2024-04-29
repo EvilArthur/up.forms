@@ -38,8 +38,10 @@ export class Option
 			this.labelObject.value = 'Новая опция';
 		}
 		const wrap = Tag.render`<label class="form-check-label">${this.labelObject.value}</label>`;
-		new EditableText(wrap, this.labelObject);
-		return wrap;
+		new EditableText(wrap, this.labelObject, this.renderEditableLabel.bind(this));
+		this.layout.label?.replaceWith(wrap)
+		this.layout.label = wrap;
+		return this.layout.label;
 	}
 
 	renderButton()

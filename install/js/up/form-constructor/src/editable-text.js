@@ -1,11 +1,13 @@
 import {Tag, Event, Type} from 'main.core';
+import {escape} from './escape';
 
 export class EditableText
 {
-	constructor(element, textObject)
+	constructor(element, textObject, renderFunction)
 	{
 		this.element = element;
 		this.textObject = textObject;
+		this.renderFunction = renderFunction;
 		this.setupEditHandler();
 	}
 
@@ -35,13 +37,12 @@ export class EditableText
 	}
 
 	onEditableTextEndChangeHandler() {
-		const newTitle = this.input.value.trim();
-		this.element.innerText = newTitle;
+		const newTitle = escape(this.input.value.trim());
 		this.textObject.value = newTitle;
 		if (newTitle === '')
 		{
 			return;
 		}
-		this.input.replaceWith(this.element);
+		this.input.replaceWith(this.renderFunction());
 	}
 }

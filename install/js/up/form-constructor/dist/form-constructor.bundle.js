@@ -4,12 +4,26 @@ this.BX.Up = this.BX.Up || {};
 (function (exports,main_core) {
 	'use strict';
 
+	function escape(string) {
+	  var htmlEscapes = {
+	    '&': '&amp;',
+	    '<': '&lt;',
+	    '>': '&gt;',
+	    '"': '&quot;',
+	    "'": '&#39;'
+	  };
+	  return string.replace(/[&<>"']/g, function (match) {
+	    return htmlEscapes[match];
+	  });
+	}
+
 	var _templateObject;
 	var EditableText = /*#__PURE__*/function () {
-	  function EditableText(element, textObject) {
+	  function EditableText(element, textObject, renderFunction) {
 	    babelHelpers.classCallCheck(this, EditableText);
 	    this.element = element;
 	    this.textObject = textObject;
+	    this.renderFunction = renderFunction;
 	    this.setupEditHandler();
 	  }
 	  babelHelpers.createClass(EditableText, [{
@@ -35,13 +49,12 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onEditableTextEndChangeHandler",
 	    value: function onEditableTextEndChangeHandler() {
-	      var newTitle = this.input.value.trim();
-	      this.element.innerText = newTitle;
+	      var newTitle = escape(this.input.value.trim());
 	      this.textObject.value = newTitle;
 	      if (newTitle === '') {
 	        return;
 	      }
-	      this.input.replaceWith(this.element);
+	      this.input.replaceWith(this.renderFunction());
 	    }
 	  }]);
 	  return EditableText;
@@ -98,11 +111,13 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableTitle",
 	    value: function renderEditableTitle() {
+	      var _this$layout$title;
 	      if (this.titleObject.value === '') {
 	        this.titleObject.value = 'Название';
 	      }
 	      var wrap = main_core.Tag.render(_templateObject4 || (_templateObject4 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h3 class=\"form-label\">", "</h3>\n\t\t"])), this.titleObject.value);
-	      new EditableText(wrap, this.titleObject);
+	      new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
+	      (_this$layout$title = this.layout.title) === null || _this$layout$title === void 0 ? void 0 : _this$layout$title.replaceWith(wrap);
 	      this.layout.title = wrap;
 	      return this.layout.title;
 	    }
@@ -342,12 +357,15 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableLabel",
 	    value: function renderEditableLabel() {
+	      var _this$layout$label;
 	      if (this.labelObject.value === '') {
 	        this.labelObject.value = 'Новая опция';
 	      }
 	      var wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["<label class=\"form-check-label\">", "</label>"])), this.labelObject.value);
-	      new EditableText(wrap, this.labelObject);
-	      return wrap;
+	      new EditableText(wrap, this.labelObject, this.renderEditableLabel.bind(this));
+	      (_this$layout$label = this.layout.label) === null || _this$layout$label === void 0 ? void 0 : _this$layout$label.replaceWith(wrap);
+	      this.layout.label = wrap;
+	      return this.layout.label;
 	    }
 	  }, {
 	    key: "renderButton",
@@ -619,11 +637,13 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderEditableTitle",
 	    value: function renderEditableTitle() {
+	      var _this$layout$title;
 	      if (this.titleObject.value === '') {
 	        this.titleObject.value = 'Новая форма';
 	      }
 	      var wrap = main_core.Tag.render(_templateObject4$2 || (_templateObject4$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t"])), this.titleObject.value);
-	      new EditableText(wrap, this.titleObject);
+	      new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
+	      (_this$layout$title = this.layout.title) === null || _this$layout$title === void 0 ? void 0 : _this$layout$title.replaceWith(wrap);
 	      this.layout.title = wrap;
 	      return this.layout.title;
 	    }

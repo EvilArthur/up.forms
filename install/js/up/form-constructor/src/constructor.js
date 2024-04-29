@@ -127,7 +127,8 @@ export class Constructor
 		const wrap = Tag.render`
 		<h1 class="text-center mt-5 mb-4">${this.titleObject.value}</h1>
 		`;
-		new EditableText(wrap, this.titleObject);
+		new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
+		this.layout.title?.replaceWith(wrap)
 		this.layout.title = wrap;
 		return this.layout.title;
 	}

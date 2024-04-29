@@ -81,7 +81,8 @@ export default class Question
 		const wrap = Tag.render`
 		<h3 class="form-label">${this.titleObject.value}</h3>
 		`;
-		new EditableText(wrap, this.titleObject);
+		new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
+		this.layout.title?.replaceWith(wrap)
 		this.layout.title = wrap;
 		return this.layout.title;
 	}
