@@ -3,10 +3,11 @@ import { EditableText } from '../../editable-text';
 
 export class Option
 {
-	constructor(id, title, questionName, isRightAnswer,isHaveRightAnswerObject)
+	constructor(id, title, questionName, questionId, isRightAnswer,isHaveRightAnswerObject)
 	{
 		this.id = id;
 		this.questionName = questionName;
+		this.questionId = questionId;
 		this.labelObject = { value: title };
 		this.layout = {};
 		this.isDeleted = false;

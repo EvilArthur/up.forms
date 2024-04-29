@@ -41,11 +41,11 @@ export class Question
 		}
 		else if (this.field_id === 2)
 		{
-			this.field = new Radio(this.options);
+			this.field = new Radio(this.options, this.title, this.id);
 		}
 		else if (this.field_id === 3)
 		{
-			this.field = new Checkbox(this.options);
+			this.field = new Checkbox(this.options, this.title, this.id);
 		}
 		this.layout.input = this.field.render();
 		return this.layout.input;

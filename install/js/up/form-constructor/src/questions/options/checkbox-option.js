@@ -9,7 +9,7 @@ export class CheckboxOption extends Option
 		{
 			return;
 		}
-		const wrap = Tag.render`<input class="form-check-input" type="checkbox" name="${this.questionName}" value="${this.id}" ${this.checked ? 'checked' : ''}>`;
+		const wrap = Tag.render`<input class="form-check-input" type="checkbox" name="${this.questionName}_${this.questionId}" value="${this.id}" ${this.checked ? 'checked' : ''}>`;
 		this.layout.button = wrap;
 		return this.layout.button;
 	}

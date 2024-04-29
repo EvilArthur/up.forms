@@ -2,9 +2,9 @@ import { Options } from './options';
 
 export class Radio extends Options
 {
-	constructor(options)
+	constructor(options, questionName, questionId)
 	{
-		super(options);
+		super(options, questionName, questionId);
 		this.type = 'radio';
 	}
 

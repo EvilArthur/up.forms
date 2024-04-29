@@ -81,6 +81,7 @@ this.BX.Up = this.BX.Up || {};
 	        return Number(setting.SETTINGS_ID) === 1;
 	      }).VALUE)
 	    };
+	    console.log(this.isHaveRightAnswerObject);
 	    this.fieldId = null;
 	  }
 	  babelHelpers.createClass(Question, [{
@@ -330,10 +331,11 @@ this.BX.Up = this.BX.Up || {};
 
 	var _templateObject$3, _templateObject2$2, _templateObject3$1, _templateObject4$1, _templateObject5$1;
 	var Option$1 = /*#__PURE__*/function () {
-	  function Option(id, title, questionName, isRightAnswer, isHaveRightAnswerObject) {
+	  function Option(id, title, questionName, questionId, isRightAnswer, isHaveRightAnswerObject) {
 	    babelHelpers.classCallCheck(this, Option);
 	    this.id = id;
 	    this.questionName = questionName;
+	    this.questionId = questionId;
 	    this.labelObject = {
 	      value: title
 	    };
@@ -432,7 +434,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (!this.isHaveRightAnswerObject.value) {
 	        return;
 	      }
-	      var wrap = main_core.Tag.render(_templateObject$4 || (_templateObject$4 = babelHelpers.taggedTemplateLiteral(["<input class=\"form-check-input\" type=\"radio\" name=\"", "\" value=\"", "\" ", ">"])), this.questionName, this.id, this.checked ? 'checked' : '');
+	      var wrap = main_core.Tag.render(_templateObject$4 || (_templateObject$4 = babelHelpers.taggedTemplateLiteral(["<input class=\"form-check-input\" type=\"radio\" name=\"", "_", "\" value=\"", "\" ", ">"])), this.questionName, this.questionId, this.id, this.checked ? 'checked' : '');
 	      this.layout.button = wrap;
 	      return this.layout.button;
 	    }
@@ -448,7 +450,7 @@ this.BX.Up = this.BX.Up || {};
 	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Radio).call(this, chapterId, id, position, title, optionData, settingData, fieldData));
 	    _this.options = optionData.map(function (option) {
 	      if (option) {
-	        return new RadioOption(option.ID, option.TITLE, _this.titleObject.value, _this.toBoolean(option.IS_RIGHT_ANSWER), _this.isHaveRightAnswerObject);
+	        return new RadioOption(option.ID, option.TITLE, _this.titleObject.value, _this.id, _this.toBoolean(option.IS_RIGHT_ANSWER), _this.isHaveRightAnswerObject);
 	      }
 	    });
 	    _this.fieldId = 2;
@@ -457,7 +459,7 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(Radio, [{
 	    key: "onAddOptionButtonClickHandler",
 	    value: function onAddOptionButtonClickHandler() {
-	      var option = new RadioOption(null, 'Новая опция', this.titleObject.value, false, this.isHaveRightAnswerObject);
+	      var option = new RadioOption(null, 'Новая опция', this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
 	      this.layout.options.append(option.render());
 	      this.options.push(option);
 	    }
@@ -478,7 +480,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (!this.isHaveRightAnswerObject.value) {
 	        return;
 	      }
-	      var wrap = main_core.Tag.render(_templateObject$5 || (_templateObject$5 = babelHelpers.taggedTemplateLiteral(["<input class=\"form-check-input\" type=\"checkbox\" name=\"", "\" value=\"", "\" ", ">"])), this.questionName, this.id, this.checked ? 'checked' : '');
+	      var wrap = main_core.Tag.render(_templateObject$5 || (_templateObject$5 = babelHelpers.taggedTemplateLiteral(["<input class=\"form-check-input\" type=\"checkbox\" name=\"", "_", "\" value=\"", "\" ", ">"])), this.questionName, this.questionId, this.id, this.checked ? 'checked' : '');
 	      this.layout.button = wrap;
 	      return this.layout.button;
 	    }
@@ -495,7 +497,7 @@ this.BX.Up = this.BX.Up || {};
 	    _this.options = optionData.map(function (option) {
 	      if (option) {
 	        /*if (option.IS_RIGHT_ANSWER)*/
-	        return new CheckboxOption(option.ID, option.TITLE, _this.titleObject.value, _this.toBoolean(option.IS_RIGHT_ANSWER), _this.isHaveRightAnswerObject);
+	        return new CheckboxOption(option.ID, option.TITLE, _this.titleObject.value, _this.id, _this.toBoolean(option.IS_RIGHT_ANSWER), _this.isHaveRightAnswerObject);
 	      }
 	    });
 	    _this.fieldId = 3;
@@ -504,7 +506,7 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(Checkbox, [{
 	    key: "onAddOptionButtonClickHandler",
 	    value: function onAddOptionButtonClickHandler() {
-	      var option = new CheckboxOption(null, 'Новая опция', this.titleObject.value, false, this.isHaveRightAnswerObject);
+	      var option = new CheckboxOption(null, 'Новая опция', this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
 	      this.layout.options.append(option.render());
 	      this.options.push(option);
 	    }

@@ -2,10 +2,12 @@ import { Event, Tag } from 'main.core';
 
 export class Options
 {
-	constructor(options)
+	constructor(options, questionName, questionId)
 	{
 		this.layout = {};
 		this.options = options;
+		this.questionName = questionName
+		this.questionId = questionId
 		this.type = null;
 		this.subAnswer = [];
 
@@ -28,7 +30,7 @@ export class Options
 	{
 		const wrap = Tag.render`
 			<div class="form-check">
-				<input class="form-check-input" type="${type}" name="${this.title}_${this.id}" value="${id}">
+				<input class="form-check-input" type="${type}" name="${this.questionName}_${this.questionId}" value="${id}">
 				<label class="form-check-label">${value}</label>
 			</div>
 		`;

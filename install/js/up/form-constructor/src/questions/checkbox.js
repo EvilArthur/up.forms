@@ -10,7 +10,7 @@ export class Checkbox extends Question
 			if (option)
 			{
 				/*if (option.IS_RIGHT_ANSWER)*/
-				return new CheckboxOption(option.ID, option.TITLE, this.titleObject.value, this.toBoolean(option.IS_RIGHT_ANSWER), this.isHaveRightAnswerObject);
+				return new CheckboxOption(option.ID, option.TITLE, this.titleObject.value, this.id, this.toBoolean(option.IS_RIGHT_ANSWER), this.isHaveRightAnswerObject);
 			}
 		});
 		this.fieldId = 3
@@ -18,7 +18,7 @@ export class Checkbox extends Question
 
 	onAddOptionButtonClickHandler()
 	{
-		const option = new CheckboxOption(null, 'Новая опция', this.titleObject.value, false, this.isHaveRightAnswerObject);
+		const option = new CheckboxOption(null, 'Новая опция', this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
 		this.layout.options.append(option.render());
 		this.options.push(option);
 	}

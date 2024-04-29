@@ -133,10 +133,12 @@ this.BX.Up = this.BX.Up || {};
 
 	var _templateObject$2, _templateObject2$1, _templateObject3$1;
 	var Options = /*#__PURE__*/function () {
-	  function Options(options) {
+	  function Options(options, questionName, questionId) {
 	    babelHelpers.classCallCheck(this, Options);
 	    this.layout = {};
 	    this.options = options;
+	    this.questionName = questionName;
+	    this.questionId = questionId;
 	    this.type = null;
 	    this.subAnswer = [];
 	  }
@@ -155,7 +157,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderButton",
 	    value: function renderButton(id, value, type) {
-	      var wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"form-check\">\n\t\t\t\t<input class=\"form-check-input\" type=\"", "\" name=\"", "_", "\" value=\"", "\">\n\t\t\t\t<label class=\"form-check-label\">", "</label>\n\t\t\t</div>\n\t\t"])), type, this.title, this.id, id, value);
+	      var wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"form-check\">\n\t\t\t\t<input class=\"form-check-input\" type=\"", "\" name=\"", "_", "\" value=\"", "\">\n\t\t\t\t<label class=\"form-check-label\">", "</label>\n\t\t\t</div>\n\t\t"])), type, this.questionName, this.questionId, id, value);
 	      main_core.Event.bind(wrap, 'change', this.onButtonChangeHandler.bind(this));
 	      return wrap;
 	    }
@@ -188,10 +190,10 @@ this.BX.Up = this.BX.Up || {};
 
 	var Radio = /*#__PURE__*/function (_Options) {
 	  babelHelpers.inherits(Radio, _Options);
-	  function Radio(options) {
+	  function Radio(options, questionName, questionId) {
 	    var _this;
 	    babelHelpers.classCallCheck(this, Radio);
-	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Radio).call(this, options));
+	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Radio).call(this, options, questionName, questionId));
 	    _this.type = 'radio';
 	    return _this;
 	  }
@@ -233,10 +235,10 @@ this.BX.Up = this.BX.Up || {};
 
 	var Checkbox = /*#__PURE__*/function (_Options) {
 	  babelHelpers.inherits(Checkbox, _Options);
-	  function Checkbox(options) {
+	  function Checkbox(options, questionName, questionId) {
 	    var _this;
 	    babelHelpers.classCallCheck(this, Checkbox);
-	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Checkbox).call(this, options));
+	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Checkbox).call(this, options, questionName, questionId));
 	    _this.type = 'checkbox';
 	    return _this;
 	  }
@@ -284,9 +286,9 @@ this.BX.Up = this.BX.Up || {};
 	      if (this.field_id === 1) {
 	        this.field = new ShortText();
 	      } else if (this.field_id === 2) {
-	        this.field = new Radio(this.options);
+	        this.field = new Radio(this.options, this.title, this.id);
 	      } else if (this.field_id === 3) {
-	        this.field = new Checkbox(this.options);
+	        this.field = new Checkbox(this.options, this.title, this.id);
 	      }
 	      this.layout.input = this.field.render();
 	      return this.layout.input;
