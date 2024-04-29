@@ -93,7 +93,7 @@ export class Option
 			return null;
 		return {
 			'ID': this.id,
-			'TITLE': this.labelObject.value,
+			'TITLE': this.layout.label.innerText,
 			'IS_RIGHT_ANSWER': this.isHaveRightAnswerObject.value ? this.layout.button.checked : null
 		};
 	}

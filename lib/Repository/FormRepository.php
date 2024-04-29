@@ -86,7 +86,7 @@ class FormRepository
 		$query->addSelect('TITLE');
 		$query->addSelect('CREATOR_ID');
 		$query->addSelect('DATE');
-		$query->addSelect('IS_ACTIVE');
+		/*$query->addSelect('IS_ACTIVE');*/
 		$query->addSelect('SETTINGS');
 		$query->addSelect('SETTINGS.SETTINGS');
 		$query->addSelect('SETTINGS.SETTINGS.TYPE');

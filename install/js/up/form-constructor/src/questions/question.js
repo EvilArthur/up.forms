@@ -225,7 +225,7 @@ export default class Question
 			return null;
 		}
 		const data = {
-			'TITLE': this.titleObject.value,
+			'TITLE': this.layout.title.innerText,
 			'POSITION': this.position,
 			'FIELD_ID': this.fieldId,
 			'ID': this.id,

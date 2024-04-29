@@ -109,7 +109,7 @@ export class Constructor
 		const hardCodeChapter = this.formData.CHAPTER[0];
 		hardCodeChapter.QUESTION = this.questions.map((question) => question.getData());
 		const form = {
-			'TITLE': this.titleObject.value,
+			'TITLE': this.layout.title.innerText,
 			'CREATOR_ID': 1,
 			'CHAPTER': [
 				hardCodeChapter,

@@ -236,7 +236,7 @@ this.BX.Up = this.BX.Up || {};
 	        return null;
 	      }
 	      var data = {
-	        'TITLE': this.titleObject.value,
+	        'TITLE': this.layout.title.innerText,
 	        'POSITION': this.position,
 	        'FIELD_ID': this.fieldId,
 	        'ID': this.id,
@@ -411,7 +411,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (this.isDeleted) return null;
 	      return {
 	        'ID': this.id,
-	        'TITLE': this.labelObject.value,
+	        'TITLE': this.layout.label.innerText,
 	        'IS_RIGHT_ANSWER': this.isHaveRightAnswerObject.value ? this.layout.button.checked : null
 	      };
 	    }
@@ -628,7 +628,7 @@ this.BX.Up = this.BX.Up || {};
 	        return question.getData();
 	      });
 	      var form = {
-	        'TITLE': this.titleObject.value,
+	        'TITLE': this.layout.title.innerText,
 	        'CREATOR_ID': 1,
 	        'CHAPTER': [hardCodeChapter]
 	      };
