@@ -6,7 +6,7 @@ export class Number extends Setting
 	renderInput()
 	{
 		const wrap = Tag.render`
-			<input type="number" class="form-control w-25" value="${this.value != null ? this.value : ''}">
+			<input type="number" class="form-control w-25" min="1" value="${this.value != null ? this.value : ''}">
 		`
 		Event.bind(wrap, 'change', () => this.onChangeInputHandler(wrap))
 		this.input = wrap;
