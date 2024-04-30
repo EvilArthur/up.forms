@@ -6,7 +6,7 @@ import {Checkbox} from './checkbox';
 
 export class Question
 {
-	constructor(chapter_id, field_id, id, position, title, optionData)
+	constructor(chapter_id, field_id, id, position, title, optionData, isRequired)
 	{
 		this.layout = {};
 		this.layout.wrap = null;
@@ -17,6 +17,7 @@ export class Question
 		this.id = parseInt(id);
 		this.position = parseInt(position);
 		this.options = optionData;
+		this.isRequired = this.toBoolean(isRequired);
 		this.field = null
 	}
 
@@ -27,6 +28,7 @@ export class Question
 			<label class="form-label">${this.title}</label>
 			${this}
 			${this.renderInput()}
+			${this.renderRequired()}
 		</div>
 		`;
 		this.layout.wrap = wrap;
@@ -51,11 +53,35 @@ export class Question
 		return this.layout.input;
 	}
 
+	renderRequired()
+	{
+		if (!this.isRequired)
+		{
+			return null;
+		}
+		const wrap = Tag.render`<lable>Это обязательный вопрос</lable>`
+		return wrap;
+	}
+
 	getAnswer()
 	{
 		return {
 			'ID': this.id,
 			'SUBANSWER': this.field.getAnswer(),
+
 		};
+	}
+
+	toBoolean(variable)
+	{
+		if (variable === 'true' || variable === true)
+		{
+			return true;
+		}
+		else if (variable === 'false' || variable === false)
+		{
+			return false;
+		}
+		return variable
 	}
 }

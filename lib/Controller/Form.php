@@ -6,6 +6,7 @@ use Bitrix\Bizproc\Error;
 use Bitrix\Main\Engine\Controller;
 use Bitrix\Main\Loader;
 
+use Up\Forms\Controller\Validator\FormValidator;
 use Up\Forms\Repository\ResponseRepository;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\TaskRepository;
@@ -45,8 +46,16 @@ class Form extends Controller
 		FormRepository::deleteForms($ids);
 	}
 
-	public function saveAnswersAction(array $answers): array
+	public function saveAnswersAction(array $answers): ?array
 	{
+		if ($errors = FormValidator::validateAnswerData($answers))
+		{
+			foreach ($errors as $error)
+			{
+				$this->addError($error);
+			}
+			return null;
+		}
 		TaskRepository::closeTask($this->getCurrentUser()->getId(), $answers['FORM_ID']);
 		return
 		[

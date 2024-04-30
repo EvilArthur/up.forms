@@ -40,7 +40,7 @@ export class FormManager
 				})
 				.catch((error) => {
 					console.log(error);
-					reject(error);
+					reject(error.errors);
 				});
 		})
 	}

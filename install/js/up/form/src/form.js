@@ -11,7 +11,8 @@ export class Form
 		this.layout.wrap = options.container;
 		this.timer = options.values.timer;
 		this.isRenderedMainBody = false;
-		this.isCompleted = false;
+		this.isSaved = false;
+		this.timeIsUp = false;
 
 		this.currentNumOfItems = 0;
 		this.numOfItemsPerPage = 10;
@@ -28,7 +29,7 @@ export class Form
 		}
 		if (this.timeIsUp)
 		{
-			this.submitResponse();
+			this.submitResponse(null);
 		}
 		this.try = options.values.try;
 		this.maxTry = options.values.maxTry;
@@ -57,11 +58,13 @@ export class Form
 				this.formData = await FormManager.getFormData(this.id, this.limit, this.offset);
 				this.isLoading = false;
 				console.log(this.formData);
+				this.chapterId = this.formData.CHAPTER[0].ID;
+				console.log(this.chapterId)
 				this.formData.CHAPTER[0].QUESTION.map((questionData) => {
 					const question = new Question(
 						questionData.CHAPTER_ID, questionData.FIELD_ID,
 						questionData.ID, questionData.POSITION,
-						questionData.TITLE, questionData.OPTION);
+						questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE);
 
 					this.questions.push(question);
 				});
@@ -112,7 +115,6 @@ export class Form
 		}
 		else
 		{
-			this.startTimer();
 			wrap = Tag.render`
 			<div class="container">
 				<h1 class="text-center mt-5 mb-4">${this.formData.TITLE}</h1>
@@ -212,31 +214,48 @@ export class Form
 		const wrap = Tag.render`
 			<button class="btn btn-primary">Подтвердить</button>
 		`;
-		Event.bind(wrap, 'click', this.submitResponse.bind(this));
-		this.layout.submitButton = wrap;
-		return wrap;
+		this.layout.submitButtonObject = {
+			isActive: true,
+			wrap: wrap
+		}
+		Event.bind(wrap, 'click', () => this.submitResponse(this.layout.submitButtonObject));
+		return this.layout.submitButtonObject.wrap;
 	}
 
-	submitResponse()
+	submitResponse(button = null)
 	{
-		this.isCompleted = true;
+		console.log(button);
+		if(button)
+		{
+			if (!button.isActive)
+			{
+				return;
+			}
+			console.log(1);
+			button.wrap.classList.add('disabled');
+			button.isActive = false;
+		}
+
 		let answers = [];
 		if (this.isRenderedMainBody)
 		{
-			this.layout.submitButton.classList.add('disabled');
+			button.wrap.classList.add('disabled');
 			answers = this.questions.map((question) => {
 				return question.getAnswer();
 			});
 		}
-
+		this.renderErrors([]);
 		const data = {
 			'FORM_ID': this.id,
+			'CHAPTER_ID': this.chapterId,
 			'ANSWER': answers,
 			'IS_COMPLETED': true,
+			'IS_TIME_UP': this.timeIsUp,
 		};
 		console.log(data);
 		FormManager.saveAnswerData(data)
 			.then((response) => {
+				this.isSaved = true;
 				if (!this.timeIsUp)
 				{
 					BX.SidePanel.Instance.close();
@@ -249,7 +268,12 @@ export class Form
 
 				console.log(response);
 			})
-			.catch((error) => console.log(error));
+			.catch((errors) => {
+				this.layout.wrap.prepend(this.renderErrors(errors))
+				button.wrap.classList.remove('disabled')
+				button.isActive = true;
+				console.log(errors);
+			});
 	}
 
 	renderTimer()
@@ -331,14 +355,14 @@ export class Form
 	{
 		const remainingTime = endTime - new Date();
 		console.log(remainingTime);
-		if (this.isCompleted)
+		if (this.isSaved)
 		{
 			return;
 		}
 		if (remainingTime <= 0)
 		{
 			this.timeIsUp = true;
-			this.submitResponse(this.layout.submitButton);
+			this.submitResponse(this.layout.submitButtonObject);
 		}
 		else
 		{
@@ -353,5 +377,23 @@ export class Form
 			this.layout.time.innerText = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 			setTimeout(() => this.updateTimer(endTime), 1000);
 		}
+	}
+
+	renderErrors(errors)
+	{
+		const wrap = Tag.render`<div class="container">
+									${errors.map((error) => this.renderError(error.message))}
+								</div>`;
+		this.layout.error?.replaceWith(wrap);
+		this.layout.error = wrap;
+		return this.layout.error;
+	}
+
+	renderError(message)
+	{
+		const wrap = Tag.render`<div class="alert alert-danger" role="alert">
+								${message}
+							</div>`
+		return wrap;
 	}
 }
