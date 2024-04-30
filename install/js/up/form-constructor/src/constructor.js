@@ -110,7 +110,7 @@ export class Constructor
 		this.questions.push(questionFactory.createQuestion(
 			1, this.formData.CHAPTER[0].id, null, this.questionNumber++,
 			'Название', [{ 'ID': null, 'TITLE': '' }],
-			[{ 'SETTINGS_ID': 1, 'VALUE': false }], this.fieldData,
+			[{ 'SETTINGS_ID': 1, 'VALUE': false }, { 'SETTINGS_ID': 2, 'VALUE': false }], this.fieldData,
 		));
 		this.renderQuestionList();
 	}

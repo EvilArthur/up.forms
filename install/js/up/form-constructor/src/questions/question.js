@@ -16,7 +16,7 @@ export default class Question
 		this.isDeleted = false;
 		this.settingData = settingData;
 		this.isHaveRightAnswerObject = { value: this.toBoolean(this.settingData.find(setting => Number(setting.SETTINGS_ID) === 1).VALUE) };
-		console.log(this.isHaveRightAnswerObject);
+		this.isRequiredQuestion = this.toBoolean(this.settingData.find(setting => Number(setting.SETTINGS_ID) === 2).VALUE)
 		this.fieldId = null;
 	}
 
@@ -50,7 +50,7 @@ export default class Question
 					${this.renderBody()}
 				</div>
 				<div class="card-footer">
-					<p>"Обязетльный вопрос"</p>
+					<p>${this.renderRequired()}</p>
 				</div>
 			</div>`;
 		this.layout.wrap?.replaceWith(wrap);
@@ -147,6 +147,28 @@ export default class Question
 		return wrap;
 	}
 
+	renderRequired()
+	{
+		this.layout.checkboxRequired = Tag.render`
+		<input class="form-check-input" type="checkbox" name="${this.position}_${this.titleObject.value}_required"
+		 ${this.isRequiredQuestion ? 'checked' : ''}>`;
+		Event.bind(this.layout.checkboxRequired, 'change', this.onChangeRequiredHandler.bind(this))
+
+		const wrap = Tag.render`
+			<div class="form-check">
+				${this.layout.checkboxRequired}
+				<label class="form-check-label">
+					Обязательный вопрос
+				</label>
+			</div>`
+		return wrap;
+	}
+
+	onChangeRequiredHandler()
+	{
+		this.isRequiredQuestion = this.layout.checkboxRequired.checked
+	}
+
 	renderBody()
 	{
 		const wrap = Tag.render`<div class="container">
@@ -213,10 +235,16 @@ export default class Question
 
 	getSettingData()
 	{
-		return [{
-			'SETTINGS_ID': 1,
-			'VALUE': this.isHaveRightAnswerObject.value,
-		}];
+		return [
+			{
+				'SETTINGS_ID': 1,
+				'VALUE': this.isHaveRightAnswerObject.value,
+			},
+			{
+				'SETTINGS_ID': 2,
+				'VALUE': this.isRequiredQuestion,
+			}
+			];
 	}
 
 	getData()

@@ -60,7 +60,7 @@ this.BX.Up = this.BX.Up || {};
 	  return EditableText;
 	}();
 
-	var _templateObject$1, _templateObject2, _templateObject3, _templateObject4, _templateObject5, _templateObject6, _templateObject7, _templateObject8, _templateObject9, _templateObject10, _templateObject11, _templateObject12, _templateObject13;
+	var _templateObject$1, _templateObject2, _templateObject3, _templateObject4, _templateObject5, _templateObject6, _templateObject7, _templateObject8, _templateObject9, _templateObject10, _templateObject11, _templateObject12, _templateObject13, _templateObject14, _templateObject15;
 	var Question = /*#__PURE__*/function () {
 	  function Question(chapter_id, id, position, title, optionData, settingData, fieldData) {
 	    babelHelpers.classCallCheck(this, Question);
@@ -81,7 +81,9 @@ this.BX.Up = this.BX.Up || {};
 	        return Number(setting.SETTINGS_ID) === 1;
 	      }).VALUE)
 	    };
-	    console.log(this.isHaveRightAnswerObject);
+	    this.isRequiredQuestion = this.toBoolean(this.settingData.find(function (setting) {
+	      return Number(setting.SETTINGS_ID) === 2;
+	    }).VALUE);
 	    this.fieldId = null;
 	  }
 	  babelHelpers.createClass(Question, [{
@@ -91,7 +93,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (this.isDeleted) {
 	        return main_core.Tag.render(_templateObject$1 || (_templateObject$1 = babelHelpers.taggedTemplateLiteral([""])));
 	      }
-	      var wrap = main_core.Tag.render(_templateObject2 || (_templateObject2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"card mb-3 mt-3\">\n\t\t\t\t<div class=\"card-header\">\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<div class=\"row\">\n\t\t\t\t\t\t<div class=\"col text-left\">\n\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"col\">\n\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"col text-end\">\n\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"col text-end\">\n\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"card-body\">\n\t\t\t\t\t", "\n\t\t\t\t</div>\n\t\t\t\t<div class=\"card-footer\">\n\t\t\t\t\t<p>\"\u041E\u0431\u044F\u0437\u0435\u0442\u043B\u044C\u043D\u044B\u0439 \u0432\u043E\u043F\u0440\u043E\u0441\"</p>\n\t\t\t\t</div>\n\t\t\t</div>"])), this.renderEditableTitle(), this.renderAutocheck(), this.renderTypes(), this.renderRemoveQuestionButton(), this.renderBody());
+	      var wrap = main_core.Tag.render(_templateObject2 || (_templateObject2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"card mb-3 mt-3\">\n\t\t\t\t<div class=\"card-header\">\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<div class=\"row\">\n\t\t\t\t\t\t<div class=\"col text-left\">\n\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"col\">\n\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"col text-end\">\n\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class=\"col text-end\">\n\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<div class=\"card-body\">\n\t\t\t\t\t", "\n\t\t\t\t</div>\n\t\t\t\t<div class=\"card-footer\">\n\t\t\t\t\t<p>", "</p>\n\t\t\t\t</div>\n\t\t\t</div>"])), this.renderEditableTitle(), this.renderAutocheck(), this.renderTypes(), this.renderRemoveQuestionButton(), this.renderBody(), this.renderRequired());
 	      (_this$layout$wrap = this.layout.wrap) === null || _this$layout$wrap === void 0 ? void 0 : _this$layout$wrap.replaceWith(wrap);
 	      this.layout.wrap = wrap;
 	      return this.layout.wrap;
@@ -161,10 +163,23 @@ this.BX.Up = this.BX.Up || {};
 	      return wrap;
 	    }
 	  }, {
+	    key: "renderRequired",
+	    value: function renderRequired() {
+	      this.layout.checkboxRequired = main_core.Tag.render(_templateObject10 || (_templateObject10 = babelHelpers.taggedTemplateLiteral(["\n\t\t<input class=\"form-check-input\" type=\"checkbox\" name=\"", "_", "_required\"\n\t\t ", ">"])), this.position, this.titleObject.value, this.isRequiredQuestion ? 'checked' : '');
+	      main_core.Event.bind(this.layout.checkboxRequired, 'change', this.onChangeRequiredHandler.bind(this));
+	      var wrap = main_core.Tag.render(_templateObject11 || (_templateObject11 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"form-check\">\n\t\t\t\t", "\n\t\t\t\t<label class=\"form-check-label\">\n\t\t\t\t\t\u041E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0432\u043E\u043F\u0440\u043E\u0441\n\t\t\t\t</label>\n\t\t\t</div>"])), this.layout.checkboxRequired);
+	      return wrap;
+	    }
+	  }, {
+	    key: "onChangeRequiredHandler",
+	    value: function onChangeRequiredHandler() {
+	      this.isRequiredQuestion = this.layout.checkboxRequired.checked;
+	    }
+	  }, {
 	    key: "renderBody",
 	    value: function renderBody() {
 	      var _this$layout$body;
-	      var wrap = main_core.Tag.render(_templateObject10 || (_templateObject10 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t  </div>"])), this.renderAddOptionButton(), this.renderOptions(), this.renderClearButton());
+	      var wrap = main_core.Tag.render(_templateObject12 || (_templateObject12 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t  </div>"])), this.renderAddOptionButton(), this.renderOptions(), this.renderClearButton());
 	      (_this$layout$body = this.layout.body) === null || _this$layout$body === void 0 ? void 0 : _this$layout$body.replaceWith(wrap);
 	      this.layout.body = wrap;
 	      return this.layout.body;
@@ -173,7 +188,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "renderOptions",
 	    value: function renderOptions() {
 	      var _this$layout$options;
-	      var wrap = main_core.Tag.render(_templateObject11 || (_templateObject11 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t", "\n\t\t</div>"])), this.options.map(function (option) {
+	      var wrap = main_core.Tag.render(_templateObject13 || (_templateObject13 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t", "\n\t\t</div>"])), this.options.map(function (option) {
 	        return option === null || option === void 0 ? void 0 : option.render();
 	      }));
 	      (_this$layout$options = this.layout.options) === null || _this$layout$options === void 0 ? void 0 : _this$layout$options.replaceWith(wrap);
@@ -183,7 +198,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderAddOptionButton",
 	    value: function renderAddOptionButton() {
-	      var wrap = main_core.Tag.render(_templateObject12 || (_templateObject12 = babelHelpers.taggedTemplateLiteral(["<button class=\"btn btn-primary btn-sm\">+</button>"])));
+	      var wrap = main_core.Tag.render(_templateObject14 || (_templateObject14 = babelHelpers.taggedTemplateLiteral(["<button class=\"btn btn-primary btn-sm\">+</button>"])));
 	      main_core.Event.bind(wrap, 'click', this.onAddOptionButtonClickHandler.bind(this));
 	      return wrap;
 	    }
@@ -200,7 +215,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (!this.isHaveRightAnswerObject.value) {
 	        return;
 	      }
-	      var wrap = main_core.Tag.render(_templateObject13 || (_templateObject13 = babelHelpers.taggedTemplateLiteral(["<button class=\"btn btn-primary btn-sm\">\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C</button>"])));
+	      var wrap = main_core.Tag.render(_templateObject15 || (_templateObject15 = babelHelpers.taggedTemplateLiteral(["<button class=\"btn btn-primary btn-sm\">\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C</button>"])));
 	      main_core.Event.bind(wrap, 'click', this.onClearRadioButtonClickHandler.bind(this));
 	      return wrap;
 	    }
@@ -228,6 +243,9 @@ this.BX.Up = this.BX.Up || {};
 	      return [{
 	        'SETTINGS_ID': 1,
 	        'VALUE': this.isHaveRightAnswerObject.value
+	      }, {
+	        'SETTINGS_ID': 2,
+	        'VALUE': this.isRequiredQuestion
 	      }];
 	    }
 	  }, {
@@ -631,6 +649,9 @@ this.BX.Up = this.BX.Up || {};
 	        'TITLE': ''
 	      }], [{
 	        'SETTINGS_ID': 1,
+	        'VALUE': false
+	      }, {
+	        'SETTINGS_ID': 2,
 	        'VALUE': false
 	      }], this.fieldData));
 	      this.renderQuestionList();

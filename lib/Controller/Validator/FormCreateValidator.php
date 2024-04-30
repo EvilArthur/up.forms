@@ -45,18 +45,27 @@ class FormCreateValidator
 		}
 		if (empty($questionData['OPTION']))
 		{
-			$errors[] = new Error('Нельзя создать вопрос с выбором без опций');
+			$errors[] = new Error('Нельзя создать вопрос с выбором без вариантов');
 		}
+		$isAtLeastOneSelected = false;
 		foreach ($questionData['OPTION'] as $optionData)
 		{
-			self::validateOptionData($optionData, $errors);
+			self::validateOptionData($optionData, $errors, $questionData['FIELD_ID']);
+			if (\CUtil::JsObjectToPhp($optionData['IS_RIGHT_ANSWER']))
+			{
+				$isAtLeastOneSelected = true;
+			}
+		}
+		if (\CUtil::JsObjectToPhp($questionData['SETTINGS'][0]['VALUE']) && !$isAtLeastOneSelected)
+		{
+			$errors[] = new Error('Для тестовых вопросов хотя бы один вариант должен быть правильным');
 		}
 		
 	}
 
-	private static function validateOptionData(array $optionData, array &$errors)
+	private static function validateOptionData(array $optionData, array &$errors, int $questionTypeId)
 	{
-		if ($optionData['TITLE'] === '')
+		if ($optionData['TITLE'] === '' && $questionTypeId !== 1)
 		{
 			$errors[] = new Error('Название опции не может быть пустым');
 		}

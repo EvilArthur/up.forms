@@ -59,7 +59,9 @@ $APPLICATION->IncludeComponent(
 	BX.ready(function() {
 		window.FormList = new BX.Up.Forms.FormList({
 			container: document.getElementById('main-container'),
-			gridId: "<?=$arResult['GRID_ID']?>"
+			gridId: "<?=$arResult['GRID_ID']?>",
+			<?= $arParams['ACTION'] ? "action: '{$arParams['ACTION']}'," : '' ?>
+			<?= $arParams['FORM_ID'] ? "formId: '{$arParams['FORM_ID']}'," : '' ?>
 		});
 	});
 </script>
