@@ -22,7 +22,7 @@ if ($arParams['IS_SLIDER'] === 'Y')
 	);
 }
 Toolbar::addFilter($arResult['FILTER_PARAMS']);
-
+$APPLICATION->SetTitle($arResult['FORM_NAME']);
 $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',
 	'',

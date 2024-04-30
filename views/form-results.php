@@ -23,7 +23,6 @@ if (isset($_REQUEST['IFRAME']) && $_REQUEST['IFRAME'] == 'Y')
 }
 else
 {
-	$APPLICATION->SetTitle("Forms");
 	$APPLICATION->IncludeComponent(
 		'up:form.results',
 		'',

@@ -132,7 +132,7 @@ export class Form
 
 	renderPagination()
 	{
-		const wrap = Tag.render
+		return Tag.render
 			`
 				<nav aria-label="Page navigation example">
 					<ul class="pagination">
@@ -141,7 +141,6 @@ export class Form
 					</ul>
 				</nav>
 			`;
-		return wrap;
 	}
 
 	renderNextPageButton()
@@ -199,14 +198,13 @@ export class Form
 
 	renderQuestionList()
 	{
-		const wrap = Tag.render`
+		return Tag.render`
 		<form>
 			${this.questions.map((question) => {
-			return question.render();
-		})}
+				return question.render();
+			})}
 		</form>
 		`;
-		return wrap;
 	}
 
 	renderSubmitButton()

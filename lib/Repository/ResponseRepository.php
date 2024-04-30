@@ -70,25 +70,15 @@ Class ResponseRepository
 
 	public static function getResponsesByFormId(int $id, array $filter = null)
 	{
-
-		$query = new Query(ResponseTable::getEntity());
-		$query->addSelect('ANSWER');
-		$query->addSelect('USER_ID');
-		$query->addSelect('ANSWER.SUBANSWER');
-		$query->addSelect('ANSWER.QUESTION');
-		$query->addSelect('ANSWER.QUESTION.OPTION');
-		$query->addSelect('ANSWER.QUESTION.FIELD');
-		$query->setFilter(
-			[
-				['=FORM_ID' => $id]
-			]
-		);
-		$query->whereIn('USER_ID', $filter['USERS']);
-		$query->setOrder($filter['SORT']);
-		$query->setLimit($filter['LIMIT']);
-		$query->setOffset($filter['OFFSET']);
-
-		return QueryHelper::decompose($query, false, true);
+		return QueryHelper::decompose(
+			ResponseTable::query()
+						 ->setSelect(['ANSWER', 'USER_ID', 'ANSWER.SUBANSWER'])
+						 ->setFilter([['=FORM_ID' => $id]])
+						 ->whereIn('USER_ID', $filter['USERS'])
+						 ->setOrder($filter['SORT'])
+						 ->setLimit($filter['LIMIT'])
+						 ->setOffset($filter['OFFSET']),
+			false);
 	}
 
 	public static function deleteResponse(int $id): void
@@ -124,11 +114,10 @@ Class ResponseRepository
 
 	public static function getCurrentResponse(int $userId, int $formId): ?EO_Response
 	{
-		$response = ResponseTable::query()
-								 ->setSelect(['ID', 'FORM_ID', 'USER_ID', 'TRY_NUMBER', 'START_TIME', 'COMPLETED_TIME'])
-								 ->setFilter(['COMPLETED' => 0, 'USER_ID' => $userId, 'FORM_ID' => $formId])
-								 ->fetchObject();
-		return $response;
+		return ResponseTable::query()
+							->setSelect(['ID', 'FORM_ID', 'USER_ID', 'TRY_NUMBER', 'START_TIME', 'COMPLETED_TIME'])
+							->setFilter(['COMPLETED' => 0, 'USER_ID' => $userId, 'FORM_ID' => $formId])
+							->fetchObject();
 	}
 
 	private static function fillAnswerByData(array $answerData)

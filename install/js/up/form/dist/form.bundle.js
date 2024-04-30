@@ -503,8 +503,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderPagination",
 	    value: function renderPagination() {
-	      var wrap = main_core.Tag.render(_templateObject5$1 || (_templateObject5$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<nav aria-label=\"Page navigation example\">\n\t\t\t\t\t<ul class=\"pagination\">\n\t\t\t\t\t\t", "\n\t\t\t\t\t\t", "\n\t\t\t\t\t</ul>\n\t\t\t\t</nav>\n\t\t\t"])), this.renderPreviousPageButton(), this.renderNextPageButton());
-	      return wrap;
+	      return main_core.Tag.render(_templateObject5$1 || (_templateObject5$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<nav aria-label=\"Page navigation example\">\n\t\t\t\t\t<ul class=\"pagination\">\n\t\t\t\t\t\t", "\n\t\t\t\t\t\t", "\n\t\t\t\t\t</ul>\n\t\t\t\t</nav>\n\t\t\t"])), this.renderPreviousPageButton(), this.renderNextPageButton());
 	    }
 	  }, {
 	    key: "renderNextPageButton",
@@ -543,10 +542,9 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderQuestionList",
 	    value: function renderQuestionList() {
-	      var wrap = main_core.Tag.render(_templateObject8 || (_templateObject8 = babelHelpers.taggedTemplateLiteral(["\n\t\t<form>\n\t\t\t", "\n\t\t</form>\n\t\t"])), this.questions.map(function (question) {
+	      return main_core.Tag.render(_templateObject8 || (_templateObject8 = babelHelpers.taggedTemplateLiteral(["\n\t\t<form>\n\t\t\t", "\n\t\t</form>\n\t\t"])), this.questions.map(function (question) {
 	        return question.render();
 	      }));
-	      return wrap;
 	    }
 	  }, {
 	    key: "renderSubmitButton",

@@ -92,22 +92,19 @@ class FormRepository
 	public static function getForms(array $filter = null)
 	{
 		$query = new Query(FormTable::getEntity());
-		$query->addSelect('TITLE')->addSelect('CREATOR_ID')->addSelect('DATE')->addSelect('SETTINGS')->addSelect(
-			'SETTINGS.SETTINGS'
-		)->addSelect('SETTINGS.SETTINGS.TYPE')->whereLike('TITLE', '%' . $filter['TITLE'] . '%')->whereIn(
-			'CREATOR_ID',
-			$filter['USERS']
-		)->setOrder($filter['SORT'])->setLimit($filter['LIMIT'])->setOffset($filter['OFFSET']);
+		$query->addSelect('TITLE')
+			  ->addSelect('CREATOR_ID')
+			  ->addSelect('DATE')
+			  ->addSelect('SETTINGS')
+			  ->addSelect('SETTINGS.SETTINGS')
+			  ->addSelect('SETTINGS.SETTINGS.TYPE')
+			  ->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
+			  ->whereIn('CREATOR_ID', $filter['USERS'])
+			  ->setOrder($filter['SORT'])
+			  ->setLimit($filter['LIMIT'])
+			  ->setOffset($filter['OFFSET']);
 
 		return QueryHelper::decompose($query, false);
-
-		// return QueryHelper::decompose(FormTable::query()
-		// 				->setSelect(['ID', 'TITLE', 'CREATOR_ID', 'DATE', 'IS_ACTIVE'])
-		// 				->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
-		// 				->whereIn('CREATOR_ID', $filter['USERS'])
-		// 				->setOrder($filter['SORT'])
-		// 				->setLimit($filter['LIMIT'])
-		// 				->setOffset($filter['OFFSET']), false, true);
 	}
 
 	public static function deleteForm(int $id): \Bitrix\Main\ORM\Data\Result
@@ -127,9 +124,7 @@ class FormRepository
 
 	public static function getFormSettings(int $id): EO_FormFormSettings_Collection
 	{
-		$settings = FormFormSettingsTable::getByPrimary(['FORM_ID' => $id])->fetchCollection();
-
-		return $settings;
+		return FormFormSettingsTable::getByPrimary(['FORM_ID' => $id])->fetchCollection();
 	}
 
 	public static function getMaxNumberOfTry(int $id): ?int
@@ -138,6 +133,11 @@ class FormRepository
 		$maxTry = $setting->getValue();
 
 		return $maxTry ? (int)$maxTry : null;
+	}
+
+	public static function getFormName(int $id): string
+	{
+		return FormTable::getByPrimary($id, ['select' => ['TITLE']])->fetchObject()->getTitle();
 	}
 
 	private static function fillFormByData(array $formData): EO_Form
@@ -272,33 +272,3 @@ class FormRepository
 		return $setting;
 	}
 }
-
-/*{
-	'title': 'Название формы',
-	'chapters': [
-					{
-						'title': 'Название раздела',
-						'description': 'Описание раздела',
-						'questions': [
-							{
-								'title': 'Название 1',
-								'description': 'Описание 1',
-								'position': 1,
-								'Field_ID': 1,
-							},
-							{
-								'title': 'Название 2',
-								'description': 'Описание 2',
-								'position': 2,
-								'type': 1,
-							},
-							{
-								'title': 'Название 3',
-								'description': 'Описание 3',
-								'position': 3,
-								'type': 1,
-							},
-						],
-					},
-				],
-			};*/
