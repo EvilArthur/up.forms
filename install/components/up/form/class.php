@@ -8,12 +8,18 @@ class FormComponent extends CBitrixComponent
 {
 	public function executeComponent()
 	{
+		global $APPLICATION;
 		$now = new DateTime();
 		if (!$this->fetchCurrentResponse())
 		{
 			$this->fetchLastTry();
 		}
 		$this->fetchFormSettings();
+		if (empty(($this->arResult['SETTINGS']->getAll())))
+		{
+			$APPLICATION->includeComponent('up:not.found', '', []);
+			return;
+		}
 		$this->prepareTemplateParams();
 		if (!is_null($this->arResult['MAX_TRY'])
 			&& $this->arResult['TRY'] >= $this->arResult['MAX_TRY']

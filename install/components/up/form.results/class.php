@@ -10,6 +10,7 @@ use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UI\PageNavigation;
 use Bitrix\Main\Grid\Panel\Actions;
 
+use Up\Forms\NotFoundComponent;
 use Up\Forms\Repository\ResponseRepository;
 
 
@@ -17,13 +18,18 @@ class FormResultsComponent extends CBitrixComponent
 {
 	public function executeComponent()
 	{
-		global $USER;
+		global $USER, $APPLICATION;
 		if(Loader::includeModule('pull'))
 		{
 			\CPullWatch::Add($USER->GetID(), 'FORM-COMPLETED');
 		}
 
 		$this->fetchData();
+		if(!$this->arResult['QUESTIONS'])
+		{
+			$APPLICATION->includeComponent('up:not.found', '', []);
+			return;
+		}
 		$this->fetchActionPanel();
 		$this->fetchGridColumns();
 		$this->fetchFilterParams();
@@ -54,7 +60,11 @@ class FormResultsComponent extends CBitrixComponent
 		{
 			$this->arResult['USERS'][$user['ID']] = $user['NAME'];
 		}
-		$this->arResult['QUESTIONS'] = FormTable::getByPrimary($this->arParams['ID'])->fetchObject()->fillChapter()->fillQuestion();
+		$this->arResult['QUESTIONS'] = FormTable::getByPrimary($this->arParams['ID'])->fetchObject();
+		if($this->arResult['QUESTIONS'])
+		{
+			$this->arResult['QUESTIONS'] = $this->arResult['QUESTIONS']->fillChapter()->fillQuestion();
+		}
 	}
 
 	protected function fetchActionPanel()

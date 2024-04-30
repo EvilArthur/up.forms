@@ -23,9 +23,11 @@ if (isset($_REQUEST['IFRAME']) && $_REQUEST['IFRAME'] == 'Y')
 }
 else
 {
-	$APPLICATION->SetTitle("Forms");
+	$APPLICATION->SetTitle("Формы");
+	$componentParameters['ACTION'] = 'result';
+	$componentParameters['FORM_ID'] = $componentParameters['ID'];
 	$APPLICATION->IncludeComponent(
-		'up:form.results',
+		'up:form.main',
 		'',
 		$componentParameters
 	);

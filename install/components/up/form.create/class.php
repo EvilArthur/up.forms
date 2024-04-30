@@ -4,6 +4,12 @@ class FormCreateComponent extends CBitrixComponent
 {
 	public function executeComponent()
 	{
+		global $APPLICATION;
+		if (!(\Up\Forms\Model\FormTable::getByPrimary($this->arParams['ID']))->fetchObject() && $this->arParams['ID'] !== 0)
+		{
+			$APPLICATION->includeComponent('up:not.found', '', []);
+			return;
+		}
 		$this->includeComponentTemplate();
 	}
 

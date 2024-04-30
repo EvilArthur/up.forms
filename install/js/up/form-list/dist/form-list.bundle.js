@@ -14,11 +14,22 @@ this.BX.Up = this.BX.Up || {};
 	      history.pushState({
 	        path: newUrl
 	      }, 'Формы', newUrl);
-	      if (options.action === 'create') {
-	        this.openSlider('/form/create/');
-	      }
-	      if (options.action === 'edit' && options.formId) {
-	        this.openSlider('/form/edit/'.concat(options.formId, '/'));
+	      switch (options.action) {
+	        case 'create':
+	          {
+	            this.openSlider('/form/create/');
+	            break;
+	          }
+	        case 'edit':
+	          if (options.formId) {
+	            this.openSlider('/form/edit/'.concat(options.formId, '/'));
+	          }
+	          break;
+	        case 'result':
+	          if (options.formId) {
+	            this.openSlider('/form/results/'.concat(options.formId, '/'));
+	          }
+	          break;
 	      }
 	    }
 	    this.gridId = options.gridId;
