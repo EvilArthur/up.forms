@@ -5,6 +5,19 @@ export class FormResults
 	constructor(options = {})
 	{
 		this.gridId = options.gridId;
+		this.id = options.formId;
+		console.log(this.id)
+		BX.addCustomEvent('onPullEvent', (module_id, command, params) =>
+		{
+			console.log(module_id)
+			console.log(command)
+			console.log(params)
+			console.log(this.id)
+			if (command === 'update' && parseInt(params.id) === this.id)
+			{
+				this.reload();
+			}
+		});
 	}
 
 	deleteResponses()

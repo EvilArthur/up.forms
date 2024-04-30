@@ -2,6 +2,7 @@
 
 use Bitrix\Main\Engine\Response\Redirect;
 use Bitrix\Main\Grid\Panel\Snippet\Onchange;
+use Bitrix\Main\Loader;
 use Bitrix\Main\UserTable;
 use Up\Forms\Model\FormTable;
 use Bitrix\Main\Grid\Options as GridOptions;
@@ -16,6 +17,12 @@ class FormResultsComponent extends CBitrixComponent
 {
 	public function executeComponent()
 	{
+		global $USER;
+		if(Loader::includeModule('pull'))
+		{
+			\CPullWatch::Add($USER->GetID(), 'FORM-COMPLETED');
+		}
+
 		$this->fetchData();
 		$this->fetchActionPanel();
 		$this->fetchGridColumns();

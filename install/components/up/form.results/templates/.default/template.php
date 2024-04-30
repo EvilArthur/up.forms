@@ -66,6 +66,7 @@ $APPLICATION->IncludeComponent(
 		window.FormResults = new BX.Up.Forms.FormResults({
 			container: document.getElementById('main-container'),
 			gridId: "<?=$arParams['GRID_ID']?>",
+			formId: <?=$arParams['ID']?>
 
 		});
 	});

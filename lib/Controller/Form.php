@@ -57,10 +57,20 @@ class Form extends Controller
 			return null;
 		}
 		TaskRepository::closeTask($this->getCurrentUser()->getId(), $answers['FORM_ID']);
+		$result = ResponseRepository::saveResponse($this->getCurrentUser()->getId(), $answers);
+		if (Loader::includeModule('pull'))
+		{
+			\CPullWatch::AddToStack('FORM-COMPLETED', [
+				'module_id' => 'forms',
+				'command' => 'update',
+				'params' => ['id' =>  $answers['FORM_ID']],
+			]);
+		}
 		return
 		[
-			'result' => ResponseRepository::saveResponse($this->getCurrentUser()->getId(), $answers)
+			'result' => $result
 		];
+
 	}
 
 	public function createResponseAction(int $formId): ?array
