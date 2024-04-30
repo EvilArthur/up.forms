@@ -77,7 +77,7 @@ class FormComponent extends CBitrixComponent
 			->getByPrimary(['SETTINGS_ID' => 3, 'FORM_ID' => $this->arParams['ID']])
 			->getValue();
 
-		$this->arResult['IS_ACTIVE'] = $timer = $this->arResult['SETTINGS']
+		$this->arResult['IS_ACTIVE'] = $this->arResult['SETTINGS']
 			->getByPrimary(['SETTINGS_ID' => 6, 'FORM_ID' => $this->arParams['ID']])
 			->getValue();
 
