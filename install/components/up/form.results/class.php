@@ -63,12 +63,15 @@ class FormResultsComponent extends CBitrixComponent
 		{
 			$this->arResult['USERS'][$user['ID']] = $user['NAME'];
 		}
-		$this->arResult['QUESTIONS'] = self::prepareQuestions(QuestionRepository::getQuestionsByFormId($this->arParams['ID']));
-		$this->arResult['SETTINGS'] = FormRepository::getFormSettings($this->arParams['ID']);
-		$this->arResult['FORM_NAME'] = FormRepository::getFormName($this->arParams['ID']);
-		$this->arResult['IS_ANONYMOUS'] = $this->arResult['SETTINGS']
-			->getByPrimary(['SETTINGS_ID' => 4, 'FORM_ID' => $this->arParams['ID']])
-			->getValue();
+		$this->arResult['QUESTIONS'] = $this->prepareQuestions(QuestionRepository::getQuestionsByFormId($this->arParams['ID']));
+		if ($this->arResult['QUESTIONS'])
+		{
+			$this->arResult['SETTINGS'] = FormRepository::getFormSettings($this->arParams['ID']);
+			$this->arResult['FORM_NAME'] = FormRepository::getFormName($this->arParams['ID']);
+			$this->arResult['IS_ANONYMOUS'] = $this->arResult['SETTINGS']
+				->getByPrimary(['SETTINGS_ID' => 4, 'FORM_ID' => $this->arParams['ID']])
+				->getValue();
+		}
 	}
 
 	protected function fetchActionPanel()
