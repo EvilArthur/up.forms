@@ -21,6 +21,7 @@ class FormComponent extends CBitrixComponent
 			return;
 		}
 		$this->prepareTemplateParams();
+
 		if (!is_null($this->arResult['MAX_TRY'])
 			&& $this->arResult['TRY'] >= $this->arResult['MAX_TRY']
 			&& is_null($this->arResult['CURRENT_RESPONSE']))
@@ -75,6 +76,11 @@ class FormComponent extends CBitrixComponent
 		$timer = $this->arResult['SETTINGS']
 			->getByPrimary(['SETTINGS_ID' => 3, 'FORM_ID' => $this->arParams['ID']])
 			->getValue();
+
+		$this->arResult['IS_ACTIVE'] = $timer = $this->arResult['SETTINGS']
+			->getByPrimary(['SETTINGS_ID' => 6, 'FORM_ID' => $this->arParams['ID']])
+			->getValue();
+
 		$this->arResult['TIMER'] = $timer;
 		/** @var EO_Response $response */
 		$response = $this->arResult['CURRENT_RESPONSE'];

@@ -1,14 +1,17 @@
 <?php
 
-use Bitrix\Main\Engine\Response\Redirect;
+use Bitrix\Main\Grid\Cell\Label\Color;
+use Bitrix\Main\Grid\Column\Type;
 use Bitrix\Main\Grid\Panel\Snippet\Onchange;
 use Bitrix\Main\Loader;
-use Bitrix\Main\UserTable;
-use Up\Forms\Model\FormTable;
+use Bitrix\Main\Grid\Panel\Actions;
 use Bitrix\Main\Grid\Options as GridOptions;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UI\PageNavigation;
-use Bitrix\Main\Grid\Panel\Actions;
+use Bitrix\Main\UserTable;
+use Bitrix\Main\Engine\Response\Redirect;
+use Up\Forms\Repository\FormRepository;
+use Up\Forms\Repository\QuestionRepository;
 
 use Up\Forms\NotFoundComponent;
 use Up\Forms\Repository\ResponseRepository;
@@ -60,11 +63,12 @@ class FormResultsComponent extends CBitrixComponent
 		{
 			$this->arResult['USERS'][$user['ID']] = $user['NAME'];
 		}
-		$this->arResult['QUESTIONS'] = FormTable::getByPrimary($this->arParams['ID'])->fetchObject();
-		if($this->arResult['QUESTIONS'])
-		{
-			$this->arResult['QUESTIONS'] = $this->arResult['QUESTIONS']->fillChapter()->fillQuestion();
-		}
+		$this->arResult['QUESTIONS'] = self::prepareQuestions(QuestionRepository::getQuestionsByFormId($this->arParams['ID']));
+		$this->arResult['SETTINGS'] = FormRepository::getFormSettings($this->arParams['ID']);
+		$this->arResult['FORM_NAME'] = FormRepository::getFormName($this->arParams['ID']);
+		$this->arResult['IS_ANONYMOUS'] = $this->arResult['SETTINGS']
+			->getByPrimary(['SETTINGS_ID' => 4, 'FORM_ID' => $this->arParams['ID']])
+			->getValue();
 	}
 
 	protected function fetchActionPanel()
@@ -124,17 +128,20 @@ class FormResultsComponent extends CBitrixComponent
 
 	protected function fetchGridColumns()
 	{
-		$columns[] = ['id' => 'USER', 'name' => 'Пользователь', 'default' => true, 'sort' => 'USER_ID'];
+		$columns[] = ($this->arResult['IS_ANONYMOUS'] === "true") ? [] : ['id' => 'USER', 'name' => 'Пользователь', 'default' => true, 'sort' => 'USER_ID'];
 
-		foreach ($this->arResult['QUESTIONS'] as $question)
+		foreach ($this->arResult['QUESTIONS'] as $id => $question)
 		{
 			$columns[] =
 				[
-					'id' => $question->getId(),
-					'name' => htmlspecialcharsbx($question->getTitle()),
+					'id' => $id,
+					'name' => htmlspecialcharsbx($question['TITLE']),
 					'default' => true,
+					'type' => Type::LABELS,
 				];
 		}
+
+		$columns[] = ($this->arResult['NUM_OF_TEST_QUESTIONS'] === 0) ? [] : ['id' => 'NUM_RIGHT_ANSWERS', 'name' => 'Количество правильных ответов', 'default' => true];
 
 		$this->arResult['COLUMNS'] = $columns;
 	}
@@ -168,27 +175,59 @@ class FormResultsComponent extends CBitrixComponent
 			'LIMIT' => $this->arResult['NAV_OBJECT']->getLimit() + 1,
 			'OFFSET' => $this->arResult['NAV_OBJECT']->getOffset(),
 			'USERS' => $filterFields['USER'],
-			'SORT' => $gridFields['sort']
+			'SORT' => $gridFields['sort'],
 		];
 	}
 
 	protected function prepareResponsesForGrid($responses)
 	{
 		$rows = [];
-
 		foreach ($responses as $response)
 		{
+			$numOfRightAnswers = 0;
 			$row = [];
-			$row['USER'] = htmlspecialcharsbx($this->arResult['USERS'][$response->getUserId()]);
+			if ($this->arResult['IS_ANONYMOUS'] === "false")
+			{
+				$row['USER'] = htmlspecialcharsbx($this->arResult['USERS'][$response->getUserId()]);
+			}
 
 			foreach ($response->getAnswer() as $answer)
 			{
-				$questionType = $answer->getQuestion()->getField()->getId();
-				if ($questionType == 2 || $questionType == 3)
+				if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['FIELD_ID'] == 2 || $this->arResult["QUESTIONS"][$answer->getQuestionId()]['FIELD_ID'] == 3)
 				{
+					$numOfRightOptions = 0;
 					foreach ($answer->getSubanswer() as $subAnswer)
 					{
-						$row[$answer->getQuestionId()] .= htmlspecialcharsbx($answer->getQuestion()->getOption()->getByPrimary($subAnswer->getValue())->getTitle()) . "<br>";
+						$currentSubAnswer = htmlspecialcharsbx($this->arResult["QUESTIONS"][$answer->getQuestionId()]['OPTIONS'][$subAnswer->getValue()]);
+						if (!$this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST'])
+						{
+							$row[$answer->getQuestionId()][] =
+								[
+									'text' => $currentSubAnswer,
+									'color' => Color::DEFAULT,
+								];
+						}
+						elseif (isset($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS'][$subAnswer->getValue()]))
+						{
+							$row[$answer->getQuestionId()][] =
+								[
+									'text' => $currentSubAnswer,
+									'color' => Color::SUCCESS,
+								];
+							$numOfRightOptions += 1;
+						}
+						else
+						{
+							$row[$answer->getQuestionId()][] =
+								[
+									'text' => $currentSubAnswer,
+									'color' => Color::DANGER,
+								];
+						}
+					}
+					if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST'] && $numOfRightOptions === count($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS']))
+					{
+						$numOfRightAnswers += 1;
 					}
 				}
 				else
@@ -197,10 +236,38 @@ class FormResultsComponent extends CBitrixComponent
 					{
 						$row[$answer->getQuestionId()] = htmlspecialcharsbx($subAnswer->getValue());
 					}
-				}
+					if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST'] === true)
+					{
+						if (array_shift($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS']) === $row[$answer->getQuestionId()])
+						{
+							$row[$answer->getQuestionId()] =
+								[
+									[
+										'text' => $row[$answer->getQuestionId()],
+										'color' => Color::SUCCESS,
+									],
+								];
+							$numOfRightAnswers += 1;
+						}
+						else
+						{
+							$row[$answer->getQuestionId()] =
+								[
+									[
+										'text' => $row[$answer->getQuestionId()],
+										'color' => Color::DANGER,
+									],
+								];
+						}
 
+					}
+				}
 			}
 
+			if ($this->arResult['NUM_OF_TEST_QUESTIONS'] !== 0)
+			{
+				$row['NUM_RIGHT_ANSWERS'] = $numOfRightAnswers . ' из ' . $this->arResult["NUM_OF_TEST_QUESTIONS"];
+			}
 
 			$rows[] = [
 				'id' => (int)$response->getId(),
@@ -223,5 +290,38 @@ class FormResultsComponent extends CBitrixComponent
 		$this->arResult['NAV_OBJECT']->setRecordCount($this->arResult['NAV_OBJECT']->getOffset() + count($responses));
 
 		return $rows;
+	}
+
+	protected function prepareQuestions($questions)
+	{
+		$numOfTestQuestions = 0;
+		$formattedQuestions = [];
+		foreach ($questions as $question)
+		{
+			$isTestQuestion = false;
+			foreach ($question->getOption() as $option)
+			{
+				$formattedQuestions[$question->getId()]['OPTIONS'][$option->getId()] = $option->getTitle();
+				if ($option->getIsRightAnswer() === 'true')
+				{
+					$formattedQuestions[$question->getId()]['RIGHT_ANSWERS'][$option->getId()] = $option->getTitle();
+					$formattedQuestions[$question->getId()]['IS_TEST'] = true;
+					$isTestQuestion = true;
+				}
+				elseif ($option->getIsRightAnswer() === null)
+				{
+					$formattedQuestions[$question->getId()]['IS_TEST'] = false;
+				}
+			}
+			if ($isTestQuestion)
+			{
+				$numOfTestQuestions += 1;
+			}
+			$formattedQuestions[$question->getId()]['TITLE'] = $question->getTitle();
+			$formattedQuestions[$question->getId()]['FIELD_ID'] = $question->getFieldId();
+		}
+		$this->arResult['NUM_OF_TEST_QUESTIONS'] = $numOfTestQuestions;
+
+		return $formattedQuestions;
 	}
 }
