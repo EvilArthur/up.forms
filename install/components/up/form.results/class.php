@@ -12,7 +12,6 @@ use Bitrix\Main\UserTable;
 use Bitrix\Main\Engine\Response\Redirect;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\QuestionRepository;
-
 use Up\Forms\NotFoundComponent;
 use Up\Forms\Repository\ResponseRepository;
 

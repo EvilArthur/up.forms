@@ -32,7 +32,7 @@ export class FormManager
 						data: data,
 					})
 				.then((response) => {
-					const result = response.data.result;
+					const result = response.data.id;
 					resolve(result);
 				})
 				.catch((error) => {
@@ -67,6 +67,50 @@ export class FormManager
 				.then((response) => {
 					const result = response.data.result;
 					console.log(result);
+					resolve(result);
+				})
+				.catch((error) => {
+					console.log(error);
+					reject(error);
+				});
+		});
+	}
+
+	static getQuestionData(id, limit, offset)
+	{
+		return new Promise((resolve, reject) => {
+			BX.ajax.runAction(
+					'up:forms.FormCreate.getQuestionData',
+					{
+						data: {
+							id: id,
+							limit: limit,
+							offset: offset
+						},
+					})
+				.then((response) => {
+					const result = response.data.result;
+					resolve(result);
+				})
+				.catch((error) => {
+					console.log(error);
+					reject(error);
+				});
+		});
+	}
+
+	static deleteQuestion(id)
+	{
+		return new Promise((resolve, reject) => {
+			BX.ajax.runAction(
+					'up:forms.FormCreate.deleteQuestion',
+					{
+						data: {
+							id: id,
+						},
+					})
+				.then((response) => {
+					const result = response.data.result;
 					resolve(result);
 				})
 				.catch((error) => {

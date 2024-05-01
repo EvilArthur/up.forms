@@ -1,26 +1,29 @@
 import { Event, Tag } from 'main.core';
 import { EditableText } from './editable-text';
-
+import { FormManager } from './form-manager';
 import { questionFactory } from './questions/questionFactory';
 
 export class Constructor
 {
-	constructor(formData, fieldData)
+	constructor(formData, fieldData, saveFormFunction)
 	{
 		this.layout = {};
 		this.titleObject = { value: '' };
 		this.fieldData = fieldData;
 		this.questions = [];
 		this.formData = formData;
+		this.fieldData = fieldData;
+		this.id = formData.ID;
+		this.chapterId = formData.CHAPTER[0].ID;
+		this.saveForm = saveFormFunction;
+		this.questionNumber = 0
+
+		this.limit = 10;
+		this.currentPage = 1;
 
 		this.titleObject.value = this.formData.TITLE;
-		formData.CHAPTER[0].QUESTION.map((questionData) => {
-			const question = questionFactory.createQuestion(
-				questionData.FIELD_ID, questionData.CHAPTER_ID,
-				questionData.ID, questionData.POSITION,
-				questionData.TITLE, questionData.OPTION, questionData.SETTINGS, fieldData);
-			this.questions.push(question);
-		});
+		this.fillQuestionsByData(formData.CHAPTER[0].QUESTION);
+
 	}
 
 	render()
@@ -36,6 +39,7 @@ export class Constructor
 				<button type="button" class="btn btn-primary mx-1">P</button>
 			</div>
 			${this.renderQuestionList()}
+			${this.renderPagination()}
 		</div>
 `;
 		this.layout.wrap?.replaceWith(wrap);
@@ -45,11 +49,9 @@ export class Constructor
 
 	renderQuestionList()
 	{
-		this.questionNumber = 1;
 		const wrap = Tag.render`
 		<div class="container">
 			${this.questions.map((question, index) => {
-			question.position = this.questionNumber++;
 			const questionWrap = question.render();
 			const typeSelect = question.layout.typeSelect;
 			Event.bind(typeSelect, 'change', () => this.changeQuestionType(index, parseInt(typeSelect.value)));
@@ -65,10 +67,7 @@ export class Constructor
 	changeQuestionType(index, fieldId)
 	{
 		const question = this.questions[index];
-		console.log(this.questions[index]);
-		console.log(this.questions);
 		let options;
-		console.log(fieldId);
 		if (fieldId === 1)
 		{
 			options = [{ 'ID': null, 'TITLE': '' }];
@@ -84,10 +83,10 @@ export class Constructor
 
 		const oldWrap = this.questions[index].layout.wrap;
 		const typeChangedQuestion = questionFactory.createQuestion(
-			fieldId, question.chapterId, question.id, question.position, question.titleObject.value,
-			options, question.getSettingData(), this.fieldData);
+			this.reloadAfterDelete.bind(this), fieldId, question.chapterId, question.id, question.position,
+			question.titleObject.value, options, question.getSettingData(), this.fieldData);
 		this.questions[index] = typeChangedQuestion;
-		
+
 		console.log(typeChangedQuestion);
 		const newWrap = typeChangedQuestion.render();
 		const typeSelect = typeChangedQuestion.layout.typeSelect;
@@ -102,13 +101,23 @@ export class Constructor
 		`;
 		Event.bind(wrap, 'click', this.onAddQuestionButtonClickHandler.bind(this));
 
-		return wrap;
+		this.layout.addQuestionButtonObject = {
+			wrap: wrap,
+			isActive: this.questions.length < 10,
+		};
+
+		return this.layout.addQuestionButtonObject.wrap;
 	}
 
 	onAddQuestionButtonClickHandler()
 	{
+		if (this.questions.length >= 10)
+		{
+			this.renderPagination();
+			return;
+		}
 		this.questions.push(questionFactory.createQuestion(
-			1, this.formData.CHAPTER[0].id, null, this.questionNumber++,
+			this.reloadAfterDelete.bind(this), 1, this.formData.CHAPTER[0].id, null, ++this.questionNumber,
 			'Название', [{ 'ID': null, 'TITLE': '' }],
 			[{ 'SETTINGS_ID': 1, 'VALUE': false }, { 'SETTINGS_ID': 2, 'VALUE': false }], this.fieldData,
 		));
@@ -142,5 +151,113 @@ export class Constructor
 		this.layout.title?.replaceWith(wrap);
 		this.layout.title = wrap;
 		return this.layout.title;
+	}
+
+	renderPagination()
+	{
+		const wrap = Tag.render
+			`
+				<nav aria-label="Page navigation example">
+					<ul class="pagination">
+						${this.renderPreviousPageButton()}
+						${this.renderNextPageButton()}
+					</ul>
+				</nav>
+			`;
+		this.layout.pagination?.replaceWith(wrap);
+		this.layout.pagination = wrap;
+		return this.layout.pagination;
+	}
+
+	renderNextPageButton()
+	{
+		if (this.questions.length === this.limit)
+		{
+			const wrap = Tag.render
+				`
+				<li class="page-item">
+					
+						<button aria-hidden="true">&raquo;</button>
+					
+				</li>
+				`;
+			Event.bind(wrap, 'click', this.onNextPageButtonClickHandler.bind(this));
+			return wrap;
+		}
+	}
+
+	renderPreviousPageButton()
+	{
+		if (this.currentPage > 1)
+		{
+			const wrap = Tag.render
+				`
+				<li class="page-item">
+					
+						<button aria-hidden="true">&laquo;</button>
+					
+				</li>
+				`;
+			Event.bind(wrap, 'click', this.onPreviousPageButtonClickHandler.bind(this));
+			return wrap;
+		}
+	}
+
+	async onNextPageButtonClickHandler()
+	{
+		this.id = await this.saveForm();
+		if (this.id)
+		{
+			this.currentPage += 1;
+			this.reload();
+		}
+	}
+
+	async onPreviousPageButtonClickHandler()
+	{
+		this.id = await this.saveForm();
+		if (this.id)
+		{
+			this.currentPage -= 1;
+			this.reload();
+		}
+	}
+
+	reload()
+	{
+		this.questions = [];
+		console.log(this.id, this.limit, this.limit * (this.currentPage - 1));
+		this.loadPage(this.chapterId, this.limit, this.limit * (this.currentPage - 1)).then( () => {
+			this.renderQuestionList()
+			this.renderPagination();
+		});
+	}
+
+	reloadAfterDelete()
+	{
+		this.questions = this.questions.filter(question => !question.isDeleted);
+		if (this.id)
+		{
+			this.saveForm().then(() => {this.reload()});
+		}
+	}
+
+	async loadPage(id, limit = 0, offset = 0)
+	{
+		const questionData = await FormManager.getQuestionData(id, limit, offset);
+		console.log(questionData);
+		this.fillQuestionsByData(questionData);
+
+	}
+
+	fillQuestionsByData(data)
+	{
+		data.map((questionData) => {
+			const question = questionFactory.createQuestion(this.reloadAfterDelete.bind(this),
+				questionData.FIELD_ID, questionData.CHAPTER_ID,
+				questionData.ID, ++this.questionNumber,
+				questionData.TITLE, questionData.OPTION, questionData.SETTINGS, this.fieldData);
+			this.questions.push(question);
+		});
 	}
 }

@@ -3,6 +3,7 @@ namespace Up\Forms\Repository;
 
 use Bitrix\Main\ORM\Query\QueryHelper;
 use Up\Forms\Model\ChapterTable;
+use Up\Forms\Model\EO_Question_Collection;
 use Up\Forms\Model\FormTable;
 use Up\Forms\Model\QuestionTable;
 
@@ -30,7 +31,7 @@ Class QuestionRepository
 				QuestionTable::query()
 							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION','OPTION', 'SETTINGS'])
 							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
-							 ->setOrder(['POSITION' => 'asc']),
+							 ->setOrder(['ID' => 'asc']),
 				false
 			);
 		}
@@ -41,11 +42,17 @@ Class QuestionRepository
 				QuestionTable::query()
 							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION', 'OPTION', 'SETTINGS'])
 							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
-							 ->setOrder(['POSITION' => 'asc'])
+							 ->setOrder(['ID' => 'asc'])
 							 ->setLimit($filter['LIMIT'])
 							 ->setOffset($filter['OFFSET']),
 			false
 			);
 		}
+	}
+
+	public static function deleteQuestion(int $id)
+	{
+		return QuestionTable::wakeUpObject(['ID' => $id])->delete()->isSuccess();
+
 	}
 }

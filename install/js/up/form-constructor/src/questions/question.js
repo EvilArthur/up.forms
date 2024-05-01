@@ -1,15 +1,17 @@
 import { Event, Loc, Tag } from 'main.core';
 import { EditableText } from '../editable-text';
+import {FormManager} from '../form-manager';
 
 export default class Question
 {
-	constructor(chapter_id, id, position, title, optionData, settingData, fieldData)
+	constructor(reloadFunction, chapterId, id, position, title, optionData, settingData, fieldData)
 	{
+		this.reload = reloadFunction;
 		this.layout = {
 			typeSelect: null,
 		};
 		this.titleObject = { value: title };
-		this.chapterId = chapter_id;
+		this.chapterId = chapterId;
 		this.id = id;
 		this.position = position;
 		this.fieldData = fieldData;
@@ -69,8 +71,12 @@ export default class Question
 
 	onRemoveQuestionButtonClickHandler()
 	{
+		if (this.id)
+		{
+			FormManager.deleteQuestion(this.id).then(this.reload());
+
+		}
 		this.isDeleted = true;
-		this.layout.wrap.remove();
 	}
 
 	renderEditableTitle(): HTMLElement

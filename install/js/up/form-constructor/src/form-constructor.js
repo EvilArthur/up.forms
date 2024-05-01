@@ -1,6 +1,6 @@
 import { Tag, Event } from 'main.core';
 import { Constructor } from './constructor';
-import {Settings} from './settings';
+import { Settings } from './settings';
 import { FormManager } from './form-manager';
 
 export class FormConstructor
@@ -19,14 +19,13 @@ export class FormConstructor
 			CHAPTER: [],
 		};
 		this.isLoading = true;
-		this.layout.wrap.append(this.render())
+		this.layout.wrap.append(this.render());
 		this.loadFormData();
 	}
 
-
 	render()
 	{
-		let wrap
+		let wrap;
 		if (this.isLoading)
 		{
 			wrap = Tag.render`
@@ -39,13 +38,12 @@ export class FormConstructor
 		}
 		else
 		{
-			console.log(this.formData);
-			this.construct = new Constructor(this.formData, this.fieldData);
+			this.construct = new Constructor(this.formData, this.fieldData, this.saveForm.bind(this));
 			this.settings = new Settings(this.formData.SETTINGS, this.allSettingsData);
 			this.layout.header = this.renderHeader();
 			this.layout.main = this.construct.render();
 			this.layout.footer = this.renderFooter();
-			wrap = Tag.render`<div></div>`
+			wrap = Tag.render`<div></div>`;
 			wrap.append(this.layout.header);
 			wrap.append(this.layout.main);
 			wrap.append(this.layout.footer);
@@ -61,11 +59,13 @@ export class FormConstructor
 		this.allSettingsData = await FormManager.getSettingsData();
 		if (this.id !== 0)
 		{
-			this.formData = await FormManager.getFormData(this.id);
+			this.formData = await FormManager.getFormData(this.id, 10);
+			console.log(this.formData);
 		}
 		else
 		{
-			this.formData.TITLE = 'Новая форма'
+			this.formData.TITLE = 'Новая форма';
+			this.formData.ID = null;
 			this.formData.CHAPTER[0] = {
 				'TITLE': 'Заголовок раздела',
 				'DESCRIPTION': 'Описание раздела',
@@ -75,7 +75,7 @@ export class FormConstructor
 			};
 			this.formData.SETTINGS = [];
 		}
-		this.isLoading = false
+		this.isLoading = false;
 		this.render();
 	}
 
@@ -105,7 +105,7 @@ export class FormConstructor
 	{
 		this.layout.constructorTab.classList.add('active');
 		this.layout.settingTab.classList.remove('active');
-		const wrap = this.construct.render()
+		const wrap = this.construct.render();
 		this.layout.main?.replaceWith(wrap);
 		this.layout.main = wrap;
 	}
@@ -122,7 +122,7 @@ export class FormConstructor
 	{
 		this.layout.settingTab.classList.add('active');
 		this.layout.constructorTab.classList.remove('active');
-		const wrap = this.settings.render()
+		const wrap = this.settings.render();
 		this.layout.main?.replaceWith(wrap);
 		this.layout.main = wrap;
 	}
@@ -137,9 +137,11 @@ export class FormConstructor
 
 	renderSaveButton()
 	{
-		const wrap = Tag.render`<button class="btn btn-primary">Сохранить</button>`
-		this.layout.saveButtonObject = {isActive: true,
-			wrap: wrap}
+		const wrap = Tag.render`<button class="btn btn-primary">Сохранить</button>`;
+		this.layout.saveButtonObject = {
+			isActive: true,
+			wrap: wrap,
+		};
 		Event.bind(wrap, 'click', () => this.onSaveButtonClickHandler(this.layout.saveButtonObject));
 
 		return this.layout.saveButtonObject.wrap;
@@ -153,26 +155,59 @@ export class FormConstructor
 		}
 		button.wrap.classList.add('disabled');
 		button.isActive = false;
-		const data = this.settings.getData();
-		const form = this.construct.getData();
-		form.SETTINGS = data;
-		form.ID = this.id;
-		console.log(form);
+		const formData = this.prepareData();
 		this.renderErrors([]);
-		FormManager.saveFormData({ formData: form })
+		FormManager.saveFormData({ formData: formData})
 			.then((response) => {
 				console.log(response);
 				const url = BX.SidePanel.Instance.getCurrentUrl();
 				BX.SidePanel.Instance.close();
 				setTimeout(() => BX.SidePanel.Instance.destroy(url), 1000);
-
 			})
 			.catch((errors) => {
-				this.layout.wrap.prepend(this.renderErrors(errors))
-				button.wrap.classList.remove('disabled')
-				button.isActive = true;
-				console.log(errors);
+				this.displayErrors(errors);
 			});
+	}
+
+	async saveForm()
+	{
+		const formData = this.prepareData();
+		this.renderErrors([]);
+		const id = parseInt(await FormManager.saveFormData({ formData: formData })
+			.catch((errors => {
+				this.displayErrors(errors);
+			})));
+		if (id !== this.id)
+		{
+			this.id = id;
+			const newUrl = '/form/edit/'.concat(this.id, '/');
+			window.history.pushState({ path: newUrl }, 'Формы', newUrl);
+			BX.SidePanel.Instance.pageUrl = window.history.url;
+			console.log(BX.SidePanel.Instance.getCurrentUrl())
+			console.log(history)
+		}
+		return id;
+	}
+
+	prepareData()
+	{
+		const settings = this.settings.getData();
+		const form = this.construct.getData();
+		form.IS_FIRST_PAGE = this.construct.currentPage === 1;
+		if (this.id)
+		{
+			form.ID = this.id;
+		}
+		form.SETTINGS = settings;
+		return form
+	}
+
+	displayErrors(errors)
+	{
+		this.layout.wrap.prepend(this.renderErrors(errors));
+		this.layout.saveButtonObject.wrap.classList.remove('disabled');
+		this.layout.saveButtonObject.isActive = true;
+		console.log(errors);
 	}
 
 	renderErrors(errors)
@@ -189,7 +224,7 @@ export class FormConstructor
 	{
 		const wrap = Tag.render`<div class="alert alert-danger" role="alert">
 								${message}
-							</div>`
+							</div>`;
 		return wrap;
 	}
 }

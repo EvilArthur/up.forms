@@ -5,6 +5,7 @@ namespace Up\Forms\Repository;
 use Bitrix\Main\Application;
 use Bitrix\Main\ORM\Query\Query;
 use Bitrix\Main\ORM\Query\QueryHelper;
+use Bitrix\Main\Type\DateTime;
 use Up\Forms\Model\ChapterTable;
 use Up\Forms\Model\EO_Chapter;
 use Up\Forms\Model\EO_Form;
@@ -27,10 +28,10 @@ class FormRepository
 		try
 		{
 			$form = self::fillFormByData($formData);
-			$result = $form->save();
+			$id = $form->save()->getId();
 			Application::getConnection()->commitTransaction();
 
-			return $result->getErrors();
+			return $id;
 		}
 		catch (\Throwable $error)
 		{
@@ -44,13 +45,12 @@ class FormRepository
 		Application::getConnection()->startTransaction();
 		try
 		{
-			self::deleteForm($formData['ID']);
-
 			$form = self::fillFormByData($formData);
+			$form->setDate(new DateTime());
 			$result = $form->save();
 			Application::getConnection()->commitTransaction();
 
-			return $result->getErrors();
+			return $result->getId();
 		}
 		catch (\Throwable $error)
 		{
@@ -92,17 +92,12 @@ class FormRepository
 	public static function getForms(array $filter = null)
 	{
 		$query = new Query(FormTable::getEntity());
-		$query->addSelect('TITLE')
-			  ->addSelect('CREATOR_ID')
-			  ->addSelect('DATE')
-			  ->addSelect('SETTINGS')
-			  ->addSelect('SETTINGS.SETTINGS')
-			  ->addSelect('SETTINGS.SETTINGS.TYPE')
-			  ->whereLike('TITLE', '%' . $filter['TITLE'] . '%')
-			  ->whereIn('CREATOR_ID', $filter['USERS'])
-			  ->setOrder($filter['SORT'])
-			  ->setLimit($filter['LIMIT'])
-			  ->setOffset($filter['OFFSET']);
+		$query->addSelect('TITLE')->addSelect('CREATOR_ID')->addSelect('DATE')->addSelect('SETTINGS')->addSelect(
+				'SETTINGS.SETTINGS'
+			)->addSelect('SETTINGS.SETTINGS.TYPE')->whereLike('TITLE', '%' . $filter['TITLE'] . '%')->whereIn(
+				'CREATOR_ID',
+				$filter['USERS']
+			)->setOrder($filter['SORT'])->setLimit($filter['LIMIT'])->setOffset($filter['OFFSET']);
 
 		return QueryHelper::decompose($query, false);
 	}
@@ -144,10 +139,13 @@ class FormRepository
 	{
 		global $USER;
 
-		$form = FormTable::createObject();
 		if ((int)$formData['ID'] > 0)
 		{
-			$form->setId($formData['ID']);
+			$form = FormTable::wakeUpObject(['ID' => $formData['ID']]);
+		}
+		else
+		{
+			$form = FormTable::createObject();
 		}
 
 		$form->setCreatorId($USER->GetID());
@@ -174,10 +172,14 @@ class FormRepository
 
 	private static function fillChapterByData(array $chapterData): EO_Chapter
 	{
-		$chapter = ChapterTable::createObject();
+
 		if (!is_null($chapterData['ID']))
 		{
-			$chapter->setId($chapterData['ID']);
+			$chapter = ChapterTable::wakeUpObject(['ID' => $chapterData['ID']]);
+		}
+		else
+		{
+			$chapter = ChapterTable::createObject();
 		}
 
 		$chapter->setTitle($chapterData['TITLE']);
@@ -198,10 +200,15 @@ class FormRepository
 
 	private static function fillQuestionByData(array $questionData): EO_Question
 	{
-		$question = QuestionTable::createObject();
+
 		if (!is_null($questionData['ID']))
 		{
-			$question->setId($questionData['ID']);
+			$question = QuestionTable::wakeUpObject(['ID' => $questionData['ID']]);
+			$question->removeAllOption();
+		}
+		else
+		{
+			$question = QuestionTable::createObject();
 		}
 		$question->setTitle($questionData['TITLE']);
 		$question->setPosition($questionData['POSITION']);
@@ -228,10 +235,14 @@ class FormRepository
 
 	private static function fillOptionByData(array $optionData): EO_Option
 	{
-		$option = OptionTable::createObject();
+
 		if (!is_null($optionData['ID']))
 		{
-			$option->setId($optionData['ID']);
+			$option = OptionTable::wakeUpObject(['ID' => $optionData['ID']]);
+		}
+		else
+		{
+			$option = OptionTable::createObject();
 		}
 
 		if ($optionData['TITLE'] === '')
@@ -246,25 +257,33 @@ class FormRepository
 
 	private static function fillQuestionSettingData(array $settingData, ?int $questionId): EO_QuestionQuestionSettings
 	{
-		$setting = QuestionQuestionSettingsTable::createObject();
-		$setting->setSettingsId($settingData['SETTINGS_ID']);
-
 		if (!is_null($questionId))
 		{
-			$setting->setQuestionId($questionId);
+			$setting = QuestionQuestionSettingsTable::wakeUpObject(
+				['SETTINGS_ID' => $settingData['SETTINGS_ID'], 'QUESTION_ID' => $questionId]
+			);
+		}
+		else
+		{
+			$setting = QuestionQuestionSettingsTable::createObject();
+			$setting->setSettingsId($settingData['SETTINGS_ID']);
 		}
 		$setting->setValue($settingData['VALUE']);
 
 		return $setting;
 	}
 
-	private static function fillFormSettingByData(array $settingData, int $formId): EO_FormFormSettings
+	private static function fillFormSettingByData(array $settingData, ?int $formId): EO_FormFormSettings
 	{
-		$setting = FormFormSettingsTable::createObject();
-		$setting->setSettingsId($settingData['ID']);
-		if ($formId > 0)
+
+		if ($formId && $formId > 0)
 		{
-			$setting->setFormId($formId);
+			$setting = FormFormSettingsTable::wakeUpObject(['SETTINGS_ID' => $settingData['ID'], 'FORM_ID' => $formId]);
+		}
+		else
+		{
+			$setting = FormFormSettingsTable::createObject();
+			$setting->setSettingsId($settingData['ID']);
 		}
 
 		$setting->setValue($settingData['VALUE']);

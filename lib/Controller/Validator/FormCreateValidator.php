@@ -15,7 +15,7 @@ class FormCreateValidator
 		}
 		foreach ($formData['CHAPTER'] as $chapterData)
 		{
-			self::validateChapterData($chapterData, $errors);
+			self::validateChapterData($chapterData, $errors, \CUtil::JsObjectToPhp($formData['IS_FIRST_PAGE']));
 			
 		}
 		foreach ($formData['SETTINGS'] as $settingsData)
@@ -25,9 +25,9 @@ class FormCreateValidator
 		return $errors;
 	}
 
-	private static function validateChapterData(array $chapterData, array &$errors)
+	private static function validateChapterData(array $chapterData, array &$errors, $isFirstPage)
 	{
-		if (empty($chapterData['QUESTION']))
+		if (empty($chapterData['QUESTION']) && $isFirstPage)
 		{
 			$errors[] = new Error('Нельзя создать форму без вопросов');
 		}

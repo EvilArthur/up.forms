@@ -3,9 +3,9 @@ import { ShortTextOption } from './options/short-text-option';
 
 export class ShortText extends Question
 {
-	constructor(chapterId, id, position, title, optionData, settingData, fieldData)
+	constructor(reloadFunction, chapterId, id, position, title, optionData, settingData, fieldData)
 	{
-		super(chapterId, id, position, title, optionData, settingData, fieldData);
+		super(reloadFunction, chapterId, id, position, title, optionData, settingData, fieldData);
 
 		this.options = optionData.map((option) => {
 			if (option)

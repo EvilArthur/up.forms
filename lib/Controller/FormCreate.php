@@ -8,6 +8,7 @@ use Up\Forms\Controller\Validator\FormCreateValidator;
 use Up\Forms\Repository\FieldRepository;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\FormSettingsRepository;
+use Up\Forms\Repository\QuestionRepository;
 
 class FormCreate extends Controller
 {
@@ -26,13 +27,13 @@ class FormCreate extends Controller
 		if ((int)$formData['ID'] === 0)
 		{
 			$result = [
-				'result' => FormRepository::createForm($formData),
+				'id' => FormRepository::createForm($formData),
 			];
 		}
 		else
 		{
 			$result = [
-				'result' => FormRepository::saveForm($formData),
+				'id' => FormRepository::saveForm($formData),
 			];
 		}
 
@@ -85,6 +86,25 @@ class FormCreate extends Controller
 		return [
 			'result' => FormSettingsRepository::getSettings(),
 		];
+	}
+
+	public function getQuestionDataAction(int $id, int $limit, int $offset)
+	{
+		$questionCollection = QuestionRepository::getQuestionsByChapterId($id, ['LIMIT' => $limit, 'OFFSET' => $offset]);
+		$questionsData = [];
+		foreach ($questionCollection as $question)
+		{
+			$questionsData[] = $question->collectValues(recursive: true);
+		}
+
+		return [
+			'result' => $questionsData,
+		];
+	}
+
+	public function deleteQuestionAction(int $id)
+	{
+		return ['result' => QuestionRepository::deleteQuestion($id)];
 	}
 
 	private function xssEscape(array $rawData)

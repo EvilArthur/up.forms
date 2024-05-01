@@ -3,9 +3,9 @@ import { CheckboxOption } from './options/checkbox-option';
 
 export class Checkbox extends Question
 {
-	constructor(chapterId, id, position, title, optionData, settingData, fieldData)
+	constructor(reloadFunction, chapterId, id, position, title, optionData, settingData, fieldData)
 	{
-		super(chapterId, id, position, title, optionData, settingData, fieldData);
+		super(reloadFunction, chapterId, id, position, title, optionData, settingData, fieldData);
 		this.options = optionData.map((option) => {
 			if (option)
 			{
@@ -18,6 +18,11 @@ export class Checkbox extends Question
 
 	onAddOptionButtonClickHandler()
 	{
+		this.options = this.options.filter(option => !option.isDeleted)
+		if (this.options.length >= 15)
+		{
+			return;
+		}
 		const option = new CheckboxOption(null, 'Новая опция', this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
 		this.layout.options.append(option.render());
 		this.options.push(option);
