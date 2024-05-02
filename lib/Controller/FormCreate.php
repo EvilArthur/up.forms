@@ -24,14 +24,16 @@ class FormCreate extends Controller
 			return null;
 		}
 
+		$userId = $this->getCurrentUser()->getId();
+
 		if ((int)$formData['ID'] === 0)
 		{
-			$result = FormRepository::createForm($formData);
+			$result = FormRepository::createForm($formData, $userId);
 		}
 		else
 		{
 			$result = [
-				'ID' => FormRepository::saveForm($formData),
+				'ID' => FormRepository::saveForm($formData, $userId),
 			];
 		}
 
@@ -47,11 +49,12 @@ class FormCreate extends Controller
 		return $result;
 	}
 
-	public function getFormDataAction($id, $limit = 0, $offset = 0)
+	public function getFormDataAction($id, $responseId, $limit = 0, $offset = 0)
 	{
 		$id = (int)$id;
 		$limit = (int)$limit;
 		$offset = (int)$offset;
+
 		if ($limit === 0 & $offset === 0)
 		{
 			$filter = null;
@@ -61,6 +64,7 @@ class FormCreate extends Controller
 			$filter = [
 				'LIMIT' => $limit,
 				'OFFSET' => $offset,
+				'RESPONSE_ID' => $responseId
 			];
 		}
 
@@ -88,7 +92,7 @@ class FormCreate extends Controller
 
 	public function getQuestionDataAction(int $id, int $limit, int $offset)
 	{
-		$questionCollection = QuestionRepository::getQuestionsByChapterId($id, ['LIMIT' => $limit, 'OFFSET' => $offset]);
+		$questionCollection = QuestionRepository::getQuestionsByChapterId($id, ['LIMIT' => $limit, 'OFFSET' => $offset, 'RESPONSE_ID' => false]);
 		$questionsData = [];
 		foreach ($questionCollection as $question)
 		{

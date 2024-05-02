@@ -22,12 +22,12 @@ use Up\Forms\Model\QuestionTable;
 
 class FormRepository
 {
-	public static function createForm($formData)
+	public static function createForm($formData, $userId)
 	{
 		Application::getConnection()->startTransaction();
 		try
 		{
-			$form = self::fillFormByData($formData);
+			$form = self::fillFormByData($formData, $userId);
 			$id = $form->save()->getId();
 			foreach ($form->getChapter() as $chapter)
 			{
@@ -44,12 +44,12 @@ class FormRepository
 		}
 	}
 
-	public static function saveForm($formData)
+	public static function saveForm($formData, $userId)
 	{
 		Application::getConnection()->startTransaction();
 		try
 		{
-			$form = self::fillFormByData($formData);
+			$form = self::fillFormByData($formData, $userId);
 			$form->setDate(new DateTime());
 			$result = $form->save();
 			Application::getConnection()->commitTransaction();
@@ -139,10 +139,8 @@ class FormRepository
 		return FormTable::getByPrimary($id, ['select' => ['TITLE']])->fetchObject()->getTitle();
 	}
 
-	private static function fillFormByData(array $formData): EO_Form
+	private static function fillFormByData(array $formData, int $userId): EO_Form
 	{
-		global $USER;
-
 		if ((int)$formData['ID'] > 0)
 		{
 			$form = FormTable::wakeUpObject(['ID' => $formData['ID']]);
@@ -152,7 +150,7 @@ class FormRepository
 			$form = FormTable::createObject();
 		}
 
-		$form->setCreatorId($USER->GetID());
+		$form->setCreatorId($userId);
 		$form->setTitle($formData['TITLE']);
 
 		foreach ($formData['CHAPTER'] as $chapterData)

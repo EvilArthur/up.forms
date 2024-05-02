@@ -133,7 +133,7 @@ this.BX.Up = this.BX.Up || {};
 
 	var _templateObject$2, _templateObject2$1, _templateObject3$1;
 	var Options = /*#__PURE__*/function () {
-	  function Options(options, questionName, questionId) {
+	  function Options(options, questionName, questionId, answer) {
 	    babelHelpers.classCallCheck(this, Options);
 	    this.layout = {};
 	    this.options = options;
@@ -141,6 +141,7 @@ this.BX.Up = this.BX.Up || {};
 	    this.questionId = questionId;
 	    this.type = null;
 	    this.subAnswer = [];
+	    this.answer = answer;
 	  }
 	  babelHelpers.createClass(Options, [{
 	    key: "render",
@@ -157,7 +158,18 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderButton",
 	    value: function renderButton(id, value, type) {
-	      var wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"form-check\">\n\t\t\t\t<input class=\"form-check-input\" type=\"", "\" name=\"", "_", "\" value=\"", "\">\n\t\t\t\t<label class=\"form-check-label\">", "</label>\n\t\t\t</div>\n\t\t"])), type, this.questionName, this.questionId, id, value);
+	      var _this2 = this;
+	      // console.log(this.answer);
+	      this.value = '';
+	      if (this.answer && this.answer.SUBANSWER.length !== 0) {
+	        this.answer.SUBANSWER.forEach(function (subAnswer) {
+	          if (Number(subAnswer.VALUE) === Number(id)) {
+	            _this2.value = 'checked';
+	            _this2.subAnswer.push(id);
+	          }
+	        });
+	      }
+	      var wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"form-check\">\n\t\t\t\t<input class=\"form-check-input\" type=\"", "\" name=\"", "_", "\" value=\"", "\" ", ">\n\t\t\t\t<label class=\"form-check-label\">", "</label>\n\t\t\t</div>\n\t\t"])), type, this.questionName, this.questionId, id, this.value, value);
 	      main_core.Event.bind(wrap, 'change', this.onButtonChangeHandler.bind(this));
 	      return wrap;
 	    }
@@ -190,10 +202,10 @@ this.BX.Up = this.BX.Up || {};
 
 	var Radio = /*#__PURE__*/function (_Options) {
 	  babelHelpers.inherits(Radio, _Options);
-	  function Radio(options, questionName, questionId) {
+	  function Radio(options, questionName, questionId, answer) {
 	    var _this;
 	    babelHelpers.classCallCheck(this, Radio);
-	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Radio).call(this, options, questionName, questionId));
+	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Radio).call(this, options, questionName, questionId, answer));
 	    _this.type = 'radio';
 	    return _this;
 	  }
@@ -208,14 +220,23 @@ this.BX.Up = this.BX.Up || {};
 
 	var _templateObject$3;
 	var ShortText = /*#__PURE__*/function () {
-	  function ShortText() {
+	  function ShortText(answer) {
 	    babelHelpers.classCallCheck(this, ShortText);
+	    this.answer = answer;
 	    this.subAnswer = [];
+	    this.value = '';
 	  }
 	  babelHelpers.createClass(ShortText, [{
 	    key: "render",
 	    value: function render() {
-	      var wrap = main_core.Tag.render(_templateObject$3 || (_templateObject$3 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<input class=\"form-control\" type=\"text\">\n\t\t"])));
+	      console.log(this.answer);
+	      if (this.answer && this.answer.SUBANSWER.length !== 0) {
+	        this.value = this.answer.SUBANSWER[0].VALUE;
+	        this.subAnswer.push(this.answer.SUBANSWER[0].VALUE);
+	      } else {
+	        this.value = '';
+	      }
+	      var wrap = main_core.Tag.render(_templateObject$3 || (_templateObject$3 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<input class=\"form-control\" type=\"text\" value=\"", "\">\n\t\t"])), this.value);
 	      main_core.Event.bind(wrap, 'change', this.onChangeHandler.bind(this));
 	      return wrap;
 	    }
@@ -235,10 +256,10 @@ this.BX.Up = this.BX.Up || {};
 
 	var Checkbox = /*#__PURE__*/function (_Options) {
 	  babelHelpers.inherits(Checkbox, _Options);
-	  function Checkbox(options, questionName, questionId) {
+	  function Checkbox(options, questionName, questionId, answer) {
 	    var _this;
 	    babelHelpers.classCallCheck(this, Checkbox);
-	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Checkbox).call(this, options, questionName, questionId));
+	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Checkbox).call(this, options, questionName, questionId, answer));
 	    _this.type = 'checkbox';
 	    return _this;
 	  }
@@ -261,6 +282,7 @@ this.BX.Up = this.BX.Up || {};
 	var _templateObject$4, _templateObject2$2;
 	var Question = /*#__PURE__*/function () {
 	  function Question(chapter_id, field_id, id, position, title, optionData, isRequired) {
+	    var answer = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : false;
 	    babelHelpers.classCallCheck(this, Question);
 	    this.layout = {};
 	    this.layout.wrap = null;
@@ -273,6 +295,7 @@ this.BX.Up = this.BX.Up || {};
 	    this.options = optionData;
 	    this.isRequired = this.toBoolean(isRequired);
 	    this.field = null;
+	    this.answer = answer;
 	  }
 	  babelHelpers.createClass(Question, [{
 	    key: "render",
@@ -285,11 +308,11 @@ this.BX.Up = this.BX.Up || {};
 	    key: "renderInput",
 	    value: function renderInput() {
 	      if (this.field_id === 1) {
-	        this.field = new ShortText();
+	        this.field = new ShortText(this.answer);
 	      } else if (this.field_id === 2) {
-	        this.field = new Radio(this.options, this.title, this.id);
+	        this.field = new Radio(this.options, this.title, this.id, this.answer);
 	      } else if (this.field_id === 3) {
-	        this.field = new Checkbox(this.options, this.title, this.id);
+	        this.field = new Checkbox(this.options, this.title, this.id, this.answer);
 	      }
 	      this.layout.input = this.field.render();
 	      return this.layout.input;
@@ -331,15 +354,14 @@ this.BX.Up = this.BX.Up || {};
 	  }
 	  babelHelpers.createClass(FormManager, null, [{
 	    key: "getFormData",
-	    value: function getFormData(id) {
-	      var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-	      var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+	    value: function getFormData(id, limit, offset, responseId) {
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.FormCreate.getFormData', {
 	          data: {
 	            id: id,
 	            limit: limit,
-	            offset: offset
+	            offset: offset,
+	            responseId: responseId
 	          }
 	        }).then(function (response) {
 	          var result = response.data.result;
@@ -353,7 +375,6 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "saveAnswerData",
 	    value: function saveAnswerData(data) {
-	      console.log(data);
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.Form.saveAnswers', {
 	          data: {
@@ -371,7 +392,6 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "createResponse",
 	    value: function createResponse(id) {
-	      console.log(1);
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.Form.createResponse', {
 	          data: {
@@ -380,6 +400,25 @@ this.BX.Up = this.BX.Up || {};
 	        }).then(function (response) {
 	          var startTime = response.data.startTime;
 	          resolve(startTime);
+	        })["catch"](function (error) {
+	          console.log(error);
+	          reject(error);
+	        });
+	      });
+	    }
+	  }, {
+	    key: "getAnswersByResponseId",
+	    value: function getAnswersByResponseId(id, limit, offset) {
+	      return new Promise(function (resolve, reject) {
+	        BX.ajax.runAction('up:forms.Response.getAnswersByResponseId', {
+	          data: {
+	            id: id,
+	            limit: limit,
+	            offset: offset
+	          }
+	        }).then(function (response) {
+	          var result = response.data.result;
+	          resolve(result);
 	        })["catch"](function (error) {
 	          console.log(error);
 	          reject(error);
@@ -408,6 +447,9 @@ this.BX.Up = this.BX.Up || {};
 	    this.limit = this.numOfItemsPerPage + 1;
 	    this.offset = 0;
 	    this.currentPage = 1;
+	    this.responseId = false;
+	    this.passedPages = [1];
+	    this.nextPageIsPassed = false;
 	    this.startTime = options.values.startTime;
 	    if (this.startTime && this.timer) {
 	      this.startTimer();
@@ -442,39 +484,54 @@ this.BX.Up = this.BX.Up || {};
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
 	              if (!(parseInt(this.id) !== 0)) {
-	                _context.next = 19;
+	                _context.next = 25;
 	                break;
 	              }
 	              _context.prev = 1;
-	              _context.next = 4;
-	              return FormManager.getFormData(this.id, this.limit, this.offset);
-	            case 4:
+	              if (!this.nextPageIsPassed) {
+	                _context.next = 11;
+	                break;
+	              }
+	              _context.next = 5;
+	              return FormManager.getFormData(this.id, this.limit, this.offset, this.responseId);
+	            case 5:
 	              this.formData = _context.sent;
 	              this.isLoading = false;
-	              console.log(this.formData);
 	              this.chapterId = this.formData.CHAPTER[0].ID;
-	              console.log(this.chapterId);
+	              this.formData.CHAPTER[0].QUESTION.map(function (questionData) {
+	                var question = new Question(questionData.CHAPTER_ID, questionData.FIELD_ID, questionData.ID, questionData.POSITION, questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE, questionData.ANSWER[0]);
+	                _this.questions.push(question);
+	              });
+	              _context.next = 17;
+	              break;
+	            case 11:
+	              _context.next = 13;
+	              return FormManager.getFormData(this.id, this.limit, this.offset, this.nextPageIsPassed);
+	            case 13:
+	              this.formData = _context.sent;
+	              this.isLoading = false;
+	              this.chapterId = this.formData.CHAPTER[0].ID;
 	              this.formData.CHAPTER[0].QUESTION.map(function (questionData) {
 	                var question = new Question(questionData.CHAPTER_ID, questionData.FIELD_ID, questionData.ID, questionData.POSITION, questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE);
 	                _this.questions.push(question);
 	              });
+	            case 17:
 	              this.currentNumOfItems = this.questions.length;
 	              if (this.currentNumOfItems === this.numOfItemsPerPage + 1) {
 	                this.questions.pop();
 	              }
-	              console.log(this.questions);
 	              this.layout.form = this.render();
-	              _context.next = 19;
+	              _context.next = 25;
 	              break;
-	            case 16:
-	              _context.prev = 16;
+	            case 22:
+	              _context.prev = 22;
 	              _context.t0 = _context["catch"](1);
 	              console.log(_context.t0);
-	            case 19:
+	            case 25:
 	            case "end":
 	              return _context.stop();
 	          }
-	        }, _callee, this, [[1, 16]]);
+	        }, _callee, this, [[1, 22]]);
 	      }));
 	      function loadFormData() {
 	        return _loadFormData.apply(this, arguments);
@@ -508,7 +565,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderNextPageButton",
 	    value: function renderNextPageButton() {
-	      if (this.currentNumOfItems === this.numOfItemsPerPage + 1) {
+	      if (this.currentNumOfItems === this.numOfItemsPerPage + 1 || this.passedPages.includes(this.currentPage + 1)) {
 	        var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"page-item\">\n\t\t\t\t\t\n\t\t\t\t\t\t<button aria-hidden=\"true\">&raquo;</button>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t\t"])));
 	        main_core.Event.bind(wrap, 'click', this.onNextPageButtonClickHandler.bind(this));
 	        return wrap;
@@ -526,18 +583,26 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onNextPageButtonClickHandler",
 	    value: function onNextPageButtonClickHandler() {
+	      var _this2 = this;
 	      this.limit += 10;
 	      this.offset += 10;
 	      this.currentPage += 1;
-	      this.reload();
+	      this.updatePassedPages();
+	      this.submitIntermediateResponse().then(function (r) {
+	        return _this2.reload();
+	      });
 	    }
 	  }, {
 	    key: "onPreviousPageButtonClickHandler",
 	    value: function onPreviousPageButtonClickHandler() {
+	      var _this3 = this;
+	      this.nextPageIsPassed = true;
 	      this.limit -= 10;
 	      this.offset -= 10;
 	      this.currentPage -= 1;
-	      this.reload();
+	      this.submitIntermediateResponse().then(function (r) {
+	        return _this3.reload();
+	      });
 	    }
 	  }, {
 	    key: "renderQuestionList",
@@ -549,28 +614,72 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderSubmitButton",
 	    value: function renderSubmitButton() {
-	      var _this2 = this;
+	      var _this4 = this;
 	      var wrap = main_core.Tag.render(_templateObject9 || (_templateObject9 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"btn btn-primary\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</button>\n\t\t"])));
 	      this.layout.submitButtonObject = {
 	        isActive: true,
 	        wrap: wrap
 	      };
 	      main_core.Event.bind(wrap, 'click', function () {
-	        return _this2.submitResponse(_this2.layout.submitButtonObject);
+	        return _this4.submitResponse(_this4.layout.submitButtonObject);
 	      });
 	      return this.layout.submitButtonObject.wrap;
 	    }
 	  }, {
+	    key: "submitIntermediateResponse",
+	    value: function () {
+	      var _submitIntermediateResponse = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+	        var answers, data, responseId;
+	        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+	          while (1) switch (_context2.prev = _context2.next) {
+	            case 0:
+	              answers = [];
+	              if (this.isRenderedMainBody) {
+	                answers = this.questions.map(function (question) {
+	                  return question.getAnswer();
+	                });
+	              }
+	              this.renderErrors([]);
+	              data = {
+	                'FORM_ID': this.id,
+	                'CHAPTER_ID': this.chapterId,
+	                'ANSWER': answers,
+	                'IS_COMPLETED': false,
+	                'IS_TIME_UP': this.timeIsUp
+	              };
+	              _context2.next = 6;
+	              return FormManager.saveAnswerData(data);
+	            case 6:
+	              responseId = _context2.sent;
+	              this.responseId = responseId;
+	            case 8:
+	            case "end":
+	              return _context2.stop();
+	          }
+	        }, _callee2, this);
+	      }));
+	      function submitIntermediateResponse() {
+	        return _submitIntermediateResponse.apply(this, arguments);
+	      }
+	      return submitIntermediateResponse;
+	    }()
+	  }, {
+	    key: "updatePassedPages",
+	    value: function updatePassedPages() {
+	      if (!this.passedPages.includes(this.currentPage)) {
+	        this.passedPages.push(this.currentPage);
+	        this.nextPageIsPassed = false;
+	      }
+	    }
+	  }, {
 	    key: "submitResponse",
 	    value: function submitResponse() {
-	      var _this3 = this;
+	      var _this5 = this;
 	      var button = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-	      console.log(button);
 	      if (button) {
 	        if (!button.isActive) {
 	          return;
 	        }
-	        console.log(1);
 	        button.wrap.classList.add('disabled');
 	        button.isActive = false;
 	      }
@@ -589,18 +698,16 @@ this.BX.Up = this.BX.Up || {};
 	        'IS_COMPLETED': true,
 	        'IS_TIME_UP': this.timeIsUp
 	      };
-	      console.log(data);
 	      FormManager.saveAnswerData(data).then(function (response) {
-	        _this3.isSaved = true;
-	        if (!_this3.timeIsUp) {
+	        _this5.isSaved = true;
+	        if (!_this5.timeIsUp) {
 	          BX.SidePanel.Instance.close();
 	          BX.SidePanel.Instance.destroy('/form/results/${formId}/');
 	        } else {
-	          _this3.render();
+	          _this5.render();
 	        }
-	        console.log(response);
 	      })["catch"](function (errors) {
-	        _this3.layout.wrap.prepend(_this3.renderErrors(errors));
+	        _this5.layout.wrap.prepend(_this5.renderErrors(errors));
 	        button.wrap.classList.remove('disabled');
 	        button.isActive = true;
 	        console.log(errors);
@@ -638,35 +745,35 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderStartButton",
 	    value: function renderStartButton() {
-	      var _this4 = this;
+	      var _this6 = this;
 	      var wrap = main_core.Tag.render(_templateObject13 || (_templateObject13 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"btn btn-primary\">\u041D\u0430\u0447\u0430\u0442\u044C</button>\n\t\t"])));
 	      main_core.Event.bind(wrap, 'click', function () {
-	        return _this4.onStartButtonClickHandler(wrap);
+	        return _this6.onStartButtonClickHandler(wrap);
 	      });
 	      return wrap;
 	    }
 	  }, {
 	    key: "onStartButtonClickHandler",
 	    value: function () {
-	      var _onStartButtonClickHandler = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(button) {
-	        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-	          while (1) switch (_context2.prev = _context2.next) {
+	      var _onStartButtonClickHandler = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(button) {
+	        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+	          while (1) switch (_context3.prev = _context3.next) {
 	            case 0:
 	              this.isStarted = true;
 	              button.classList.add('disabled');
-	              _context2.next = 4;
+	              _context3.next = 4;
 	              return FormManager.createResponse(this.id);
 	            case 4:
-	              this.startTime = _context2.sent;
+	              this.startTime = _context3.sent;
 	              console.log(this.startTime);
 	              console.log(new Date(this.startTime * 1000));
 	              this.startTimer();
 	              this.render();
 	            case 9:
 	            case "end":
-	              return _context2.stop();
+	              return _context3.stop();
 	          }
-	        }, _callee2, this);
+	        }, _callee3, this);
 	      }));
 	      function onStartButtonClickHandler(_x) {
 	        return _onStartButtonClickHandler.apply(this, arguments);
@@ -698,7 +805,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "updateTimer",
 	    value: function updateTimer(endTime) {
-	      var _this5 = this;
+	      var _this7 = this;
 	      var remainingTime = endTime - new Date();
 	      console.log(remainingTime);
 	      if (this.isSaved) {
@@ -716,17 +823,17 @@ this.BX.Up = this.BX.Up || {};
 	        var formattedMinutes = String(minutes).padStart(2, '0');
 	        this.layout.time.innerText = "".concat(formattedHours, ":").concat(formattedMinutes, ":").concat(formattedSeconds);
 	        setTimeout(function () {
-	          return _this5.updateTimer(endTime);
+	          return _this7.updateTimer(endTime);
 	        }, 1000);
 	      }
 	    }
 	  }, {
 	    key: "renderErrors",
 	    value: function renderErrors(errors) {
-	      var _this6 = this,
+	      var _this8 = this,
 	        _this$layout$error;
 	      var wrap = main_core.Tag.render(_templateObject14 || (_templateObject14 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t</div>"])), errors.map(function (error) {
-	        return _this6.renderError(error.message);
+	        return _this8.renderError(error.message);
 	      }));
 	      (_this$layout$error = this.layout.error) === null || _this$layout$error === void 0 ? void 0 : _this$layout$error.replaceWith(wrap);
 	      this.layout.error = wrap;

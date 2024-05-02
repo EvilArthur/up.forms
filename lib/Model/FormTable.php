@@ -1,7 +1,7 @@
 <?php
 namespace Up\Forms\Model;
 
-use Bitrix\Form\FormSettingsTable;
+
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields\DatetimeField;

@@ -9,7 +9,8 @@ export class FormManager
 						data: {
 							id: id,
 							limit: limit,
-							offset: offset
+							offset: offset,
+							responseId: false
 						},
 					})
 				.then((response) => {

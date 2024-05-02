@@ -106,17 +106,17 @@ class FormResultsComponent extends CBitrixComponent
 
 	protected function fetchFilterParams()
 	{
-		$this->arResult['FILTERS'] =
-			[
-				[
-					'id' => 'USER',
-					'name' => 'Пользователь',
-					'type' => 'list',
-					'items' => $this->arResult['USERS'],
-					'params' => ['multiple' => 'Y'],
-					'default' => true,
-				],
+		if ($this->arResult['IS_ANONYMOUS'] === "false")
+		{
+			$this->arResult['FILTERS'][] = [
+				'id' => 'USER',
+				'name' => 'Пользователь',
+				'type' => 'list',
+				'items' => $this->arResult['USERS'],
+				'params' => ['multiple' => 'Y'],
+				'default' => true,
 			];
+		}
 
 		$this->arResult['FILTER_PARAMS'] =
 			[
@@ -131,7 +131,9 @@ class FormResultsComponent extends CBitrixComponent
 	protected function fetchGridColumns()
 	{
 		$columns[] = ($this->arResult['IS_ANONYMOUS'] === "true") ? [] : ['id' => 'USER', 'name' => 'Пользователь', 'default' => true, 'sort' => 'USER_ID'];
-
+		$columns[] = ['id' => 'START_TIME', 'name' => 'Попытка начата', 'default' => true, 'sort' => 'START_TIME'];
+		$columns[] = ['id' => 'COMPLETED_TIME', 'name' => 'Попытка Закончена', 'default' => true, 'sort' => 'COMPLETED_TIME'];
+		$columns[] = ['id' => 'TRY_NUMBER', 'name' => 'Номер попытки', 'default' => true, 'sort' => 'TRY_NUMBER'];
 		foreach ($this->arResult['QUESTIONS'] as $id => $question)
 		{
 			$columns[] =
@@ -192,7 +194,9 @@ class FormResultsComponent extends CBitrixComponent
 			{
 				$row['USER'] = htmlspecialcharsbx($this->arResult['USERS'][$response->getUserId()]);
 			}
-
+			$row['START_TIME'] = $response->getStartTime()->format('d M, H:i');
+			$row['COMPLETED_TIME'] = $response->getCompletedTime()->format('d M, H:i');
+			$row['TRY_NUMBER'] = $response->getTryNumber();
 			foreach ($response->getAnswer() as $answer)
 			{
 				if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['FIELD_ID'] == 2 || $this->arResult["QUESTIONS"][$answer->getQuestionId()]['FIELD_ID'] == 3)
@@ -227,7 +231,7 @@ class FormResultsComponent extends CBitrixComponent
 								];
 						}
 					}
-					if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST'] && $numOfRightOptions === count($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS']))
+					if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST'] && $numOfRightOptions === count($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS']) && count($row[$answer->getQuestionId()]) === $numOfRightOptions)
 					{
 						$numOfRightAnswers += 1;
 					}

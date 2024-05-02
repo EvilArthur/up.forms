@@ -21,14 +21,20 @@ Class ResponseRepository
 			return;
 		}
 		$response->fillAnswer()->fillSubanswer();
+
+
 		foreach ($responseData['ANSWER'] as $answerData)
 		{
-			if ($answer = $response->getAnswer()->getByPrimary($answerData['ID']))
+			foreach ($response->getAnswer() as $answer)
 			{
-				$answer->delete();
+				if ($answer->getQuestionId() === (int)$answerData['ID'])
+				{
+					$answer->delete();
+				}
 			}
 			$response->addToAnswer(self::fillAnswerByData($answerData));
 		}
+
 		if (\CUtil::JsObjectToPhp($responseData['IS_COMPLETED']))
 		{
 			$response->setCompleted(true);
@@ -37,13 +43,13 @@ Class ResponseRepository
 		$result = $response->save();
 
 		db()->unlock('saveAnswer');
-		return  $result->getErrors();
+		return  $response->getId();
 	}
 
 	public static function createResponse(int $userId, int $formId)
 	{
 		db()->lock('createResponse', 30);
-		$try = self::getLastTry($formId);
+		$try = self::getLastTry($formId, $userId);
 		$maxTry = FormRepository::getMaxNumberOfTry($formId);
 
 		if (!is_null($maxTry) && $try >= $maxTry)
@@ -72,8 +78,8 @@ Class ResponseRepository
 	{
 		return QueryHelper::decompose(
 			ResponseTable::query()
-						 ->setSelect(['ANSWER', 'USER_ID', 'ANSWER.SUBANSWER'])
-						 ->setFilter([['=FORM_ID' => $id]])
+						 ->setSelect(['ANSWER', 'USER_ID', 'TRY_NUMBER', 'START_TIME', 'COMPLETED_TIME', 'ANSWER.SUBANSWER'])
+						 ->setFilter([['=FORM_ID' => $id], ['=COMPLETED' => 1]])
 						 ->whereIn('USER_ID', $filter['USERS'])
 						 ->setOrder($filter['SORT'])
 						 ->setLimit($filter['LIMIT'])
@@ -97,11 +103,10 @@ Class ResponseRepository
 		}
 	}
 
-	public static function getLastTry($formId): ?int
+	public static function getLastTry($formId, $userId): ?int
 	{
-		global $USER;
 		$try = ResponseTable::getList(['select' => ['LAST_TRY'],
-									   'filter' => ['USER_ID' => $USER->GetID(),
+									   'filter' => ['USER_ID' => $userId,
 										   			'FORM_ID' => $formId]]);
 
 		$try = $try->fetchAll()[0]['LAST_TRY'];
@@ -131,5 +136,25 @@ Class ResponseRepository
 			$answer->addToSubanswer($subanswer);
 		}
 		return $answer;
+	}
+
+	public static function getResponseWithAnswersById(int $responseId, array $filter)
+	{
+		return ResponseTable::getByPrimary(
+			$responseId,
+			[
+				'select' =>
+					[
+						'ID',
+						'FORM_ID',
+						'ANSWER',
+						'ANSWER.SUBANSWER',
+					],
+				'limit' => $filter['LIMIT'],
+				'offset' => $filter['OFFSET'],
+			])->fetchObject();
+
+
+
 	}
 }

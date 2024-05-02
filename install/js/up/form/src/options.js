@@ -2,7 +2,7 @@ import { Event, Tag } from 'main.core';
 
 export class Options
 {
-	constructor(options, questionName, questionId)
+	constructor(options, questionName, questionId, answer)
 	{
 		this.layout = {};
 		this.options = options;
@@ -10,7 +10,7 @@ export class Options
 		this.questionId = questionId
 		this.type = null;
 		this.subAnswer = [];
-
+		this.answer = answer
 	}
 
 	render()
@@ -28,9 +28,22 @@ export class Options
 
 	renderButton(id, value, type)
 	{
+		// console.log(this.answer);
+		this.value = '';
+		if (this.answer && this.answer.SUBANSWER.length !== 0)
+		{
+			this.answer.SUBANSWER.forEach((subAnswer) =>
+			{
+				if (Number(subAnswer.VALUE) === Number(id))
+				{
+					this.value = 'checked';
+					this.subAnswer.push(id);
+				}
+			});
+		}
 		const wrap = Tag.render`
 			<div class="form-check">
-				<input class="form-check-input" type="${type}" name="${this.questionName}_${this.questionId}" value="${id}">
+				<input class="form-check-input" type="${type}" name="${this.questionName}_${this.questionId}" value="${id}" ${this.value}>
 				<label class="form-check-label">${value}</label>
 			</div>
 		`;

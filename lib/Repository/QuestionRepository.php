@@ -24,13 +24,26 @@ Class QuestionRepository
 
 	public static function getQuestionsByChapterId(int $chapterId, $filter = null)
 	{
+		if (is_numeric($filter['RESPONSE_ID']))
+		{
+			$selectFields = ['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION', 'OPTION', 'SETTINGS', 'ANSWER', 'ANSWER.SUBANSWER'];
+			$selectedFilter = [['=CHAPTER_ID' => $chapterId], ['=ANSWER.RESPONSE_ID' => $filter['RESPONSE_ID']]];
+			// $selectFields = ['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION', 'OPTION', 'SETTINGS'];
+			// $selectedFilter = [['=CHAPTER_ID' => $chapterId]];
+		}
+		else
+		{
+			$selectFields = ['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION', 'OPTION', 'SETTINGS'];
+			$selectedFilter = [['=CHAPTER_ID' => $chapterId]];
+		}
+
 		if ($filter === null)
 		{
 			return QueryHelper::decompose
 			(
 				QuestionTable::query()
-							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION','OPTION', 'SETTINGS'])
-							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
+							 ->setSelect($selectFields)
+							 ->setFilter($selectedFilter)
 							 ->setOrder(['ID' => 'asc']),
 				false
 			);
@@ -40,8 +53,9 @@ Class QuestionRepository
 			return QueryHelper::decompose
 			(
 				QuestionTable::query()
-							 ->setSelect(['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION', 'OPTION', 'SETTINGS'])
-							 ->setFilter([['=CHAPTER_ID' => $chapterId]])
+							 ->setSelect($selectFields)
+							 ->addSelect('ANSWER')
+							 ->setFilter($selectedFilter)
 							 ->setOrder(['ID' => 'asc'])
 							 ->setLimit($filter['LIMIT'])
 							 ->setOffset($filter['OFFSET']),
