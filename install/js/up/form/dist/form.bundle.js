@@ -702,7 +702,7 @@ this.BX.Up = this.BX.Up || {};
 	        _this5.isSaved = true;
 	        if (!_this5.timeIsUp) {
 	          BX.SidePanel.Instance.close();
-	          BX.SidePanel.Instance.destroy('/form/results/${formId}/');
+	          BX.SidePanel.Instance.destroy('/form/view/${formId}/');
 	        } else {
 	          _this5.render();
 	        }

@@ -307,7 +307,7 @@ export class Form
 				if (!this.timeIsUp)
 				{
 					BX.SidePanel.Instance.close();
-					BX.SidePanel.Instance.destroy('/form/results/${formId}/');
+					BX.SidePanel.Instance.destroy('/form/view/${formId}/');
 				}
 				else
 				{
