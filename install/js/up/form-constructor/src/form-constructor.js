@@ -173,13 +173,16 @@ export class FormConstructor
 	{
 		const formData = this.prepareData();
 		this.renderErrors([]);
-		const id = parseInt(await FormManager.saveFormData({ formData: formData })
+		const result = await FormManager.saveFormData({ formData: formData })
 			.catch((errors => {
 				this.displayErrors(errors);
-			})));
+			}));
+		const id = parseInt(result.id);
+		const chapterId = parseInt(result.chapterId);
 		if (id !== this.id)
 		{
 			this.id = id;
+			this.construct.chapterId = chapterId;
 			const newUrl = '/form/edit/'.concat(this.id, '/');
 			window.history.pushState({ path: newUrl }, 'Формы', newUrl);
 			BX.SidePanel.Instance.pageUrl = window.history.url;

@@ -26,14 +26,12 @@ class FormCreate extends Controller
 
 		if ((int)$formData['ID'] === 0)
 		{
-			$result = [
-				'id' => FormRepository::createForm($formData),
-			];
+			$result = FormRepository::createForm($formData);
 		}
 		else
 		{
 			$result = [
-				'id' => FormRepository::saveForm($formData),
+				'ID' => FormRepository::saveForm($formData),
 			];
 		}
 

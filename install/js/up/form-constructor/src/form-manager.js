@@ -32,7 +32,7 @@ export class FormManager
 						data: data,
 					})
 				.then((response) => {
-					const result = response.data.id;
+					const result = {id: response.data.ID, chapterId: response.data.CHAPTER_ID};
 					resolve(result);
 				})
 				.catch((error) => {

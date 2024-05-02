@@ -92,7 +92,10 @@ this.BX.Up = this.BX.Up || {};
 	        BX.ajax.runAction('up:forms.FormCreate.saveFormData', {
 	          data: data
 	        }).then(function (response) {
-	          var result = response.data.id;
+	          var result = {
+	            id: response.data.ID,
+	            chapterId: response.data.CHAPTER_ID
+	          };
 	          resolve(result);
 	        })["catch"](function (error) {
 	          console.log(error);
@@ -774,7 +777,7 @@ this.BX.Up = this.BX.Up || {};
 	        this.renderPagination();
 	        return;
 	      }
-	      this.questions.push(questionFactory.createQuestion(this.reloadAfterDelete.bind(this), 1, this.formData.CHAPTER[0].id, null, ++this.questionNumber, 'Название', [{
+	      this.questions.push(questionFactory.createQuestion(this.reloadAfterDelete.bind(this), 1, this.chapterId, null, ++this.questionNumber, 'Название', [{
 	        'ID': null,
 	        'TITLE': ''
 	      }], [{
@@ -790,6 +793,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "getData",
 	    value: function getData() {
 	      var hardCodeChapter = this.formData.CHAPTER[0];
+	      hardCodeChapter.ID = this.chapterId;
 	      hardCodeChapter.QUESTION = this.questions.map(function (question) {
 	        return question.getData();
 	      });
@@ -1364,24 +1368,25 @@ this.BX.Up = this.BX.Up || {};
 	    value: function () {
 	      var _saveForm = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime$1().mark(function _callee2() {
 	        var _this3 = this;
-	        var formData, id, newUrl;
+	        var formData, result, id, chapterId, newUrl;
 	        return _regeneratorRuntime$1().wrap(function _callee2$(_context2) {
 	          while (1) switch (_context2.prev = _context2.next) {
 	            case 0:
 	              formData = this.prepareData();
 	              this.renderErrors([]);
-	              _context2.t0 = parseInt;
-	              _context2.next = 5;
+	              _context2.next = 4;
 	              return FormManager.saveFormData({
 	                formData: formData
 	              })["catch"](function (errors) {
 	                _this3.displayErrors(errors);
 	              });
-	            case 5:
-	              _context2.t1 = _context2.sent;
-	              id = (0, _context2.t0)(_context2.t1);
+	            case 4:
+	              result = _context2.sent;
+	              id = parseInt(result.id);
+	              chapterId = parseInt(result.chapterId);
 	              if (id !== this.id) {
 	                this.id = id;
+	                this.construct.chapterId = chapterId;
 	                newUrl = '/form/edit/'.concat(this.id, '/');
 	                window.history.pushState({
 	                  path: newUrl

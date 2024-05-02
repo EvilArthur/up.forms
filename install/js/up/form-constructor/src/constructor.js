@@ -117,7 +117,7 @@ export class Constructor
 			return;
 		}
 		this.questions.push(questionFactory.createQuestion(
-			this.reloadAfterDelete.bind(this), 1, this.formData.CHAPTER[0].id, null, ++this.questionNumber,
+			this.reloadAfterDelete.bind(this), 1, this.chapterId, null, ++this.questionNumber,
 			'Название', [{ 'ID': null, 'TITLE': '' }],
 			[{ 'SETTINGS_ID': 1, 'VALUE': false }, { 'SETTINGS_ID': 2, 'VALUE': false }], this.fieldData,
 		));
@@ -127,6 +127,7 @@ export class Constructor
 	getData()
 	{
 		const hardCodeChapter = this.formData.CHAPTER[0];
+		hardCodeChapter.ID = this.chapterId;
 		hardCodeChapter.QUESTION = this.questions.map((question) => question.getData());
 		const form = {
 			'TITLE': this.layout.title.innerText,

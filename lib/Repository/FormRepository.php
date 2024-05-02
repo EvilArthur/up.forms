@@ -29,9 +29,13 @@ class FormRepository
 		{
 			$form = self::fillFormByData($formData);
 			$id = $form->save()->getId();
+			foreach ($form->getChapter() as $chapter)
+			{
+				$chapterId = $chapter->getId();
+			}
 			Application::getConnection()->commitTransaction();
 
-			return $id;
+			return ['ID' => $id, 'CHAPTER_ID' => $chapterId];
 		}
 		catch (\Throwable $error)
 		{
