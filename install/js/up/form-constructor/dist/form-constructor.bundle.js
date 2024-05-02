@@ -1171,7 +1171,7 @@ this.BX.Up = this.BX.Up || {};
 	      var _formSetting$find;
 	      var setting;
 	      var settingValue = (_formSetting$find = formSetting.find(function (item) {
-	        return item.SETTINGS_ID === parseInt(settingData.ID);
+	        return parseInt(item.SETTINGS_ID) === parseInt(settingData.ID);
 	      })) === null || _formSetting$find === void 0 ? void 0 : _formSetting$find.VALUE;
 	      if (parseInt(settingData.TYPE_ID) === 1) {
 	        setting = new Datetime(settingData.ID, settingData.TITLE, settingValue);

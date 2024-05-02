@@ -13,7 +13,7 @@ export class Settings
 		this.allSettings = allSettings;
 		this.allSettings.map((settingData) => {
 			let setting;
-			const settingValue = formSetting.find(item => item.SETTINGS_ID === parseInt(settingData.ID))?.VALUE;
+			const settingValue = formSetting.find(item => parseInt(item.SETTINGS_ID) === parseInt(settingData.ID))?.VALUE;
 			if (parseInt(settingData.TYPE_ID) === 1)
 			{
 				setting = new Datetime(settingData.ID, settingData.TITLE, settingValue);
