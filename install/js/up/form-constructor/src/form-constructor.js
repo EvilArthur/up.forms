@@ -73,7 +73,7 @@ export class FormConstructor
 				'QUESTION': [],
 				'ID': null,
 			};
-			this.formData.SETTINGS = [];
+			this.formData.SETTINGS = [{SETTINGS_ID: 6, VALUE: 'true'}];
 		}
 		this.isLoading = false;
 		this.render();

@@ -1293,7 +1293,10 @@ this.BX.Up = this.BX.Up || {};
 	                'QUESTION': [],
 	                'ID': null
 	              };
-	              this.formData.SETTINGS = [];
+	              this.formData.SETTINGS = [{
+	                SETTINGS_ID: 6,
+	                VALUE: 'true'
+	              }];
 	            case 17:
 	              this.isLoading = false;
 	              this.render();
