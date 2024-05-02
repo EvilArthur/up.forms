@@ -16,10 +16,15 @@ export class Constructor
 		this.id = formData.ID;
 		this.chapterId = formData.CHAPTER[0].ID;
 		this.saveForm = saveFormFunction;
-		this.questionNumber = 0
+		this.questionNumber = 0;
+		this.isLastPage = true;
 
 		this.limit = 10;
 		this.currentPage = 1;
+		this.loading = new bootstrap.Modal(this.renderLoading(), {
+			backdrop: 'static',
+			keyboard: false
+		});
 
 		this.titleObject.value = this.formData.TITLE;
 		this.fillQuestionsByData(formData.CHAPTER[0].QUESTION);
@@ -206,6 +211,8 @@ export class Constructor
 
 	async onNextPageButtonClickHandler()
 	{
+		this.loading.show();
+		this.layout.wrap.append(this.renderLoading());
 		this.id = await this.saveForm();
 		if (this.id)
 		{
@@ -216,6 +223,8 @@ export class Constructor
 
 	async onPreviousPageButtonClickHandler()
 	{
+		this.loading.show();
+		this.layout.wrap.append(this.renderLoading());
 		this.id = await this.saveForm();
 		if (this.id)
 		{
@@ -226,26 +235,31 @@ export class Constructor
 
 	reload()
 	{
-		this.questions = [];
 		console.log(this.id, this.limit, this.limit * (this.currentPage - 1));
 		this.loadPage(this.chapterId, this.limit, this.limit * (this.currentPage - 1)).then( () => {
 			this.renderQuestionList()
 			this.renderPagination();
+			this.loading.hide();
 		});
 	}
 
 	reloadAfterDelete()
 	{
 		this.questions = this.questions.filter(question => !question.isDeleted);
-		if (this.id)
+		if (this.id && !this.isLastPage)
 		{
+			this.loading.show();
 			this.saveForm().then(() => {this.reload()});
+		}
+		else
+		{
+			this.renderQuestionList();
 		}
 	}
 
 	async loadPage(id, limit = 0, offset = 0)
 	{
-		const questionData = await FormManager.getQuestionData(id, limit, offset);
+		const questionData = await FormManager.getQuestionData(id, limit + 1, offset);
 		console.log(questionData);
 		this.fillQuestionsByData(questionData);
 
@@ -253,6 +267,7 @@ export class Constructor
 
 	fillQuestionsByData(data)
 	{
+		this.questions = [];
 		data.map((questionData) => {
 			const question = questionFactory.createQuestion(this.reloadAfterDelete.bind(this),
 				questionData.FIELD_ID, questionData.CHAPTER_ID,
@@ -260,5 +275,24 @@ export class Constructor
 				questionData.TITLE, questionData.OPTION, questionData.SETTINGS, this.fieldData);
 			this.questions.push(question);
 		});
+		this.isLastPage = this.questions.length <= this.limit;
+		if (!this.isLastPage)
+		{
+			this.questions.pop();
+		}
+	}
+
+	renderLoading()
+	{
+		const wrap = Tag.render`
+		 <div class="modal" id="loadingModal">
+			<div class="modal-dialog modal-dialog-centered">
+				  <div class="spinner-border text-center" role="status">
+					<span class="visually-hidden">Loading...</span>
+				  </div>
+			</div>
+		  </div>
+		`
+		return wrap;
 	}
 }

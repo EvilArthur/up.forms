@@ -71,12 +71,16 @@ export default class Question
 
 	onRemoveQuestionButtonClickHandler()
 	{
+		this.isDeleted = true;
 		if (this.id)
 		{
 			FormManager.deleteQuestion(this.id).then(this.reload());
 
 		}
-		this.isDeleted = true;
+		else
+		{
+			this.reload();
+		}
 	}
 
 	renderEditableTitle(): HTMLElement
