@@ -2,9 +2,9 @@ import { Options } from './options';
 
 export class Checkbox extends Options
 {
-	constructor(options, questionName, questionId)
+	constructor(options, questionName, questionId, answer)
 	{
-		super(options, questionName, questionId);
+		super(options, questionName, questionId, answer);
 		this.type = 'checkbox';
 	}
 

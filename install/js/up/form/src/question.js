@@ -6,7 +6,7 @@ import {Checkbox} from './checkbox';
 
 export class Question
 {
-	constructor(chapter_id, field_id, id, position, title, optionData, isRequired)
+	constructor(chapter_id, field_id, id, position, title, optionData, isRequired, answer = false)
 	{
 		this.layout = {};
 		this.layout.wrap = null;
@@ -18,7 +18,8 @@ export class Question
 		this.position = parseInt(position);
 		this.options = optionData;
 		this.isRequired = this.toBoolean(isRequired);
-		this.field = null
+		this.field = null;
+		this.answer = answer
 	}
 
 	render(): HTMLElement
@@ -39,15 +40,15 @@ export class Question
 	{
 		if (this.field_id === 1)
 		{
-			this.field = new ShortText();
+			this.field = new ShortText(this.answer);
 		}
 		else if (this.field_id === 2)
 		{
-			this.field = new Radio(this.options, this.title, this.id);
+			this.field = new Radio(this.options, this.title, this.id, this.answer);
 		}
 		else if (this.field_id === 3)
 		{
-			this.field = new Checkbox(this.options, this.title, this.id);
+			this.field = new Checkbox(this.options, this.title, this.id, this.answer);
 		}
 		this.layout.input = this.field.render();
 		return this.layout.input;

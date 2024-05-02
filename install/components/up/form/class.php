@@ -6,6 +6,7 @@ use Up\Forms\Repository\ResponseRepository;
 
 class FormComponent extends CBitrixComponent
 {
+
 	public function executeComponent()
 	{
 		global $APPLICATION;
@@ -22,6 +23,10 @@ class FormComponent extends CBitrixComponent
 		}
 		$this->prepareTemplateParams();
 
+		if ($this->arResult['IS_ACTIVE'] === 'false')
+		{
+			$this->setTemplateName('closed');
+		}
 		if (!is_null($this->arResult['MAX_TRY'])
 			&& $this->arResult['TRY'] >= $this->arResult['MAX_TRY']
 			&& is_null($this->arResult['CURRENT_RESPONSE']))
@@ -103,11 +108,17 @@ class FormComponent extends CBitrixComponent
 		global $USER;
 		$currentResponse = ResponseRepository::getCurrentResponse($USER->GetID(), $this->arParams['ID']);
 		$this->arResult['CURRENT_RESPONSE'] = $currentResponse;
+		if ($this->arResult['CURRENT_RESPONSE'])
+		{
+			$this->arResult['CURRENT_RESPONSE']->fillAnswer()->fillSubanswer();
+			$this->arResult['ANSWERS'] = $this->arResult['CURRENT_RESPONSE']->getAnswer();
+		}
 		return $currentResponse;
 	}
 
 	protected function fetchLastTry()
 	{
-		$this->arResult['TRY'] = ResponseRepository::getLastTry($this->arParams['ID']) ? : 0;
+		global $USER;
+		$this->arResult['TRY'] = ResponseRepository::getLastTry($this->arParams['ID'], $USER->GetID()) ? : 0;
 	}
 }

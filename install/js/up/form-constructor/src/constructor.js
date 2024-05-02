@@ -245,6 +245,9 @@ export class Constructor
 
 	async loadPage(id, limit = 0, offset = 0)
 	{
+		console.log(id);
+		console.log(limit);
+		console.log(offset);
 		const questionData = await FormManager.getQuestionData(id, limit, offset);
 		console.log(questionData);
 		this.fillQuestionsByData(questionData);

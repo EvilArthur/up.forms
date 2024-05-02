@@ -9,6 +9,7 @@ $values = [
 	'maxTry' => $arResult['MAX_TRY'],
 	'try' => $arResult['TRY'],
 	'startTime' => $arResult['START_RESPONSE_TIME'],
+	'answers' => $arResult['ANSWERS']
 ]
 ?>
 

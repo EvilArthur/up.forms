@@ -19,6 +19,9 @@ export class Form
 		this.limit = this.numOfItemsPerPage + 1;
 		this.offset = 0;
 		this.currentPage = 1;
+		this.responseId = false;
+		this.passedPages = [1];
+		this.nextPageIsPassed = false;
 
 		this.startTime = options.values.startTime;
 		if (this.startTime && this.timer)
@@ -55,25 +58,44 @@ export class Form
 		{
 			try
 			{
-				this.formData = await FormManager.getFormData(this.id, this.limit, this.offset);
-				this.isLoading = false;
-				console.log(this.formData);
-				this.chapterId = this.formData.CHAPTER[0].ID;
-				console.log(this.chapterId)
-				this.formData.CHAPTER[0].QUESTION.map((questionData) => {
-					const question = new Question(
-						questionData.CHAPTER_ID, questionData.FIELD_ID,
-						questionData.ID, questionData.POSITION,
-						questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE);
+				if (this.nextPageIsPassed)
+				{
+					this.formData = await FormManager.getFormData(this.id, this.limit, this.offset, this.responseId);
 
-					this.questions.push(question);
-				});
+					this.isLoading = false;
+					this.chapterId = this.formData.CHAPTER[0].ID;
+
+					this.formData.CHAPTER[0].QUESTION.map((questionData) => {
+						const question = new Question(
+							questionData.CHAPTER_ID, questionData.FIELD_ID,
+							questionData.ID, questionData.POSITION,
+							questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE, questionData.ANSWER[0]);
+
+						this.questions.push(question);
+					});
+				}
+				else
+				{
+					this.formData = await FormManager.getFormData(this.id, this.limit, this.offset, this.nextPageIsPassed);
+
+					this.isLoading = false;
+					this.chapterId = this.formData.CHAPTER[0].ID;
+
+					this.formData.CHAPTER[0].QUESTION.map((questionData) => {
+						const question = new Question(
+							questionData.CHAPTER_ID, questionData.FIELD_ID,
+							questionData.ID, questionData.POSITION,
+							questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE);
+
+						this.questions.push(question);
+					});
+				}
+
 				this.currentNumOfItems = this.questions.length;
 				if (this.currentNumOfItems === this.numOfItemsPerPage + 1)
 				{
 					this.questions.pop();
 				}
-				console.log(this.questions);
 				this.layout.form = this.render();
 			}
 			catch (error)
@@ -145,7 +167,7 @@ export class Form
 
 	renderNextPageButton()
 	{
-		if (this.currentNumOfItems === this.numOfItemsPerPage + 1)
+		if (this.currentNumOfItems === this.numOfItemsPerPage + 1 || this.passedPages.includes(this.currentPage + 1))
 		{
 			const wrap = Tag.render
 				`
@@ -182,18 +204,18 @@ export class Form
 		this.limit += 10;
 		this.offset += 10;
 		this.currentPage += 1;
-
-		this.reload();
+		this.updatePassedPages();
+		this.submitIntermediateResponse().then(r => this.reload());
 	}
 
 
 	onPreviousPageButtonClickHandler()
 	{
+		this.nextPageIsPassed = true;
 		this.limit -= 10;
 		this.offset -= 10;
 		this.currentPage -= 1;
-
-		this.reload()
+		this.submitIntermediateResponse().then(r => this.reload());
 	}
 
 	renderQuestionList()
@@ -220,16 +242,45 @@ export class Form
 		return this.layout.submitButtonObject.wrap;
 	}
 
+	async submitIntermediateResponse()
+	{
+		let answers = [];
+		if (this.isRenderedMainBody)
+		{
+			answers = this.questions.map((question) => {
+				return question.getAnswer();
+			});
+		}
+		this.renderErrors([]);
+		const data = {
+			'FORM_ID': this.id,
+			'CHAPTER_ID': this.chapterId,
+			'ANSWER': answers,
+			'IS_COMPLETED': false,
+			'IS_TIME_UP': this.timeIsUp,
+		};
+
+		const responseId = await FormManager.saveAnswerData(data)
+		this.responseId = responseId;
+	}
+
+	updatePassedPages()
+	{
+		if (!this.passedPages.includes(this.currentPage))
+		{
+			this.passedPages.push(this.currentPage);
+			this.nextPageIsPassed = false;
+		}
+	}
+
 	submitResponse(button = null)
 	{
-		console.log(button);
 		if(button)
 		{
 			if (!button.isActive)
 			{
 				return;
 			}
-			console.log(1);
 			button.wrap.classList.add('disabled');
 			button.isActive = false;
 		}
@@ -250,7 +301,6 @@ export class Form
 			'IS_COMPLETED': true,
 			'IS_TIME_UP': this.timeIsUp,
 		};
-		console.log(data);
 		FormManager.saveAnswerData(data)
 			.then((response) => {
 				this.isSaved = true;
@@ -263,8 +313,6 @@ export class Form
 				{
 					this.render();
 				}
-
-				console.log(response);
 			})
 			.catch((errors) => {
 				this.layout.wrap.prepend(this.renderErrors(errors))

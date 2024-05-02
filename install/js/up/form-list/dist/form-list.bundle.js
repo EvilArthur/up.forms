@@ -95,7 +95,6 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "createTask",
 	    value: function createTask(formTitle, formId, userId) {
-	      console.log('hui');
 	      BX.SidePanel.Instance.open("/company/personal/user/" + userId + "/tasks/task/edit/0/?SCOPE=tasks_grid", {
 	        requestMethod: "post",
 	        requestParams: {

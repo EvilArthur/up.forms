@@ -13,6 +13,8 @@ Extension::load('up.form-results');
 \CJSCore::init("sidepanel");
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
+
+
 if ($arParams['IS_SLIDER'] === 'Y')
 {
 	$APPLICATION->IncludeComponent(
@@ -21,7 +23,13 @@ if ($arParams['IS_SLIDER'] === 'Y')
 		[]
 	);
 }
+?>
+<div class="header-toolbar-form-results">
+<?php
 Toolbar::addFilter($arResult['FILTER_PARAMS']);
+?>
+</div>
+<?php
 $APPLICATION->SetTitle($arResult['FORM_NAME']);
 $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',

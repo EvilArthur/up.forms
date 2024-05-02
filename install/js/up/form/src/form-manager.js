@@ -1,6 +1,6 @@
 export class FormManager
 {
-	static getFormData(id, limit = 0, offset = 0)
+	static getFormData(id, limit, offset, responseId)
 	{
 		return new Promise((resolve, reject) => {
 			BX.ajax.runAction(
@@ -9,7 +9,8 @@ export class FormManager
 						data: {
 							id: id,
 							limit: limit,
-							offset: offset
+							offset: offset,
+							responseId: responseId
 						},
 					})
 				.then((response) => {
@@ -25,7 +26,6 @@ export class FormManager
 
 	static saveAnswerData(data)
 	{
-		console.log(data);
 		return new Promise((resolve, reject) => {
 			BX.ajax.runAction(
 					'up:forms.Form.saveAnswers',
@@ -47,7 +47,6 @@ export class FormManager
 
 	static createResponse(id)
 	{
-		console.log(1);
 		return new Promise((resolve, reject) => {
 			BX.ajax.runAction(
 					'up:forms.Form.createResponse',
@@ -59,6 +58,29 @@ export class FormManager
 				.then((response) => {
 					const startTime = response.data.startTime;
 					resolve(startTime);
+				})
+				.catch((error) => {
+					console.log(error);
+					reject(error);
+				});
+		})
+	}
+
+	static getAnswersByResponseId(id, limit, offset)
+	{
+		return new Promise((resolve, reject) => {
+			BX.ajax.runAction(
+					'up:forms.Response.getAnswersByResponseId',
+					{
+						data: {
+							id: id,
+							limit: limit,
+							offset: offset
+						},
+					})
+				.then((response) => {
+					const result = response.data.result;
+					resolve(result);
 				})
 				.catch((error) => {
 					console.log(error);

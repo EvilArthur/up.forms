@@ -74,7 +74,8 @@ this.BX.Up = this.BX.Up || {};
 	          data: {
 	            id: id,
 	            limit: limit,
-	            offset: offset
+	            offset: offset,
+	            responseId: false
 	          }
 	        }).then(function (response) {
 	          var result = response.data.result;
@@ -933,13 +934,16 @@ this.BX.Up = this.BX.Up || {};
 	            case 0:
 	              limit = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : 0;
 	              offset = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : 0;
-	              _context3.next = 4;
+	              console.log(id);
+	              console.log(limit);
+	              console.log(offset);
+	              _context3.next = 7;
 	              return FormManager.getQuestionData(id, limit, offset);
-	            case 4:
+	            case 7:
 	              questionData = _context3.sent;
 	              console.log(questionData);
 	              this.fillQuestionsByData(questionData);
-	            case 7:
+	            case 10:
 	            case "end":
 	              return _context3.stop();
 	          }

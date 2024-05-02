@@ -102,7 +102,6 @@ export class FormList
 
 	createTask(formTitle, formId, userId)
 	{
-		console.log('hui');
 		BX.SidePanel.Instance.open(
 			"/company/personal/user/" + userId + "/tasks/task/edit/0/?SCOPE=tasks_grid",
 			{
