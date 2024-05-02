@@ -23,7 +23,7 @@ export class Constructor
 		this.currentPage = 1;
 		this.loading = new bootstrap.Modal(this.renderLoading(), {
 			backdrop: 'static',
-			keyboard: false
+			keyboard: false,
 		});
 
 		this.titleObject.value = this.formData.TITLE;
@@ -213,11 +213,15 @@ export class Constructor
 	{
 		this.loading.show();
 		this.layout.wrap.append(this.renderLoading());
-		this.id = await this.saveForm();
-		if (this.id)
+		const isSuccess = await this.saveForm();
+		if (isSuccess)
 		{
 			this.currentPage += 1;
 			this.reload();
+		}
+		else
+		{
+			this.loading.hide();
 		}
 	}
 
@@ -225,19 +229,22 @@ export class Constructor
 	{
 		this.loading.show();
 		this.layout.wrap.append(this.renderLoading());
-		this.id = await this.saveForm();
-		if (this.id)
+		const isSuccess = await this.saveForm();
+		if (isSuccess)
 		{
 			this.currentPage -= 1;
 			this.reload();
+		}
+		{
+			this.loading.hide();
 		}
 	}
 
 	reload()
 	{
 		console.log(this.id, this.limit, this.limit * (this.currentPage - 1));
-		this.loadPage(this.chapterId, this.limit, this.limit * (this.currentPage - 1)).then( () => {
-			this.renderQuestionList()
+		this.loadPage(this.chapterId, this.limit, this.limit * (this.currentPage - 1)).then(() => {
+			this.renderQuestionList();
 			this.renderPagination();
 			this.loading.hide();
 		});
@@ -249,7 +256,9 @@ export class Constructor
 		if (this.id && !this.isLastPage)
 		{
 			this.loading.show();
-			this.saveForm().then(() => {this.reload()});
+			this.saveForm().then(() => {
+				this.reload();
+			});
 		}
 		else
 		{
@@ -292,7 +301,7 @@ export class Constructor
 				  </div>
 			</div>
 		  </div>
-		`
+		`;
 		return wrap;
 	}
 }

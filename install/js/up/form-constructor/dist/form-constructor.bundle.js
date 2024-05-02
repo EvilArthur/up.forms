@@ -74,7 +74,8 @@ this.BX.Up = this.BX.Up || {};
 	          data: {
 	            id: id,
 	            limit: limit,
-	            offset: offset
+	            offset: offset,
+	            responseId: false
 	          }
 	        }).then(function (response) {
 	          var result = response.data.result;
@@ -855,6 +856,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "onNextPageButtonClickHandler",
 	    value: function () {
 	      var _onNextPageButtonClickHandler = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+	        var isSuccess;
 	        return _regeneratorRuntime().wrap(function _callee$(_context) {
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
@@ -863,10 +865,12 @@ this.BX.Up = this.BX.Up || {};
 	              _context.next = 4;
 	              return this.saveForm();
 	            case 4:
-	              this.id = _context.sent;
-	              if (this.id) {
+	              isSuccess = _context.sent;
+	              if (isSuccess) {
 	                this.currentPage += 1;
 	                this.reload();
+	              } else {
+	                this.loading.hide();
 	              }
 	            case 6:
 	            case "end":
@@ -883,6 +887,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "onPreviousPageButtonClickHandler",
 	    value: function () {
 	      var _onPreviousPageButtonClickHandler = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+	        var isSuccess;
 	        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
 	          while (1) switch (_context2.prev = _context2.next) {
 	            case 0:
@@ -891,12 +896,13 @@ this.BX.Up = this.BX.Up || {};
 	              _context2.next = 4;
 	              return this.saveForm();
 	            case 4:
-	              this.id = _context2.sent;
-	              if (this.id) {
+	              isSuccess = _context2.sent;
+	              if (isSuccess) {
 	                this.currentPage -= 1;
 	                this.reload();
 	              }
-	            case 6:
+	              this.loading.hide();
+	            case 7:
 	            case "end":
 	              return _context2.stop();
 	          }
@@ -1407,10 +1413,17 @@ this.BX.Up = this.BX.Up || {};
 	              });
 	            case 4:
 	              result = _context2.sent;
+	              if (result) {
+	                _context2.next = 7;
+	                break;
+	              }
+	              return _context2.abrupt("return", false);
+	            case 7:
 	              id = parseInt(result.id);
 	              chapterId = parseInt(result.chapterId);
 	              if (id !== this.id) {
 	                this.id = id;
+	                this.construct.id = id;
 	                this.construct.chapterId = chapterId;
 	                newUrl = '/form/edit/'.concat(this.id, '/');
 	                window.history.pushState({
@@ -1420,8 +1433,8 @@ this.BX.Up = this.BX.Up || {};
 	                console.log(BX.SidePanel.Instance.getCurrentUrl());
 	                console.log(history);
 	              }
-	              return _context2.abrupt("return", id);
-	            case 9:
+	              return _context2.abrupt("return", true);
+	            case 11:
 	            case "end":
 	              return _context2.stop();
 	          }
