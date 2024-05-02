@@ -319,6 +319,11 @@ export class Form
 				this.isSaved = true;
 				if (!this.timeIsUp)
 				{
+					if (!BX.SidePanel.Instance.isOpen())
+					{
+						window.location.pathname = '/';
+						return;
+					}
 					BX.SidePanel.Instance.close();
 					BX.SidePanel.Instance.destroy('/form/view/${formId}/');
 				}

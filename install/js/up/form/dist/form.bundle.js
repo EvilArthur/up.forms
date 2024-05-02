@@ -688,6 +688,10 @@ this.BX.Up = this.BX.Up || {};
 	      FormManager.saveAnswerData(data).then(function (response) {
 	        _this5.isSaved = true;
 	        if (!_this5.timeIsUp) {
+	          if (!BX.SidePanel.Instance.isOpen()) {
+	            window.location.pathname = '/';
+	            return;
+	          }
 	          BX.SidePanel.Instance.close();
 	          BX.SidePanel.Instance.destroy('/form/view/${formId}/');
 	        } else {
