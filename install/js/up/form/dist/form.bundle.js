@@ -584,24 +584,30 @@ this.BX.Up = this.BX.Up || {};
 	    key: "onNextPageButtonClickHandler",
 	    value: function onNextPageButtonClickHandler() {
 	      var _this2 = this;
-	      this.limit += 10;
-	      this.offset += 10;
-	      this.currentPage += 1;
-	      this.updatePassedPages();
-	      this.submitIntermediateResponse().then(function (r) {
-	        return _this2.reload();
+	      this.submitIntermediateResponse().then(function (responseId) {
+	        _this2.limit += 10;
+	        _this2.offset += 10;
+	        _this2.currentPage += 1;
+	        _this2.responseId = responseId;
+	        _this2.updatePassedPages();
+	        _this2.reload();
+	      })["catch"](function (errors) {
+	        _this2.layout.wrap.prepend(_this2.renderErrors(errors));
 	      });
 	    }
 	  }, {
 	    key: "onPreviousPageButtonClickHandler",
 	    value: function onPreviousPageButtonClickHandler() {
 	      var _this3 = this;
-	      this.nextPageIsPassed = true;
-	      this.limit -= 10;
-	      this.offset -= 10;
-	      this.currentPage -= 1;
-	      this.submitIntermediateResponse().then(function (r) {
-	        return _this3.reload();
+	      this.submitIntermediateResponse().then(function (responseId) {
+	        _this3.nextPageIsPassed = true;
+	        _this3.limit -= 10;
+	        _this3.offset -= 10;
+	        _this3.currentPage -= 1;
+	        _this3.responseId = responseId;
+	        _this3.reload();
+	      })["catch"](function (errors) {
+	        _this3.layout.wrap.prepend(_this3.renderErrors(errors));
 	      });
 	    }
 	  }, {
@@ -627,42 +633,23 @@ this.BX.Up = this.BX.Up || {};
 	    }
 	  }, {
 	    key: "submitIntermediateResponse",
-	    value: function () {
-	      var _submitIntermediateResponse = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-	        var answers, data, responseId;
-	        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-	          while (1) switch (_context2.prev = _context2.next) {
-	            case 0:
-	              answers = [];
-	              if (this.isRenderedMainBody) {
-	                answers = this.questions.map(function (question) {
-	                  return question.getAnswer();
-	                });
-	              }
-	              this.renderErrors([]);
-	              data = {
-	                'FORM_ID': this.id,
-	                'CHAPTER_ID': this.chapterId,
-	                'ANSWER': answers,
-	                'IS_COMPLETED': false,
-	                'IS_TIME_UP': this.timeIsUp
-	              };
-	              _context2.next = 6;
-	              return FormManager.saveAnswerData(data);
-	            case 6:
-	              responseId = _context2.sent;
-	              this.responseId = responseId;
-	            case 8:
-	            case "end":
-	              return _context2.stop();
-	          }
-	        }, _callee2, this);
-	      }));
-	      function submitIntermediateResponse() {
-	        return _submitIntermediateResponse.apply(this, arguments);
+	    value: function submitIntermediateResponse() {
+	      var answers = [];
+	      if (this.isRenderedMainBody) {
+	        answers = this.questions.map(function (question) {
+	          return question.getAnswer();
+	        });
 	      }
-	      return submitIntermediateResponse;
-	    }()
+	      this.renderErrors([]);
+	      var data = {
+	        'FORM_ID': this.id,
+	        'CHAPTER_ID': this.chapterId,
+	        'ANSWER': answers,
+	        'IS_COMPLETED': false,
+	        'IS_TIME_UP': this.timeIsUp
+	      };
+	      return FormManager.saveAnswerData(data);
+	    }
 	  }, {
 	    key: "updatePassedPages",
 	    value: function updatePassedPages() {
@@ -755,25 +742,25 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onStartButtonClickHandler",
 	    value: function () {
-	      var _onStartButtonClickHandler = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(button) {
-	        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-	          while (1) switch (_context3.prev = _context3.next) {
+	      var _onStartButtonClickHandler = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(button) {
+	        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+	          while (1) switch (_context2.prev = _context2.next) {
 	            case 0:
 	              this.isStarted = true;
 	              button.classList.add('disabled');
-	              _context3.next = 4;
+	              _context2.next = 4;
 	              return FormManager.createResponse(this.id);
 	            case 4:
-	              this.startTime = _context3.sent;
+	              this.startTime = _context2.sent;
 	              console.log(this.startTime);
 	              console.log(new Date(this.startTime * 1000));
 	              this.startTimer();
 	              this.render();
 	            case 9:
 	            case "end":
-	              return _context3.stop();
+	              return _context2.stop();
 	          }
-	        }, _callee3, this);
+	        }, _callee2, this);
 	      }));
 	      function onStartButtonClickHandler(_x) {
 	        return _onStartButtonClickHandler.apply(this, arguments);

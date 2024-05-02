@@ -201,21 +201,35 @@ export class Form
 
 	onNextPageButtonClickHandler()
 	{
-		this.limit += 10;
-		this.offset += 10;
-		this.currentPage += 1;
-		this.updatePassedPages();
-		this.submitIntermediateResponse().then(r => this.reload());
+		this.submitIntermediateResponse()
+			.then((responseId) => {
+				this.limit += 10;
+				this.offset += 10;
+				this.currentPage += 1;
+				this.responseId = responseId;
+				this.updatePassedPages();
+				this.reload()
+			})
+			.catch((errors) => {
+				this.layout.wrap.prepend(this.renderErrors(errors))
+			});
 	}
 
 
 	onPreviousPageButtonClickHandler()
 	{
-		this.nextPageIsPassed = true;
-		this.limit -= 10;
-		this.offset -= 10;
-		this.currentPage -= 1;
-		this.submitIntermediateResponse().then(r => this.reload());
+		this.submitIntermediateResponse()
+			.then((responseId) => {
+				this.nextPageIsPassed = true;
+				this.limit -= 10;
+				this.offset -= 10;
+				this.currentPage -= 1;
+				this.responseId = responseId;
+				this.reload()
+			})
+			.catch((errors) => {
+				this.layout.wrap.prepend(this.renderErrors(errors))
+			});
 	}
 
 	renderQuestionList()
@@ -242,7 +256,7 @@ export class Form
 		return this.layout.submitButtonObject.wrap;
 	}
 
-	async submitIntermediateResponse()
+	submitIntermediateResponse()
 	{
 		let answers = [];
 		if (this.isRenderedMainBody)
@@ -260,8 +274,7 @@ export class Form
 			'IS_TIME_UP': this.timeIsUp,
 		};
 
-		const responseId = await FormManager.saveAnswerData(data)
-		this.responseId = responseId;
+		return FormManager.saveAnswerData(data)
 	}
 
 	updatePassedPages()
