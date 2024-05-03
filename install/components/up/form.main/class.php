@@ -151,7 +151,11 @@ class FormMainComponent extends CBitrixComponent
 			];
 		foreach ($this->arResult['FORM_SETTINGS'] as $setting)
 		{
-			$this->arResult['COLUMNS'][] = ['id' => $setting['ID'], 'name' => $setting['TITLE'], 'default' => true];
+			$this->arResult['COLUMNS'][] = [
+				'id' => $setting['ID'],
+				'name' => Loc::getMessage($setting['TITLE']),
+				'default' => true
+			];
 		}
 	}
 

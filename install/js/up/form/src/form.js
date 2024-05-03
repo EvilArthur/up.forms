@@ -1,4 +1,4 @@
-import { Event, Tag, Loc } from 'main.core';
+import { Event, Loc, Tag } from 'main.core';
 import { Question } from './question';
 import { FormManager } from './form-manager';
 
@@ -56,48 +56,45 @@ export class Form
 	{
 		if (parseInt(this.id) !== 0)
 		{
-			try
+			if (this.nextPageIsPassed)
 			{
-				if (this.nextPageIsPassed)
-				{
-					this.formData = await FormManager.getFormData(this.id, this.limit, this.offset, this.responseId);
+				this.formData = await FormManager.getFormData(this.id, this.limit, this.offset, this.responseId);
 
-					this.isLoading = false;
-					this.chapterId = this.formData.CHAPTER[0].ID;
+				this.isLoading = false;
+				this.chapterId = this.formData.CHAPTER[0].ID;
 
-					this.formData.CHAPTER[0].QUESTION.map((questionData) => {
-						const question = new Question(
-							questionData.CHAPTER_ID, questionData.FIELD_ID,
-							questionData.ID, questionData.POSITION,
-							questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE, questionData.ANSWER[0]);
+				this.formData.CHAPTER[0].QUESTION.map((questionData) => {
+					const question = new Question(
+						questionData.CHAPTER_ID, questionData.FIELD_ID,
+						questionData.ID, questionData.POSITION,
+						questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE, questionData.ANSWER[0]);
 
-						this.questions.push(question);
-					});
-				}
-				else
-				{
-					this.formData = await FormManager.getFormData(this.id, this.limit, this.offset, this.nextPageIsPassed);
-
-					this.isLoading = false;
-					this.chapterId = this.formData.CHAPTER[0].ID;
-
-					this.formData.CHAPTER[0].QUESTION.map((questionData) => {
-						const question = new Question(
-							questionData.CHAPTER_ID, questionData.FIELD_ID,
-							questionData.ID, questionData.POSITION,
-							questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE);
-
-						this.questions.push(question);
-					});
-				}
-
-				this.currentNumOfItems = this.questions.length;
-				if (this.currentNumOfItems === this.numOfItemsPerPage + 1)
-				{
-					this.questions.pop();
-				}
-				this.layout.form = this.render();
+					this.questions.push(question);
+				});
 			}
+			else
+			{
+				this.formData = await FormManager.getFormData(this.id, this.limit, this.offset, this.nextPageIsPassed);
+
+				this.isLoading = false;
+				this.chapterId = this.formData.CHAPTER[0].ID;
+
+				this.formData.CHAPTER[0].QUESTION.map((questionData) => {
+					const question = new Question(
+						questionData.CHAPTER_ID, questionData.FIELD_ID,
+						questionData.ID, questionData.POSITION,
+						questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE);
+
+					this.questions.push(question);
+				});
+			}
+
+			this.currentNumOfItems = this.questions.length;
+			if (this.currentNumOfItems === this.numOfItemsPerPage + 1)
+			{
+				this.questions.pop();
+			}
+			this.layout.form = this.render();
 		}
 	}
 
@@ -123,7 +120,7 @@ export class Form
 					<div class="d-flex justify-content-center">${this.renderStartButton()}</div>
 				</div>`;
 		}
-		else if(this.timeIsUp)
+		else if (this.timeIsUp)
 		{
 			wrap = Tag.render`
 				<div class="container">
@@ -206,13 +203,12 @@ export class Form
 				this.currentPage += 1;
 				this.responseId = responseId;
 				this.updatePassedPages();
-				this.reload()
+				this.reload();
 			})
 			.catch((errors) => {
-				this.layout.wrap.prepend(this.renderErrors(errors))
+				this.layout.wrap.prepend(this.renderErrors(errors));
 			});
 	}
-
 
 	onPreviousPageButtonClickHandler()
 	{
@@ -223,10 +219,10 @@ export class Form
 				this.offset -= 10;
 				this.currentPage -= 1;
 				this.responseId = responseId;
-				this.reload()
+				this.reload();
 			})
 			.catch((errors) => {
-				this.layout.wrap.prepend(this.renderErrors(errors))
+				this.layout.wrap.prepend(this.renderErrors(errors));
 			});
 	}
 
@@ -235,8 +231,8 @@ export class Form
 		return Tag.render`
 		<form>
 			${this.questions.map((question) => {
-				return question.render();
-			})}
+			return question.render();
+		})}
 		</form>
 		`;
 	}
@@ -253,8 +249,8 @@ export class Form
 		`;
 		this.layout.submitButtonObject = {
 			isActive: true,
-			wrap: wrap
-		}
+			wrap: wrap,
+		};
 		Event.bind(wrap, 'click', () => this.submitResponse(this.layout.submitButtonObject));
 		return this.layout.submitButtonObject.wrap;
 	}
@@ -277,7 +273,7 @@ export class Form
 			'IS_TIME_UP': this.timeIsUp,
 		};
 
-		return FormManager.saveAnswerData(data)
+		return FormManager.saveAnswerData(data);
 	}
 
 	updatePassedPages()
@@ -291,7 +287,7 @@ export class Form
 
 	submitResponse(button = null)
 	{
-		if(button)
+		if (button)
 		{
 			if (!button.isActive)
 			{
@@ -337,8 +333,8 @@ export class Form
 				}
 			})
 			.catch((errors) => {
-				this.layout.wrap.prepend(this.renderErrors(errors))
-				button.wrap.classList.remove('disabled')
+				this.layout.wrap.prepend(this.renderErrors(errors));
+				button.wrap.classList.remove('disabled');
 				button.isActive = true;
 			});
 	}
@@ -395,7 +391,7 @@ export class Form
 	{
 		this.isStarted = true;
 		button.classList.add('disabled');
-		this.startTime = await FormManager.createResponse(this.id)
+		this.startTime = await FormManager.createResponse(this.id);
 		this.startTimer();
 		this.render();
 
@@ -461,7 +457,7 @@ export class Form
 	{
 		const wrap = Tag.render`<div class="alert alert-danger" role="alert">
 								${message}
-							</div>`
+							</div>`;
 		return wrap;
 	}
 }

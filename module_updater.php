@@ -285,3 +285,24 @@ __formsMigrate(20, function($updater, $DB)
 		");
 	}
 });
+
+__formsMigrate(21, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_form_settings'))
+	{
+		$DB->query
+		("
+			UPDATE up_form_settings
+			SET TITLE = 
+				CASE 
+					WHEN ID = 1 THEN 'UP_FORMS_FORM_SETTINGS_1'
+					WHEN ID = 2 THEN 'UP_FORMS_FORM_SETTINGS_2'
+					WHEN ID = 3 THEN 'UP_FORMS_FORM_SETTINGS_3'
+					WHEN ID = 4 THEN 'UP_FORMS_FORM_SETTINGS_4'
+					WHEN ID = 5 THEN 'UP_FORMS_FORM_SETTINGS_5'
+					WHEN ID = 6 THEN 'UP_FORMS_FORM_SETTINGS_6'
+				END
+			WHERE ID IN (1, 2, 3, 4, 5, 6);
+		");
+	}
+});

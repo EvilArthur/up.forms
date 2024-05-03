@@ -81,7 +81,6 @@ this.BX.Up = this.BX.Up || {};
 	          var result = response.data.result;
 	          resolve(result);
 	        })["catch"](function (error) {
-	          console.log(error);
 	          reject(error);
 	        });
 	      });
@@ -99,7 +98,6 @@ this.BX.Up = this.BX.Up || {};
 	          };
 	          resolve(result);
 	        })["catch"](function (error) {
-	          console.log(error);
 	          reject(error.errors);
 	        });
 	      });
@@ -110,10 +108,8 @@ this.BX.Up = this.BX.Up || {};
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.FormCreate.getFieldData').then(function (response) {
 	          var result = response.data.result;
-	          console.log(result);
 	          resolve(result);
 	        })["catch"](function (error) {
-	          console.log(error);
 	          reject(error);
 	        });
 	      });
@@ -124,10 +120,8 @@ this.BX.Up = this.BX.Up || {};
 	      return new Promise(function (resolve, reject) {
 	        BX.ajax.runAction('up:forms.FormCreate.getSettingsData').then(function (response) {
 	          var result = response.data.result;
-	          console.log(result);
 	          resolve(result);
 	        })["catch"](function (error) {
-	          console.log(error);
 	          reject(error);
 	        });
 	      });
@@ -146,7 +140,6 @@ this.BX.Up = this.BX.Up || {};
 	          var result = response.data.result;
 	          resolve(result);
 	        })["catch"](function (error) {
-	          console.log(error);
 	          reject(error);
 	        });
 	      });
@@ -163,7 +156,6 @@ this.BX.Up = this.BX.Up || {};
 	          var result = response.data.result;
 	          resolve(result);
 	        })["catch"](function (error) {
-	          console.log(error);
 	          reject(error);
 	        });
 	      });
@@ -758,7 +750,6 @@ this.BX.Up = this.BX.Up || {};
 	      var oldWrap = this.questions[index].layout.wrap;
 	      var typeChangedQuestion = questionFactory.createQuestion(this.reloadAfterDelete.bind(this), fieldId, question.chapterId, question.id, question.position, question.titleObject.value, options, question.getSettingData(), this.fieldData);
 	      this.questions[index] = typeChangedQuestion;
-	      console.log(typeChangedQuestion);
 	      var newWrap = typeChangedQuestion.render();
 	      var typeSelect = typeChangedQuestion.layout.typeSelect;
 	      main_core.Event.bind(typeSelect, 'change', function () {
@@ -916,7 +907,6 @@ this.BX.Up = this.BX.Up || {};
 	    key: "reload",
 	    value: function reload() {
 	      var _this3 = this;
-	      console.log(this.id, this.limit, this.limit * (this.currentPage - 1));
 	      this.loadPage(this.chapterId, this.limit, this.limit * (this.currentPage - 1)).then(function () {
 	        _this3.renderQuestionList();
 	        _this3.renderPagination();
@@ -1005,7 +995,7 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(Setting, [{
 	    key: "render",
 	    value: function render() {
-	      var wrap = main_core.Tag.render(_templateObject$7 || (_templateObject$7 = babelHelpers.taggedTemplateLiteral(["<div class=\"mb-3\">\n\t\t\t\t\t\t\t\t\t<label class=\"form-label\">", "</label>\n\t\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t</div>"])), this.title, this.renderBindedInput());
+	      var wrap = main_core.Tag.render(_templateObject$7 || (_templateObject$7 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"mb-3\">\n\t\t\t\t<label class=\"form-label\">", "</label>\n\t\t\t\t", "\n\t\t\t</div>"])), main_core.Loc.getMessage(this.title), this.renderBindedInput());
 	      return wrap;
 	    }
 	  }, {
@@ -1268,17 +1258,16 @@ this.BX.Up = this.BX.Up || {};
 	            case 5:
 	              this.allSettingsData = _context.sent;
 	              if (!(this.id !== 0)) {
-	                _context.next = 13;
+	                _context.next = 12;
 	                break;
 	              }
 	              _context.next = 9;
 	              return FormManager.getFormData(this.id, 10);
 	            case 9:
 	              this.formData = _context.sent;
-	              console.log(this.formData);
-	              _context.next = 17;
+	              _context.next = 16;
 	              break;
-	            case 13:
+	            case 12:
 	              this.formData.TITLE = main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_FORM_DEFAULT_TITLE');
 	              this.formData.ID = null;
 	              this.formData.CHAPTER[0] = {
@@ -1292,10 +1281,10 @@ this.BX.Up = this.BX.Up || {};
 	                SETTINGS_ID: 6,
 	                VALUE: 'true'
 	              }];
-	            case 17:
+	            case 16:
 	              this.isLoading = false;
 	              this.render();
-	            case 19:
+	            case 18:
 	            case "end":
 	              return _context.stop();
 	          }
@@ -1382,7 +1371,6 @@ this.BX.Up = this.BX.Up || {};
 	      FormManager.saveFormData({
 	        formData: formData
 	      }).then(function (response) {
-	        console.log(response);
 	        var url = BX.SidePanel.Instance.getCurrentUrl();
 	        BX.SidePanel.Instance.close();
 	        setTimeout(function () {
@@ -1428,8 +1416,6 @@ this.BX.Up = this.BX.Up || {};
 	                  path: newUrl
 	                }, main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_MODULE_NAME'), newUrl);
 	                BX.SidePanel.Instance.pageUrl = window.history.url;
-	                console.log(BX.SidePanel.Instance.getCurrentUrl());
-	                console.log(history);
 	              }
 	              return _context2.abrupt("return", true);
 	            case 11:
@@ -1461,7 +1447,6 @@ this.BX.Up = this.BX.Up || {};
 	      this.layout.wrap.prepend(this.renderErrors(errors));
 	      this.layout.saveButtonObject.wrap.classList.remove('disabled');
 	      this.layout.saveButtonObject.isActive = true;
-	      console.log(errors);
 	    }
 	  }, {
 	    key: "renderErrors",

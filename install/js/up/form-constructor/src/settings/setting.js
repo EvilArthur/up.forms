@@ -1,4 +1,4 @@
-import { Event, Tag } from 'main.core';
+import { Event, Tag, Loc } from 'main.core';
 
 export class Setting
 {
@@ -12,10 +12,11 @@ export class Setting
 
 	render()
 	{
-		const wrap = Tag.render`<div class="mb-3">
-									<label class="form-label">${this.title}</label>
-									${this.renderBindedInput()}
-								</div>`;
+		const wrap = Tag.render`
+			<div class="mb-3">
+				<label class="form-label">${Loc.getMessage(this.title)}</label>
+				${this.renderBindedInput()}
+			</div>`;
 		return wrap;
 	}
 

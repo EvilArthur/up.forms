@@ -238,7 +238,6 @@ this.BX.Up = this.BX.Up || {};
 	          var result = response.data.result;
 	          resolve(result);
 	        })["catch"](function (error) {
-	          /*console.log(error);*/
 	          reject(error);
 	        });
 	      });
@@ -255,7 +254,6 @@ this.BX.Up = this.BX.Up || {};
 	          var result = response.data.result;
 	          resolve(result);
 	        })["catch"](function (error) {
-	          /*console.log(error);*/
 	          reject(error.errors);
 	        });
 	      });
@@ -272,7 +270,6 @@ this.BX.Up = this.BX.Up || {};
 	          var startTime = response.data.startTime;
 	          resolve(startTime);
 	        })["catch"](function (error) {
-	          /*console.log(error);*/
 	          reject(error);
 	        });
 	      });
@@ -291,7 +288,6 @@ this.BX.Up = this.BX.Up || {};
 	          var result = response.data.result;
 	          resolve(result);
 	        })["catch"](function (error) {
-	          /*console.log(error);*/
 	          reject(error);
 	        });
 	      });
@@ -355,17 +351,16 @@ this.BX.Up = this.BX.Up || {};
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
 	              if (!(parseInt(this.id) !== 0)) {
-	                _context.next = 24;
+	                _context.next = 19;
 	                break;
 	              }
-	              _context.prev = 1;
 	              if (!this.nextPageIsPassed) {
-	                _context.next = 11;
+	                _context.next = 10;
 	                break;
 	              }
-	              _context.next = 5;
+	              _context.next = 4;
 	              return FormManager.getFormData(this.id, this.limit, this.offset, this.responseId);
-	            case 5:
+	            case 4:
 	              this.formData = _context.sent;
 	              this.isLoading = false;
 	              this.chapterId = this.formData.CHAPTER[0].ID;
@@ -373,12 +368,12 @@ this.BX.Up = this.BX.Up || {};
 	                var question = new Question(questionData.CHAPTER_ID, questionData.FIELD_ID, questionData.ID, questionData.POSITION, questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE, questionData.ANSWER[0]);
 	                _this.questions.push(question);
 	              });
-	              _context.next = 17;
+	              _context.next = 16;
 	              break;
-	            case 11:
-	              _context.next = 13;
+	            case 10:
+	              _context.next = 12;
 	              return FormManager.getFormData(this.id, this.limit, this.offset, this.nextPageIsPassed);
-	            case 13:
+	            case 12:
 	              this.formData = _context.sent;
 	              this.isLoading = false;
 	              this.chapterId = this.formData.CHAPTER[0].ID;
@@ -386,22 +381,17 @@ this.BX.Up = this.BX.Up || {};
 	                var question = new Question(questionData.CHAPTER_ID, questionData.FIELD_ID, questionData.ID, questionData.POSITION, questionData.TITLE, questionData.OPTION, questionData.SETTINGS[1].VALUE);
 	                _this.questions.push(question);
 	              });
-	            case 17:
+	            case 16:
 	              this.currentNumOfItems = this.questions.length;
 	              if (this.currentNumOfItems === this.numOfItemsPerPage + 1) {
 	                this.questions.pop();
 	              }
 	              this.layout.form = this.render();
-	              _context.next = 24;
-	              break;
-	            case 22:
-	              _context.prev = 22;
-	              _context.t0 = _context["catch"](1);
-	            case 24:
+	            case 19:
 	            case "end":
 	              return _context.stop();
 	          }
-	        }, _callee, this, [[1, 22]]);
+	        }, _callee, this);
 	      }));
 	      function loadFormData() {
 	        return _loadFormData.apply(this, arguments);
