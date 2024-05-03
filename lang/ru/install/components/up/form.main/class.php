@@ -21,9 +21,9 @@ $MESS['UP_FORMS_GRID_ACTION_RESULT'] = 'Результаты';
 $MESS['UP_FORMS_GRID_ACTION_CREATE_TASK'] = 'Создать задачу';
 $MESS['UP_FORMS_GRID_ACTION_QUICK_TASK'] = 'Быстрая задача';
 
-$MESS['UP_FORMS_FORM_SETTINGS_1'] = '@Доступна с';
-$MESS['UP_FORMS_FORM_SETTINGS_2'] = '@Доступна до';
-$MESS['UP_FORMS_FORM_SETTINGS_3'] = '@Таймер';
-$MESS['UP_FORMS_FORM_SETTINGS_4'] = '@Анонимная';
-$MESS['UP_FORMS_FORM_SETTINGS_5'] = '@Количество попыток';
-$MESS['UP_FORMS_FORM_SETTINGS_6'] = '@Активная';
+$MESS['UP_FORMS_FORM_SETTINGS_1'] = 'Доступна с';
+$MESS['UP_FORMS_FORM_SETTINGS_2'] = 'Доступна до';
+$MESS['UP_FORMS_FORM_SETTINGS_3'] = 'Таймер';
+$MESS['UP_FORMS_FORM_SETTINGS_4'] = 'Анонимная';
+$MESS['UP_FORMS_FORM_SETTINGS_5'] = 'Количество попыток';
+$MESS['UP_FORMS_FORM_SETTINGS_6'] = 'Активная';
