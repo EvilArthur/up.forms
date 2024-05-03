@@ -9,5 +9,6 @@ $MESS['UP_FORMS_GRID_COLUMN_START_TIME'] = 'Попытка начата';
 $MESS['UP_FORMS_GRID_COLUMN_COMPLETED_TIME'] = 'Попытка закончена';
 $MESS['UP_FORMS_GRID_COLUMN_TRY_NUMBER'] = 'Номер попытки';
 $MESS['UP_FORMS_GRID_COLUMN_CORRECT_ANSWERS'] = 'Количество правильных ответов';
+$MESS['UP_FORMS_GRID_COLUMN_OUT_OF_CORRECT_ANSWERS'] = 'из';
 
 $MESS['UP_FORMS_GRID_ACTION_DELETE'] = 'Удалить';

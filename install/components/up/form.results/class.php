@@ -316,7 +316,10 @@ class FormResultsComponent extends CBitrixComponent
 
 			if ($this->arResult['NUM_OF_TEST_QUESTIONS'] !== 0)
 			{
-				$row['NUM_RIGHT_ANSWERS'] = $numOfRightAnswers . '/' . $this->arResult["NUM_OF_TEST_QUESTIONS"];
+				$row['NUM_RIGHT_ANSWERS'] =
+					$numOfRightAnswers . ' ' .
+					Loc::getMessage('UP_FORMS_GRID_COLUMN_OUT_OF_CORRECT_ANSWERS') . ' ' .
+					$this->arResult["NUM_OF_TEST_QUESTIONS"];
 			}
 
 			$rows[] = [

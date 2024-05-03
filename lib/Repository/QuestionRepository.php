@@ -66,7 +66,9 @@ Class QuestionRepository
 
 	public static function deleteQuestion(int $id)
 	{
-		return QuestionTable::wakeUpObject(['ID' => $id])->delete()->isSuccess();
+		$question = QuestionTable::wakeUpObject(['ID' => $id]);
+		$question->fillOption();
+		return $question->delete()->isSuccess();
 
 	}
 }
