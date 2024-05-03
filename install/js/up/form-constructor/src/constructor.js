@@ -34,14 +34,12 @@ export class Constructor
 	render()
 	{
 		const wrap = Tag.render`
-		<div class="container">
-			<div class="container d-flex justify-content-center">
+		<div class="container" id="container-with-title">
+			<div class="container d-flex justify-content-center  mt-4 mb-4">
 				${this.renderEditableTitle()}
 			</div>
 			<div class="container d-flex justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
 				${this.renderAddQuestionButton()}
-				<button type="button" class="btn btn-primary mx-1">Тт</button>
-				<button type="button" class="btn btn-primary mx-1">P</button>
 			</div>
 			${this.renderQuestionList()}
 			${this.renderPagination()}
@@ -102,7 +100,7 @@ export class Constructor
 	renderAddQuestionButton()
 	{
 		const wrap = Tag.render`
-			<button type="button" class="btn btn-primary mx-1">+</button>
+			<button type="button" class="btn add-question-btn">+ Добавить вопрос</button>
 		`;
 		Event.bind(wrap, 'click', this.onAddQuestionButtonClickHandler.bind(this));
 
@@ -151,7 +149,7 @@ export class Constructor
 			this.titleObject.value = 'Новая форма';
 		}
 		const wrap = Tag.render`
-		<h1 class="text-center mt-5 mb-4">${this.titleObject.value}</h1>
+		<h1 class="text-center">${this.titleObject.value}</h1>
 		`;
 		new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
 		this.layout.title?.replaceWith(wrap);
@@ -163,7 +161,7 @@ export class Constructor
 	{
 		const wrap = Tag.render
 			`
-				<nav aria-label="Page navigation example">
+				<nav class="d-flex justify-content-center mb-5 mt-5" aria-label="Page navigation example">
 					<ul class="pagination">
 						${this.renderPreviousPageButton()}
 						${this.renderNextPageButton()}
@@ -183,7 +181,7 @@ export class Constructor
 				`
 				<li class="page-item">
 					
-						<button aria-hidden="true">&raquo;</button>
+						<button class="page-link" aria-hidden="true">&raquo;</button>
 					
 				</li>
 				`;
@@ -199,9 +197,7 @@ export class Constructor
 			const wrap = Tag.render
 				`
 				<li class="page-item">
-					
-						<button aria-hidden="true">&laquo;</button>
-					
+						<button class="page-link" aria-hidden="true">&laquo;</button>
 				</li>
 				`;
 			Event.bind(wrap, 'click', this.onPreviousPageButtonClickHandler.bind(this));

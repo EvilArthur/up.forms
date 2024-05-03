@@ -148,7 +148,7 @@ this.BX.Up = this.BX.Up || {};
 	    value: function render() {
 	      var _this = this,
 	        _this$layout$wrap;
-	      var wrap = main_core.Tag.render(_templateObject$2 || (_templateObject$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t<div class=\"container\">\n\t\t\t", "\n\t\t\t", "\n\t\t</div>"])), this.options.map(function (option) {
+	      var wrap = main_core.Tag.render(_templateObject$2 || (_templateObject$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t<div class=\"test-question\">\n\t\t\t", "\n\t\t\t", "\n\t\t</div>"])), this.options.map(function (option) {
 	        return _this.renderButton(option.ID, option.TITLE, _this.type);
 	      }), this.renderClearButton());
 	      (_this$layout$wrap = this.layout.wrap) === null || _this$layout$wrap === void 0 ? void 0 : _this$layout$wrap.replaceWith(wrap);
@@ -181,7 +181,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderClearButton",
 	    value: function renderClearButton() {
-	      var wrap = main_core.Tag.render(_templateObject3$1 || (_templateObject3$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t<button class=\"btn btn-primary btn-sm\">\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C</button>"])));
+	      var wrap = main_core.Tag.render(_templateObject3$1 || (_templateObject3$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t<button class=\"btn clear-from-correct-answer\">\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C</button>"])));
 	      main_core.Event.bind(wrap, 'click', this.onClearRadioButtonClickHandler.bind(this));
 	      return wrap;
 	    }
@@ -229,7 +229,6 @@ this.BX.Up = this.BX.Up || {};
 	  babelHelpers.createClass(ShortText, [{
 	    key: "render",
 	    value: function render() {
-	      console.log(this.answer);
 	      if (this.answer && this.answer.SUBANSWER.length !== 0) {
 	        this.value = this.answer.SUBANSWER[0].VALUE;
 	        this.subAnswer.push(this.answer.SUBANSWER[0].VALUE);
@@ -323,7 +322,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (!this.isRequired) {
 	        return null;
 	      }
-	      var wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["<lable>\u042D\u0442\u043E \u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0432\u043E\u043F\u0440\u043E\u0441</lable>"])));
+	      var wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["<div class=\"recuired-question\"><lable class=\"recuired-question\">\u043E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0432\u043E\u043F\u0440\u043E\u0441</lable></div>"])));
 	      return wrap;
 	    }
 	  }, {
@@ -546,11 +545,11 @@ this.BX.Up = this.BX.Up || {};
 	      if (this.isLoading) {
 	        wrap = main_core.Tag.render(_templateObject$5 || (_templateObject$5 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container d-flex justify-content-center\">\n\t\t\t\t<div class=\"spinner-border\" style=\"width: 3rem; height: 3rem;\" role=\"status\">\n\t\t\t\t\t<span class=\"sr-only\"></span>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t"])));
 	      } else if (!this.isStarted) {
-	        wrap = main_core.Tag.render(_templateObject2$3 || (_templateObject2$3 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t\t", "\n\t\t\t\t\t<div class=\"d-flex justify-content-center\">", "</div>\n\t\t\t\t</div>"])), this.formData.TITLE, this.renderTriesRemaining(), this.renderStartButton());
+	        wrap = main_core.Tag.render(_templateObject2$3 || (_templateObject2$3 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<h1 class=\"text-center mb-5\">", "</h1>\n\t\t\t\t\t", "\n\t\t\t\t\t<div class=\"d-flex justify-content-center\">", "</div>\n\t\t\t\t</div>"])), this.formData.TITLE, this.renderTriesRemaining(), this.renderStartButton());
 	      } else if (this.timeIsUp) {
-	        wrap = main_core.Tag.render(_templateObject3$2 || (_templateObject3$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t\t<div class=\"d-flex justify-content-center\"><h2 class =\"text-center\">\u0412\u0440\u0435\u043C\u044F \u0432\u044B\u0448\u043B\u043E!</h2></div>\n\t\t\t\t</div>"])), this.formData.TITLE);
+	        wrap = main_core.Tag.render(_templateObject3$2 || (_templateObject3$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<div class=\"container\">\n\t\t\t\t\t<h1 class=\"text-center mb-5\">", "</h1>\n\t\t\t\t\t<div class=\"d-flex justify-content-center\"><h2 class =\"text-center\">\u0412\u0440\u0435\u043C\u044F \u0432\u044B\u0448\u043B\u043E!</h2></div>\n\t\t\t\t</div>"])), this.formData.TITLE);
 	      } else {
-	        wrap = main_core.Tag.render(_templateObject4$1 || (_templateObject4$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mt-5 mb-4\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>"])), this.formData.TITLE, this.renderTimer(), this.renderQuestionList(), this.renderSubmitButton(), this.renderPagination());
+	        wrap = main_core.Tag.render(_templateObject4$1 || (_templateObject4$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"container\">\n\t\t\t\t<h1 class=\"text-center mb-5\">", "</h1>\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t\t", "\n\t\t\t</div>"])), this.formData.TITLE, this.renderTimer(), this.renderQuestionList(), this.renderPagination(), this.renderSubmitButton());
 	        this.isRenderedMainBody = true;
 	      }
 	      (_this$layout$form = this.layout.form) === null || _this$layout$form === void 0 ? void 0 : _this$layout$form.replaceWith(wrap);
@@ -560,13 +559,13 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderPagination",
 	    value: function renderPagination() {
-	      return main_core.Tag.render(_templateObject5$1 || (_templateObject5$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<nav aria-label=\"Page navigation example\">\n\t\t\t\t\t<ul class=\"pagination\">\n\t\t\t\t\t\t", "\n\t\t\t\t\t\t", "\n\t\t\t\t\t</ul>\n\t\t\t\t</nav>\n\t\t\t"])), this.renderPreviousPageButton(), this.renderNextPageButton());
+	      return main_core.Tag.render(_templateObject5$1 || (_templateObject5$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<nav class=\"d-flex justify-content-center mt-5\">\n\t\t\t\t\t<ul class=\"pagination\">\n\t\t\t\t\t\t", "\n\t\t\t\t\t\t", "\n\t\t\t\t\t</ul>\n\t\t\t\t</nav>\n\t\t\t"])), this.renderPreviousPageButton(), this.renderNextPageButton());
 	    }
 	  }, {
 	    key: "renderNextPageButton",
 	    value: function renderNextPageButton() {
 	      if (this.currentNumOfItems === this.numOfItemsPerPage + 1 || this.passedPages.includes(this.currentPage + 1)) {
-	        var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"page-item\">\n\t\t\t\t\t\n\t\t\t\t\t\t<button aria-hidden=\"true\">&raquo;</button>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t\t"])));
+	        var wrap = main_core.Tag.render(_templateObject6 || (_templateObject6 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"page-item\">\n\t\t\t\t\t\n\t\t\t\t\t\t<button class=\"page-link\" aria-hidden=\"true\">&raquo;</button>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t\t"])));
 	        main_core.Event.bind(wrap, 'click', this.onNextPageButtonClickHandler.bind(this));
 	        return wrap;
 	      }
@@ -575,7 +574,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "renderPreviousPageButton",
 	    value: function renderPreviousPageButton() {
 	      if (this.currentPage > 1) {
-	        var wrap = main_core.Tag.render(_templateObject7 || (_templateObject7 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"page-item\">\n\t\t\t\t\t\n\t\t\t\t\t\t<button aria-hidden=\"true\">&laquo;</button>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t\t"])));
+	        var wrap = main_core.Tag.render(_templateObject7 || (_templateObject7 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<li class=\"page-item\">\n\t\t\t\t\t\n\t\t\t\t\t\t<button class=\"page-link\" aria-hidden=\"true\">&laquo;</button>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t\t"])));
 	        main_core.Event.bind(wrap, 'click', this.onPreviousPageButtonClickHandler.bind(this));
 	        return wrap;
 	      }
@@ -621,7 +620,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "renderSubmitButton",
 	    value: function renderSubmitButton() {
 	      var _this4 = this;
-	      var wrap = main_core.Tag.render(_templateObject9 || (_templateObject9 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"btn btn-primary\">\u041F\u043E\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u044C</button>\n\t\t"])));
+	      var wrap = main_core.Tag.render(_templateObject9 || (_templateObject9 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"d-flex justify-content-center mt-5\">\n\t\t\t\t<button class=\"btn btn-primary submit-button\">\u041E\u0422\u041F\u0420\u0410\u0412\u0418\u0422\u042C</button>\n\t\t\t</div>\n\t\t\t\n\t\t"])));
 	      this.layout.submitButtonObject = {
 	        isActive: true,
 	        wrap: wrap

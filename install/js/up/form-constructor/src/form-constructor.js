@@ -43,7 +43,7 @@ export class FormConstructor
 			this.layout.header = this.renderHeader();
 			this.layout.main = this.construct.render();
 			this.layout.footer = this.renderFooter();
-			wrap = Tag.render`<div></div>`;
+			wrap = Tag.render`<div id="inner-container"></div>`;
 			wrap.append(this.layout.header);
 			wrap.append(this.layout.main);
 			wrap.append(this.layout.footer);
@@ -137,7 +137,7 @@ export class FormConstructor
 
 	renderSaveButton()
 	{
-		const wrap = Tag.render`<button class="btn btn-primary">Сохранить</button>`;
+		const wrap = Tag.render`<button class="btn btn-primary submit-button">СОХРАНИТЬ</button>`;
 		this.layout.saveButtonObject = {
 			isActive: true,
 			wrap: wrap,

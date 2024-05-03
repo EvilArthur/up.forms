@@ -271,3 +271,17 @@ __formsMigrate(19, function($updater, $DB)
 		");
 	}
 });
+
+__formsMigrate(20, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && !$updater->TableExists('up_accepted_user'))
+	{
+		$DB->query
+		("
+			CREATE TABLE up_accepted_user(
+				ID int not null,
+				PRIMARY KEY (ID)
+			);
+		");
+	}
+});

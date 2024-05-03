@@ -11,7 +11,6 @@ export class ShortText
 
 	render()
 	{
-		console.log(this.answer);
 		if (this.answer && this.answer.SUBANSWER.length !== 0)
 		{
 			this.value = this.answer.SUBANSWER[0].VALUE;

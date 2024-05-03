@@ -14,7 +14,7 @@ $values = [
 ?>
 
 
-<div class="container w-50" id="main-container">
+<div class="container main" id="main-container">
 </div>
 
 

@@ -19,7 +19,7 @@ export class Option
 			return;
 		}
 		const wrap = Tag.render`
-		<div class="form-check">
+		<div class="form-check inner-question-options-wrap">
 			${this.renderEditableLabel()}
 			${this.renderDeleteButton()}
 		</div>`;
@@ -30,7 +30,6 @@ export class Option
 
 	renderEditableLabel()
 	{
-		console.log(this.labelObject.value)
 		if (this.labelObject.value === '')
 		{
 			this.labelObject.value = 'Новая опция';

@@ -22,9 +22,9 @@ export class Option
 			return;
 		}
 		const wrap = Tag.render`
-		<div class="form-check">
-			${this.renderEditableLabel()}
+		<div class="form-check inner-question-options-wrap">
 			${this.getBindedButton()}
+			${this.renderEditableLabel()}
 			${this.renderDeleteButton()}
 		</div>`;
 		this.layout.wrap?.replaceWith(wrap);
@@ -38,7 +38,7 @@ export class Option
 		{
 			this.labelObject.value = 'Новая опция';
 		}
-		const wrap = Tag.render`<label class="form-check-label">${this.labelObject.value}</label>`;
+		const wrap = Tag.render`<label class="form-check-label question-option-title">${this.labelObject.value}</label>`;
 		new EditableText(wrap, this.labelObject, this.renderEditableLabel.bind(this));
 		this.layout.label?.replaceWith(wrap)
 		this.layout.label = wrap;
