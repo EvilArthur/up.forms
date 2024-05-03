@@ -14,11 +14,17 @@ export class ShortTextOption
 		let wrap
 		if (!this.isHaveRightAnswerObject.value)
 		{
-			wrap = Tag.render`<p class="mb-0">Здесь будет поле для ввода ответа</p>`;
+			wrap = Tag.render`
+				<p class="mb-0">
+					${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_SHORT_TEXT_LAYOUT')}
+				</p>`;
 		}
 		else
 		{
-			wrap = Tag.render`<input class="form-control" type="text" placeholder="Введите правильный ответ" value="${this.title}">`;
+			wrap = Tag.render`
+				<input class="form-control" type="text"
+ 				placeholder="${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_SHORT_TEXT_PLACEHOLDER')}"
+ 				 value="${this.title}">`;
 			Event.bind(wrap, 'change', () => {this.title = wrap.value})
 		}
 		this.field = wrap

@@ -98,9 +98,9 @@ this.BX.Up = this.BX.Up || {};
 	      BX.SidePanel.Instance.open("/company/personal/user/" + userId + "/tasks/task/edit/0/?SCOPE=tasks_grid", {
 	        requestMethod: "post",
 	        requestParams: {
-	          'TITLE': 'Пройти форму - ' + formTitle,
-	          'DESCRIPTION': "[URL=/form/view/" + formId + "/]\u0424\u043E\u0440\u043C\u0430 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0430 \u043F\u043E \u0441\u0441\u044B\u043B\u043A\u0435[/URL]",
-	          'TAGS': ['формы']
+	          'TITLE': main_core.Loc.getMessage('UP_FORMS_FORM_LIST_TASK_TITLE') + ' - ' + formTitle,
+	          'DESCRIPTION': "[URL=/form/view/" + formId + "/]".concat(main_core.Loc.getMessage('UP_FORMS_FORM_LIST_TASK_DESCRIPTION'), "[/URL]"),
+	          'TAGS': [main_core.Loc.getMessage('UP_FORMS_FORM_LIST_TASK_TAG')]
 	        },
 	        cacheable: false
 	      });
@@ -132,7 +132,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "openSlider",
 	    value: function openSlider(url) {
 	      BX.SidePanel.Instance.open(url, {
-	        width: 2000
+	        width: 1000
 	      });
 	    }
 	  }]);

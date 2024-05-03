@@ -92,7 +92,7 @@ export default class Question
 	{
 		if (this.titleObject.value === '')
 		{
-			this.titleObject.value = 'Название';
+			this.titleObject.value = Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_DEFAULT_TITLE');
 		}
 		const wrap = Tag.render`
 		<h3 class="form-label">${this.titleObject.value}</h3>
@@ -119,20 +119,21 @@ export default class Question
 			this.render();
 		});
 
-		const wrap = Tag.render`<div class="container">
-									<div class="form-check">
-										${buttonNoCheck}
-											<label class="form-check-label">
-												Без проверки
-											</label>
-									</div>
-									<div class="form-check">
-										${buttonCheck}
-											<label class="form-check-label">
-												Тестовый
-											</label>
-									</div>
-							</div>`;
+		const wrap = Tag.render`
+		<div class="container">
+			<div class="form-check">
+				${buttonNoCheck}
+				<label class="form-check-label">
+					${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_CONTROL_TYPE_1')}
+				</label>
+			</div>
+			<div class="form-check">
+				${buttonCheck}
+				<label class="form-check-label">
+					${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_CONTROL_TYPE_2')}
+				</label>
+			</div>
+		</div>`;
 		return wrap;
 	}
 
@@ -173,7 +174,7 @@ export default class Question
 			<div class="form-check">
 				${this.layout.checkboxRequired}
 				<label class="form-check-label">
-					Обязательный вопрос
+					${Loc.getMessage('UP_FORMS_FORM_СONSTRUCTOR_REQUIRED_QUESTION')}
 				</label>
 			</div>`
 		return wrap;
@@ -215,7 +216,13 @@ export default class Question
 
 	onAddOptionButtonClickHandler()
 	{
-		const option = new Option(null, 'Новая опция', this.id, 'radio', this.isHaveRightAnswerObject);
+		const option = new Option(
+			null,
+			Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE'),
+			this.id,
+			'radio',
+			this.isHaveRightAnswerObject
+		);
 		this.layout.options.append(option.render());
 		this.options.push(option);
 	}
@@ -226,7 +233,10 @@ export default class Question
 		{
 			return;
 		}
-		const wrap = Tag.render`<button class="btn clear-from-correct-answer">Очистить</button>`;
+		const wrap = Tag.render`
+			<button class="btn clear-from-correct-answer">
+				${Loc.getMessage('UP_FORMS_FORM_СONSTRUCTOR_CLEAR_CORRECT_ANSWERS')}
+			</button>`;
 		Event.bind(wrap, 'click', this.onClearRadioButtonClickHandler.bind(this));
 		return wrap;
 	}

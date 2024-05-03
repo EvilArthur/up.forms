@@ -233,7 +233,7 @@ this.BX.Up = this.BX.Up || {};
 	    value: function renderEditableTitle() {
 	      var _this$layout$title;
 	      if (this.titleObject.value === '') {
-	        this.titleObject.value = 'Название';
+	        this.titleObject.value = main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_DEFAULT_TITLE');
 	      }
 	      var wrap = main_core.Tag.render(_templateObject4 || (_templateObject4 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h3 class=\"form-label\">", "</h3>\n\t\t"])), this.titleObject.value);
 	      new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
@@ -255,7 +255,7 @@ this.BX.Up = this.BX.Up || {};
 	        _this.isHaveRightAnswerObject.value = true;
 	        _this.render();
 	      });
-	      var wrap = main_core.Tag.render(_templateObject7 || (_templateObject7 = babelHelpers.taggedTemplateLiteral(["<div class=\"container\">\n\t\t\t\t\t\t\t\t\t<div class=\"form-check\">\n\t\t\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"form-check-label\">\n\t\t\t\t\t\t\t\t\t\t\t\t\u0411\u0435\u0437 \u043F\u0440\u043E\u0432\u0435\u0440\u043A\u0438\n\t\t\t\t\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div class=\"form-check\">\n\t\t\t\t\t\t\t\t\t\t", "\n\t\t\t\t\t\t\t\t\t\t\t<label class=\"form-check-label\">\n\t\t\t\t\t\t\t\t\t\t\t\t\u0422\u0435\u0441\u0442\u043E\u0432\u044B\u0439\n\t\t\t\t\t\t\t\t\t\t\t</label>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t</div>"])), buttonNoCheck, buttonCheck);
+	      var wrap = main_core.Tag.render(_templateObject7 || (_templateObject7 = babelHelpers.taggedTemplateLiteral(["\n\t\t<div class=\"container\">\n\t\t\t<div class=\"form-check\">\n\t\t\t\t", "\n\t\t\t\t<label class=\"form-check-label\">\n\t\t\t\t\t", "\n\t\t\t\t</label>\n\t\t\t</div>\n\t\t\t<div class=\"form-check\">\n\t\t\t\t", "\n\t\t\t\t<label class=\"form-check-label\">\n\t\t\t\t\t", "\n\t\t\t\t</label>\n\t\t\t</div>\n\t\t</div>"])), buttonNoCheck, main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_CONTROL_TYPE_1'), buttonCheck, main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_QUESTION_CONTROL_TYPE_2'));
 	      return wrap;
 	    }
 	  }, {
@@ -284,7 +284,7 @@ this.BX.Up = this.BX.Up || {};
 	    value: function renderRequired() {
 	      this.layout.checkboxRequired = main_core.Tag.render(_templateObject10 || (_templateObject10 = babelHelpers.taggedTemplateLiteral(["\n\t\t<input class=\"form-check-input\" type=\"checkbox\" name=\"", "_", "_required\"\n\t\t ", ">"])), this.position, this.titleObject.value, this.isRequiredQuestion ? 'checked' : '');
 	      main_core.Event.bind(this.layout.checkboxRequired, 'change', this.onChangeRequiredHandler.bind(this));
-	      var wrap = main_core.Tag.render(_templateObject11 || (_templateObject11 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"form-check\">\n\t\t\t\t", "\n\t\t\t\t<label class=\"form-check-label\">\n\t\t\t\t\t\u041E\u0431\u044F\u0437\u0430\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0432\u043E\u043F\u0440\u043E\u0441\n\t\t\t\t</label>\n\t\t\t</div>"])), this.layout.checkboxRequired);
+	      var wrap = main_core.Tag.render(_templateObject11 || (_templateObject11 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<div class=\"form-check\">\n\t\t\t\t", "\n\t\t\t\t<label class=\"form-check-label\">\n\t\t\t\t\t", "\n\t\t\t\t</label>\n\t\t\t</div>"])), this.layout.checkboxRequired, main_core.Loc.getMessage('UP_FORMS_FORM_СONSTRUCTOR_REQUIRED_QUESTION'));
 	      return wrap;
 	    }
 	  }, {
@@ -322,7 +322,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "onAddOptionButtonClickHandler",
 	    value: function onAddOptionButtonClickHandler() {
-	      var option = new Option(null, 'Новая опция', this.id, 'radio', this.isHaveRightAnswerObject);
+	      var option = new Option(null, main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE'), this.id, 'radio', this.isHaveRightAnswerObject);
 	      this.layout.options.append(option.render());
 	      this.options.push(option);
 	    }
@@ -332,7 +332,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (!this.isHaveRightAnswerObject.value) {
 	        return;
 	      }
-	      var wrap = main_core.Tag.render(_templateObject15 || (_templateObject15 = babelHelpers.taggedTemplateLiteral(["<button class=\"btn clear-from-correct-answer\">\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C</button>"])));
+	      var wrap = main_core.Tag.render(_templateObject15 || (_templateObject15 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"btn clear-from-correct-answer\">\n\t\t\t\t", "\n\t\t\t</button>"])), main_core.Loc.getMessage('UP_FORMS_FORM_СONSTRUCTOR_CLEAR_CORRECT_ANSWERS'));
 	      main_core.Event.bind(wrap, 'click', this.onClearRadioButtonClickHandler.bind(this));
 	      return wrap;
 	    }
@@ -410,9 +410,9 @@ this.BX.Up = this.BX.Up || {};
 	      var _this = this;
 	      var wrap;
 	      if (!this.isHaveRightAnswerObject.value) {
-	        wrap = main_core.Tag.render(_templateObject$2 || (_templateObject$2 = babelHelpers.taggedTemplateLiteral(["<p class=\"mb-0\">\u0417\u0434\u0435\u0441\u044C \u0431\u0443\u0434\u0435\u0442 \u043F\u043E\u043B\u0435 \u0434\u043B\u044F \u0432\u0432\u043E\u0434\u0430 \u043E\u0442\u0432\u0435\u0442\u0430</p>"])));
+	        wrap = main_core.Tag.render(_templateObject$2 || (_templateObject$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<p class=\"mb-0\">\n\t\t\t\t\t", "\n\t\t\t\t</p>"])), main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_SHORT_TEXT_LAYOUT'));
 	      } else {
-	        wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["<input class=\"form-control\" type=\"text\" placeholder=\"\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u044B\u0439 \u043E\u0442\u0432\u0435\u0442\" value=\"", "\">"])), this.title);
+	        wrap = main_core.Tag.render(_templateObject2$1 || (_templateObject2$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t\t<input class=\"form-control\" type=\"text\"\n \t\t\t\tplaceholder=\"", "\"\n \t\t\t\t value=\"", "\">"])), main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_SHORT_TEXT_PLACEHOLDER'), this.title);
 	        main_core.Event.bind(wrap, 'change', function () {
 	          _this.title = wrap.value;
 	        });
@@ -496,7 +496,7 @@ this.BX.Up = this.BX.Up || {};
 	    value: function renderEditableLabel() {
 	      var _this$layout$label;
 	      if (this.labelObject.value === '') {
-	        this.labelObject.value = 'Новая опция';
+	        this.labelObject.value = main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE');
 	      }
 	      var wrap = main_core.Tag.render(_templateObject2$2 || (_templateObject2$2 = babelHelpers.taggedTemplateLiteral(["<label class=\"form-check-label question-option-title\">", "</label>"])), this.labelObject.value);
 	      new EditableText(wrap, this.labelObject, this.renderEditableLabel.bind(this));
@@ -600,7 +600,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (this.options.length >= 15) {
 	        return;
 	      }
-	      var option = new RadioOption(null, 'Новая опция', this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
+	      var option = new RadioOption(null, main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE'), this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
 	      this.layout.options.append(option.render());
 	      this.options.push(option);
 	    }
@@ -637,7 +637,6 @@ this.BX.Up = this.BX.Up || {};
 	    _this = babelHelpers.possibleConstructorReturn(this, babelHelpers.getPrototypeOf(Checkbox).call(this, reloadFunction, chapterId, id, position, title, optionData, settingData, fieldData));
 	    _this.options = optionData.map(function (option) {
 	      if (option) {
-	        /*if (option.IS_RIGHT_ANSWER)*/
 	        return new CheckboxOption(option.ID, option.TITLE, _this.titleObject.value, _this.id, _this.toBoolean(option.IS_RIGHT_ANSWER), _this.isHaveRightAnswerObject);
 	      }
 	    });
@@ -653,7 +652,7 @@ this.BX.Up = this.BX.Up || {};
 	      if (this.options.length >= 15) {
 	        return;
 	      }
-	      var option = new CheckboxOption(null, 'Новая опция', this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
+	      var option = new CheckboxOption(null, main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE'), this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
 	      this.layout.options.append(option.render());
 	      this.options.push(option);
 	    }
@@ -751,7 +750,7 @@ this.BX.Up = this.BX.Up || {};
 	      } else if (question.fieldId === 1) {
 	        options = [{
 	          'ID': null,
-	          'TITLE': 'Новая опция'
+	          'TITLE': main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE')
 	        }];
 	      } else {
 	        options = question.getOptionData();
@@ -770,7 +769,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderAddQuestionButton",
 	    value: function renderAddQuestionButton() {
-	      var wrap = main_core.Tag.render(_templateObject3$2 || (_templateObject3$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button type=\"button\" class=\"btn add-question-btn\">+ \u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u0432\u043E\u043F\u0440\u043E\u0441</button>\n\t\t"])));
+	      var wrap = main_core.Tag.render(_templateObject3$2 || (_templateObject3$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button type=\"button\" class=\"btn add-question-btn\">\n\t\t\t\t+ ", "\n\t\t\t</button>\n\t\t"])), main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_ADD_QUESTION_BUTTON'));
 	      main_core.Event.bind(wrap, 'click', this.onAddQuestionButtonClickHandler.bind(this));
 	      this.layout.addQuestionButtonObject = {
 	        wrap: wrap,
@@ -817,7 +816,7 @@ this.BX.Up = this.BX.Up || {};
 	    value: function renderEditableTitle() {
 	      var _this$layout$title;
 	      if (this.titleObject.value === '') {
-	        this.titleObject.value = 'Новая форма';
+	        this.titleObject.value = main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_FORM_DEFAULT_TITLE');
 	      }
 	      var wrap = main_core.Tag.render(_templateObject4$2 || (_templateObject4$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t<h1 class=\"text-center\">", "</h1>\n\t\t"])), this.titleObject.value);
 	      new EditableText(wrap, this.titleObject, this.renderEditableTitle.bind(this));
@@ -957,9 +956,8 @@ this.BX.Up = this.BX.Up || {};
 	              return FormManager.getQuestionData(id, limit + 1, offset);
 	            case 4:
 	              questionData = _context3.sent;
-	              console.log(questionData);
 	              this.fillQuestionsByData(questionData);
-	            case 7:
+	            case 6:
 	            case "end":
 	              return _context3.stop();
 	          }
@@ -987,7 +985,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderLoading",
 	    value: function renderLoading() {
-	      var wrap = main_core.Tag.render(_templateObject8$1 || (_templateObject8$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t <div class=\"modal\" id=\"loadingModal\">\n\t\t\t<div class=\"modal-dialog modal-dialog-centered\">\n\t\t\t\t  <div class=\"spinner-border text-center\" role=\"status\">\n\t\t\t\t\t<span class=\"visually-hidden\">Loading...</span>\n\t\t\t\t  </div>\n\t\t\t</div>\n\t\t  </div>\n\t\t"])));
+	      var wrap = main_core.Tag.render(_templateObject8$1 || (_templateObject8$1 = babelHelpers.taggedTemplateLiteral(["\n\t\t <div class=\"modal\" id=\"loadingModal\">\n\t\t\t<div class=\"modal-dialog modal-dialog-centered\">\n\t\t\t\t  <div class=\"spinner-border text-center\" role=\"status\">\n\t\t\t\t\t<span class=\"visually-hidden\">\n\t\t\t\t\t\t", "\n\t\t\t\t\t</span>\n\t\t\t\t  </div>\n\t\t\t</div>\n\t\t  </div>\n\t\t"])), main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_DATA_LOADING'));
 	      return wrap;
 	    }
 	  }]);
@@ -1225,9 +1223,6 @@ this.BX.Up = this.BX.Up || {};
 	    this.layout.wrap = options.container;
 	    this.layout.error = null;
 	    this.id = options.id;
-	    if (!this.layout.wrap) {
-	      throw new Error("TaskList: container is not found");
-	    }
 	    this.formData = {
 	      CHAPTER: []
 	    };
@@ -1284,11 +1279,11 @@ this.BX.Up = this.BX.Up || {};
 	              _context.next = 17;
 	              break;
 	            case 13:
-	              this.formData.TITLE = 'Новая форма';
+	              this.formData.TITLE = main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_FORM_DEFAULT_TITLE');
 	              this.formData.ID = null;
 	              this.formData.CHAPTER[0] = {
-	                'TITLE': 'Заголовок раздела',
-	                'DESCRIPTION': 'Описание раздела',
+	                'TITLE': main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_CHAPTER_DEFAULT_TITLE'),
+	                'DESCRIPTION': main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_CHAPTER_DEFAULT_DESCRIPTION'),
 	                'POSITION': 1,
 	                'QUESTION': [],
 	                'ID': null
@@ -1320,7 +1315,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderConstructorTab",
 	    value: function renderConstructorTab() {
-	      var wrap = main_core.Tag.render(_templateObject4$3 || (_templateObject4$3 = babelHelpers.taggedTemplateLiteral(["<button class=\"nav-link active\" data-toggle=\"tab\" role=\"tab\">\u0412\u043E\u043F\u0440\u043E\u0441\u044B</button>"])));
+	      var wrap = main_core.Tag.render(_templateObject4$3 || (_templateObject4$3 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"nav-link active\" data-toggle=\"tab\" role=\"tab\">\n\t\t\t\t", "\n\t\t\t</button>"])), main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_QUESTIONS_TAB'));
 	      main_core.Event.bind(wrap, 'click', this.onConstructorTabClickHandler.bind(this));
 	      this.layout.constructorTab = wrap;
 	      return this.layout.constructorTab;
@@ -1338,7 +1333,7 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "renderSettingTab",
 	    value: function renderSettingTab() {
-	      var wrap = main_core.Tag.render(_templateObject5$3 || (_templateObject5$3 = babelHelpers.taggedTemplateLiteral(["<button class=\"nav-link\" data-toggle=\"tab\" role=\"tab\">\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438</button>"])));
+	      var wrap = main_core.Tag.render(_templateObject5$3 || (_templateObject5$3 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"nav-link\" data-toggle=\"tab\" role=\"tab\">\n\t\t\t\t", "\n\t\t\t</button>"])), main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_SETTINGS_TAB'));
 	      main_core.Event.bind(wrap, 'click', this.onSettingTabClickHandler.bind(this));
 	      this.layout.settingTab = wrap;
 	      return this.layout.settingTab;
@@ -1363,7 +1358,7 @@ this.BX.Up = this.BX.Up || {};
 	    key: "renderSaveButton",
 	    value: function renderSaveButton() {
 	      var _this = this;
-	      var wrap = main_core.Tag.render(_templateObject7$2 || (_templateObject7$2 = babelHelpers.taggedTemplateLiteral(["<button class=\"btn btn-primary submit-button\">\u0421\u041E\u0425\u0420\u0410\u041D\u0418\u0422\u042C</button>"])));
+	      var wrap = main_core.Tag.render(_templateObject7$2 || (_templateObject7$2 = babelHelpers.taggedTemplateLiteral(["\n\t\t\t<button class=\"btn btn-primary submit-button\">\n\t\t\t\t", "\n\t\t\t</button>"])), main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_SAVE_BUTTON'));
 	      this.layout.saveButtonObject = {
 	        isActive: true,
 	        wrap: wrap
@@ -1431,7 +1426,7 @@ this.BX.Up = this.BX.Up || {};
 	                newUrl = '/form/edit/'.concat(this.id, '/');
 	                window.history.pushState({
 	                  path: newUrl
-	                }, 'Формы', newUrl);
+	                }, main_core.Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_MODULE_NAME'), newUrl);
 	                BX.SidePanel.Instance.pageUrl = window.history.url;
 	                console.log(BX.SidePanel.Instance.getCurrentUrl());
 	                console.log(history);

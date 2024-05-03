@@ -12,12 +12,7 @@ this.BX.Up = this.BX.Up || {};
 	    babelHelpers.classCallCheck(this, FormResults);
 	    this.gridId = options.gridId;
 	    this.id = options.formId;
-	    console.log(this.id);
 	    BX.addCustomEvent('onPullEvent', function (module_id, command, params) {
-	      console.log(module_id);
-	      console.log(command);
-	      console.log(params);
-	      console.log(_this.id);
 	      if (command === 'update' && parseInt(params.id) === _this.id) {
 	        _this.reload();
 	      }

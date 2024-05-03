@@ -1,5 +1,4 @@
-import { Tag, Event, Type } from 'main.core';
-import { Option } from '../../form-constructor/src/option';
+import { Tag, Loc } from 'main.core';
 import { Radio } from './radio';
 import {ShortText} from './short-text';
 import {Checkbox} from './checkbox';
@@ -60,7 +59,12 @@ export class Question
 		{
 			return null;
 		}
-		const wrap = Tag.render`<div class="recuired-question"><lable class="recuired-question">обязательный вопрос</lable></div>`
+		const wrap = Tag.render`
+		<div class="recuired-question">
+			<lable class="recuired-question">
+				${Loc.getMessage('UP_FORMS_FORM_REQUIRED_QUESTION')}
+			</lable>
+		</div>`
 		return wrap;
 	}
 

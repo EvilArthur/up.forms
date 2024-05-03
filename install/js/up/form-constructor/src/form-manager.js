@@ -18,7 +18,6 @@ export class FormManager
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error);
 				});
 		});
@@ -37,7 +36,6 @@ export class FormManager
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error.errors);
 				});
 	})
@@ -50,11 +48,9 @@ export class FormManager
 					'up:forms.FormCreate.getFieldData')
 				.then((response) => {
 					const result = response.data.result;
-					console.log(result);
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error);
 				});
 		});
@@ -67,11 +63,9 @@ export class FormManager
 					'up:forms.FormCreate.getSettingsData')
 				.then((response) => {
 					const result = response.data.result;
-					console.log(result);
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error);
 				});
 		});
@@ -94,7 +88,6 @@ export class FormManager
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error);
 				});
 		});
@@ -115,7 +108,6 @@ export class FormManager
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error);
 				});
 		});

@@ -1,4 +1,4 @@
-import { Tag, Event } from 'main.core';
+import { Tag, Event, Loc } from 'main.core';
 import { Constructor } from './constructor';
 import { Settings } from './settings';
 import { FormManager } from './form-manager';
@@ -11,10 +11,6 @@ export class FormConstructor
 		this.layout.wrap = options.container;
 		this.layout.error = null;
 		this.id = options.id;
-		if (!this.layout.wrap)
-		{
-			throw new Error(`TaskList: container is not found`);
-		}
 		this.formData = {
 			CHAPTER: [],
 		};
@@ -60,15 +56,14 @@ export class FormConstructor
 		if (this.id !== 0)
 		{
 			this.formData = await FormManager.getFormData(this.id, 10);
-			console.log(this.formData);
 		}
 		else
 		{
-			this.formData.TITLE = 'Новая форма';
+			this.formData.TITLE = Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_FORM_DEFAULT_TITLE');
 			this.formData.ID = null;
 			this.formData.CHAPTER[0] = {
-				'TITLE': 'Заголовок раздела',
-				'DESCRIPTION': 'Описание раздела',
+				'TITLE': Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_CHAPTER_DEFAULT_TITLE'),
+				'DESCRIPTION': Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_CHAPTER_DEFAULT_DESCRIPTION'),
 				'POSITION': 1,
 				'QUESTION': [],
 				'ID': null,
@@ -95,7 +90,10 @@ export class FormConstructor
 
 	renderConstructorTab()
 	{
-		const wrap = Tag.render`<button class="nav-link active" data-toggle="tab" role="tab">Вопросы</button>`;
+		const wrap = Tag.render`
+			<button class="nav-link active" data-toggle="tab" role="tab">
+				${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_QUESTIONS_TAB')}
+			</button>`;
 		Event.bind(wrap, 'click', this.onConstructorTabClickHandler.bind(this));
 		this.layout.constructorTab = wrap;
 		return this.layout.constructorTab;
@@ -112,7 +110,10 @@ export class FormConstructor
 
 	renderSettingTab()
 	{
-		const wrap = Tag.render`<button class="nav-link" data-toggle="tab" role="tab">Настройки</button>`;
+		const wrap = Tag.render`
+			<button class="nav-link" data-toggle="tab" role="tab">
+				${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_SETTINGS_TAB')}
+			</button>`;
 		Event.bind(wrap, 'click', this.onSettingTabClickHandler.bind(this));
 		this.layout.settingTab = wrap;
 		return this.layout.settingTab;
@@ -137,7 +138,10 @@ export class FormConstructor
 
 	renderSaveButton()
 	{
-		const wrap = Tag.render`<button class="btn btn-primary submit-button">СОХРАНИТЬ</button>`;
+		const wrap = Tag.render`
+			<button class="btn btn-primary submit-button">
+				${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_SAVE_BUTTON')}
+			</button>`;
 		this.layout.saveButtonObject = {
 			isActive: true,
 			wrap: wrap,
@@ -159,7 +163,6 @@ export class FormConstructor
 		this.renderErrors([]);
 		FormManager.saveFormData({ formData: formData})
 			.then((response) => {
-				console.log(response);
 				const url = BX.SidePanel.Instance.getCurrentUrl();
 				BX.SidePanel.Instance.close();
 				setTimeout(() => BX.SidePanel.Instance.destroy(url), 1000);
@@ -189,10 +192,11 @@ export class FormConstructor
 			this.construct.id = id;
 			this.construct.chapterId = chapterId;
 			const newUrl = '/form/edit/'.concat(this.id, '/');
-			window.history.pushState({ path: newUrl }, 'Формы', newUrl);
+			window.history.pushState(
+				{ path: newUrl },
+				Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_MODULE_NAME'),
+				newUrl);
 			BX.SidePanel.Instance.pageUrl = window.history.url;
-			console.log(BX.SidePanel.Instance.getCurrentUrl())
-			console.log(history)
 		}
 		return true;
 	}
@@ -215,7 +219,6 @@ export class FormConstructor
 		this.layout.wrap.prepend(this.renderErrors(errors));
 		this.layout.saveButtonObject.wrap.classList.remove('disabled');
 		this.layout.saveButtonObject.isActive = true;
-		console.log(errors);
 	}
 
 	renderErrors(errors)

@@ -28,7 +28,6 @@ export class Options
 
 	renderButton(id, value, type)
 	{
-		// console.log(this.answer);
 		this.value = '';
 		if (this.answer && this.answer.SUBANSWER.length !== 0)
 		{

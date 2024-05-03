@@ -1,4 +1,4 @@
-import { Event, Tag } from 'main.core';
+import { Event, Tag, Loc } from 'main.core';
 import { EditableText } from '../../editable-text';
 
 export class Option
@@ -36,7 +36,7 @@ export class Option
 	{
 		if (this.labelObject.value === '')
 		{
-			this.labelObject.value = 'Новая опция';
+			this.labelObject.value = Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE');
 		}
 		const wrap = Tag.render`<label class="form-check-label question-option-title">${this.labelObject.value}</label>`;
 		new EditableText(wrap, this.labelObject, this.renderEditableLabel.bind(this));

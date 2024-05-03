@@ -1,4 +1,4 @@
-import { Event, Tag } from 'main.core';
+import { Event, Tag, Loc } from 'main.core';
 import { EditableText } from './editable-text';
 import { FormManager } from './form-manager';
 import { questionFactory } from './questions/questionFactory';
@@ -77,7 +77,10 @@ export class Constructor
 		}
 		else if (question.fieldId === 1)
 		{
-			options = [{ 'ID': null, 'TITLE': 'Новая опция' }];
+			options = [{
+				'ID': null,
+				'TITLE': Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE')
+			}];
 		}
 		else
 		{
@@ -90,7 +93,6 @@ export class Constructor
 			question.titleObject.value, options, question.getSettingData(), this.fieldData);
 		this.questions[index] = typeChangedQuestion;
 
-		console.log(typeChangedQuestion);
 		const newWrap = typeChangedQuestion.render();
 		const typeSelect = typeChangedQuestion.layout.typeSelect;
 		Event.bind(typeSelect, 'change', () => this.changeQuestionType(index, parseInt(typeSelect.value)));
@@ -100,7 +102,9 @@ export class Constructor
 	renderAddQuestionButton()
 	{
 		const wrap = Tag.render`
-			<button type="button" class="btn add-question-btn">+ Добавить вопрос</button>
+			<button type="button" class="btn add-question-btn">
+				+ ${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_ADD_QUESTION_BUTTON')}
+			</button>
 		`;
 		Event.bind(wrap, 'click', this.onAddQuestionButtonClickHandler.bind(this));
 
@@ -146,7 +150,7 @@ export class Constructor
 	{
 		if (this.titleObject.value === '')
 		{
-			this.titleObject.value = 'Новая форма';
+			this.titleObject.value = Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_FORM_DEFAULT_TITLE');
 		}
 		const wrap = Tag.render`
 		<h1 class="text-center">${this.titleObject.value}</h1>
@@ -238,7 +242,6 @@ export class Constructor
 
 	reload()
 	{
-		console.log(this.id, this.limit, this.limit * (this.currentPage - 1));
 		this.loadPage(this.chapterId, this.limit, this.limit * (this.currentPage - 1)).then(() => {
 			this.renderQuestionList();
 			this.renderPagination();
@@ -265,7 +268,6 @@ export class Constructor
 	async loadPage(id, limit = 0, offset = 0)
 	{
 		const questionData = await FormManager.getQuestionData(id, limit + 1, offset);
-		console.log(questionData);
 		this.fillQuestionsByData(questionData);
 
 	}
@@ -293,7 +295,9 @@ export class Constructor
 		 <div class="modal" id="loadingModal">
 			<div class="modal-dialog modal-dialog-centered">
 				  <div class="spinner-border text-center" role="status">
-					<span class="visually-hidden">Loading...</span>
+					<span class="visually-hidden">
+						${Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_DATA_LOADING')}
+					</span>
 				  </div>
 			</div>
 		  </div>

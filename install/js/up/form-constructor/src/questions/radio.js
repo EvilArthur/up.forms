@@ -1,3 +1,4 @@
+import { Loc } from 'main.core';
 import Question from './question'
 import { RadioOption } from './options/radio-option';
 
@@ -22,7 +23,14 @@ export class Radio extends Question
 		{
 			return;
 		}
-		const option = new RadioOption(null, 'Новая опция', this.titleObject.value, this.id, false, this.isHaveRightAnswerObject);
+		const option = new RadioOption(
+			null,
+			Loc.getMessage('UP_FORMS_FORM_CONSTRUCTOR_OPTION_DEFAULT_TITLE'),
+			this.titleObject.value,
+			this.id,
+			false,
+			this.isHaveRightAnswerObject
+		);
 		this.layout.options.append(option.render());
 		this.options.push(option);
 	}

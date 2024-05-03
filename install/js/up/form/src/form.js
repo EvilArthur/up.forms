@@ -1,4 +1,4 @@
-import { Event, Tag } from 'main.core';
+import { Event, Tag, Loc } from 'main.core';
 import { Question } from './question';
 import { FormManager } from './form-manager';
 
@@ -98,10 +98,6 @@ export class Form
 				}
 				this.layout.form = this.render();
 			}
-			catch (error)
-			{
-				console.log(error);
-			}
 		}
 	}
 
@@ -132,7 +128,9 @@ export class Form
 			wrap = Tag.render`
 				<div class="container">
 					<h1 class="text-center mb-5">${this.formData.TITLE}</h1>
-					<div class="d-flex justify-content-center"><h2 class ="text-center">Время вышло!</h2></div>
+					<div class="d-flex justify-content-center">
+						<h2 class ="text-center">${Loc.getMessage('UP_FORMS_FORM_TIME_IS_UP_MESSAGE')}</h2>
+					</div>
 				</div>`;
 		}
 		else
@@ -247,7 +245,9 @@ export class Form
 	{
 		const wrap = Tag.render`
 			<div class="d-flex justify-content-center mt-5">
-				<button class="btn btn-primary submit-button">ОТПРАВИТЬ</button>
+				<button class="btn btn-primary submit-button">
+					${Loc.getMessage('UP_FORMS_FORM_SUBMIT_BUTTON')}
+				</button>
 			</div>
 			
 		`;
@@ -340,7 +340,6 @@ export class Form
 				this.layout.wrap.prepend(this.renderErrors(errors))
 				button.wrap.classList.remove('disabled')
 				button.isActive = true;
-				console.log(errors);
 			});
 	}
 
@@ -374,14 +373,19 @@ export class Form
 		{
 			return null;
 		}
-		const wrap = Tag.render`<h2 class ="text-center">У вас осталось попыток: ${this.maxTry - this.try}</h2>`;
+		const wrap = Tag.render`
+				<h2 class ="text-center">
+					${Loc.getMessage('UP_FORMS_FORM_TRYIES_REMAINING')}: ${this.maxTry - this.try}
+				</h2>`;
 		return wrap;
 	}
 
 	renderStartButton()
 	{
 		const wrap = Tag.render`
-			<button class="btn btn-primary">Начать</button>
+			<button class="btn btn-primary">
+				${Loc.getMessage('UP_FORMS_FORM_START_BUTTON')}
+			</button>
 		`;
 		Event.bind(wrap, 'click', () => this.onStartButtonClickHandler(wrap));
 		return wrap;
@@ -392,8 +396,6 @@ export class Form
 		this.isStarted = true;
 		button.classList.add('disabled');
 		this.startTime = await FormManager.createResponse(this.id)
-		console.log(this.startTime);
-		console.log(new Date(this.startTime * 1000));
 		this.startTimer();
 		this.render();
 
@@ -415,14 +417,12 @@ export class Form
 		const [hours, minutes] = timer.split(':').map(Number);
 		const totalMinutesCombined = hours * 60 + minutes;
 		const newDate = new Date(jsTimeStamp + totalMinutesCombined * 60000);
-		console.log(newDate);
 		return newDate;
 	}
 
 	updateTimer(endTime)
 	{
 		const remainingTime = endTime - new Date();
-		console.log(remainingTime);
 		if (this.isSaved)
 		{
 			return;

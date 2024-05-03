@@ -1,5 +1,4 @@
 <?php
-$MESS['UP_FORMS_FORM_LIST_EDIT'] = 'Редактировать';
-$MESS['UP_FORMS_FORM_LIST_PUBLIC_LINK'] = 'Публичная ссылка';
-$MESS['UP_FORMS_FORM_LIST_PUBLIC_RESULTS'] = 'Результаты';
-$MESS['UP_FORMS_FORM_LIST_PUBLIC_DELETE'] = 'Удалить';
+$MESS['UP_FORMS_FORM_LIST_TASK_TITLE'] = 'Пройти форму';
+$MESS['UP_FORMS_FORM_LIST_TASK_DESCRIPTION'] = 'Форма доступна по ссылке';
+$MESS['UP_FORMS_FORM_LIST_TASK_TAG'] = 'формы';

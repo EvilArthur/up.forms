@@ -1,4 +1,4 @@
-import {Tag, Event } from 'main.core';
+import {Tag } from 'main.core';
 import {Setting} from './setting';
 
 export class Checkbox extends Setting

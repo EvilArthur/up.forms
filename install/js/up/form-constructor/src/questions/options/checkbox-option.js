@@ -1,4 +1,4 @@
-import { Event, Loc, Tag } from 'main.core';
+import { Tag } from 'main.core';
 import {Option} from './button-option';
 
 export class CheckboxOption extends Option

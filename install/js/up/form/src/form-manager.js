@@ -18,7 +18,6 @@ export class FormManager
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error);
 				});
 		});
@@ -39,7 +38,6 @@ export class FormManager
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error.errors);
 				});
 		})
@@ -60,7 +58,6 @@ export class FormManager
 					resolve(startTime);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error);
 				});
 		})
@@ -83,7 +80,6 @@ export class FormManager
 					resolve(result);
 				})
 				.catch((error) => {
-					console.log(error);
 					reject(error);
 				});
 		})
