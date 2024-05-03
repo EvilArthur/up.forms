@@ -325,7 +325,8 @@ export class Form
 						return;
 					}
 					BX.SidePanel.Instance.close();
-					BX.SidePanel.Instance.destroy('/form/view/${formId}/');
+					const url = BX.SidePanel.Instance.getCurrentUrl();
+					setTimeout(() => BX.SidePanel.Instance.destroy(url), 1000);
 				}
 				else
 				{

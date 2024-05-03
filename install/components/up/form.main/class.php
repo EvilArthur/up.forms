@@ -11,8 +11,9 @@ use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UI\PageNavigation;
 use Up\Forms\Model\FormSettingsTable;
 use Up\Forms\Repository\FormRepository;
-use Up\Forms\Repository\TaskRepository;
 
+use \Bitrix\Main\Localization\Loc;
+Loc::loadMessages(__FILE__);
 class FormMainComponent extends CBitrixComponent
 {
 	public function executeComponent()
@@ -64,7 +65,7 @@ class FormMainComponent extends CBitrixComponent
 			[
 				'id' => 'createForm',
 				'click' => new JsCode("FormList.createForm()"),
-				'text' => 'Создать',
+				'text' => Loc::getMessage('UP_FORMS_GRID_CREATE_FORM_BUTTON'),
 			]
 		);
 		// $addButton->set
@@ -80,7 +81,7 @@ class FormMainComponent extends CBitrixComponent
 			[
 				'ACTION' => Actions::CALLBACK,
 				'CONFIRM' => true,
-				'CONFIRM_APPLY_BUTTON'  => 'Подтвердить',
+				'CONFIRM_APPLY_BUTTON'  => Loc::getMessage('UP_FORMS_GRID_ACTION_PANEL_CONFIRM_APPLY_BUTTON'),
 				'DATA' => [
 					['JS' => 'FormList.deleteForms()'],
 				],
@@ -94,7 +95,7 @@ class FormMainComponent extends CBitrixComponent
 						[
 							'ID'       => 'delete',
 							'TYPE'     => 'BUTTON',
-							'TEXT'     => 'Удалить',
+							'TEXT'     => Loc::getMessage('UP_FORMS_GRID_ACTION_PANEL_DELETE_BUTTON'),
 							'CLASS'    => 'icon remove',
 							'ONCHANGE' => $deleteOnchange->toArray(),
 						],
@@ -110,12 +111,12 @@ class FormMainComponent extends CBitrixComponent
 			[
 				[
 					'id' => 'TITLE',
-					'name' => 'Название формы',
+					'name' => Loc::getMessage('UP_FORMS_GRID_FILTER_FORM_TITLE'),
 					'default' => true,
 				],
 				[
 					'id' => 'USER',
-					'name' => 'Пользователь',
+					'name' => Loc::getMessage('UP_FORMS_GRID_FILTER_USER'),
 					'type' => 'list',
 					'items' => $this->arResult['USERS'],
 					'params' => ['multiple' => 'Y'],
@@ -137,9 +138,9 @@ class FormMainComponent extends CBitrixComponent
 	{
 		$this->arResult['COLUMNS'] =
 			[
-				['id' => 'TITLE', 'name' => 'Название формы', 'sort' => 'TITLE', 'default' => true],
-				['id' => 'DATE', 'name' => 'Последнее изменение', 'sort' => 'DATE', 'default' => true],
-				['id' => 'USER_NAME', 'name' => 'Создал', 'sort' => 'CREATOR_ID', 'default' => true],
+				['id' => 'TITLE', 'name' => Loc::getMessage('UP_FORMS_GRID_COLUMN_TITLE'), 'sort' => 'TITLE', 'default' => true],
+				['id' => 'DATE', 'name' => Loc::getMessage('UP_FORMS_GRID_COLUMN_DATE'), 'sort' => 'DATE', 'default' => true],
+				['id' => 'USER_NAME', 'name' => Loc::getMessage('UP_FORMS_GRID_COLUMN_USER_NAME'), 'sort' => 'CREATOR_ID', 'default' => true],
 			];
 		foreach ($this->arResult['FORM_SETTINGS'] as $setting)
 		{
@@ -195,17 +196,19 @@ class FormMainComponent extends CBitrixComponent
 			];
 			foreach ($form->getSettings() as $setting)
 			{
-				if($setting->getValue() == null)
+				if(is_null($setting->getValue()))
 				{
-					$columns[$setting->getSettingsId()] = 'нет ограничений';
+					$columns[$setting->getSettingsId()] = Loc::getMessage('UP_FORMS_GRID_NULL_VALUE');
 				}
-				elseif($setting->getSettings()->getType()->getTitle() == 'datetime-local')
+				elseif($setting->getSettings()->getType()->getTitle() === 'datetime-local')
 				{
 					$columns[$setting->getSettingsId()] = date('d.M Y H:i', strtotime($setting->getValue())) ;
 				}
-				elseif ($setting->getSettings()->getType()->getTitle() == 'checkbox')
+				elseif ($setting->getSettings()->getType()->getTitle() === 'checkbox')
 				{
-					$columns[$setting->getSettingsId()] = ($setting->getValue() == 'false')? 'нет' : 'да';
+					$columns[$setting->getSettingsId()] = ($setting->getValue() === 'false') ?
+						Loc::getMessage('UP_FORMS_GRID_CHECKBOX_FALSE') :
+						Loc::getMessage('UP_FORMS_GRID_CHECKBOX_TRUE');
 				}
 				else
 				{
@@ -218,32 +221,32 @@ class FormMainComponent extends CBitrixComponent
 				'columns' => $columns,
 				'actions' => [
 					[
-						'text' => 'Открыть',
+						'text' => Loc::getMessage('UP_FORMS_GRID_ACTION_OPEN'),
 						'onclick' => 'FormList.openForm(' . $form->getId() . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Удалить',
+						'text' => Loc::getMessage('UP_FORMS_GRID_ACTION_DELETE'),
 						'onclick' => 'FormList.deleteForm(' . $form->getId() . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Редактировать',
+						'text' => Loc::getMessage('UP_FORMS_GRID_ACTION_EDIT'),
 						'onclick' => 'FormList.editForm(' . $form->getId() . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Результаты',
+						'text' => Loc::getMessage('UP_FORMS_GRID_ACTION_RESULT'),
 						'onclick' => 'FormList.showResults(' . $form->getId() . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Создать задачу',
+						'text' => Loc::getMessage('UP_FORMS_GRID_ACTION_CREATE_TASK'),
 						'onclick' => 'FormList.createTask("' . $form->getTitle() . '",' . $form->getId() . ',' . $this->arResult['USER_ID'] . ')',
 						'default' => true,
 					],
 					[
-						'text' => 'Быстрая задача',
+						'text' => Loc::getMessage('UP_FORMS_GRID_ACTION_QUICK_TASK'),
 						'onclick' => 'FormList.createFastTask("' . $form->getTitle() . '",' . $form->getId() . ',' . $this->arResult['USER_ID'] . ')',
 						'default' => true,
 					],

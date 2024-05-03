@@ -693,7 +693,10 @@ this.BX.Up = this.BX.Up || {};
 	            return;
 	          }
 	          BX.SidePanel.Instance.close();
-	          BX.SidePanel.Instance.destroy('/form/view/${formId}/');
+	          var url = BX.SidePanel.Instance.getCurrentUrl();
+	          setTimeout(function () {
+	            return BX.SidePanel.Instance.destroy(url);
+	          }, 1000);
 	        } else {
 	          _this5.render();
 	        }

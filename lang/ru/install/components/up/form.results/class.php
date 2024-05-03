@@ -1,0 +1,13 @@
+<?php
+$MESS['UP_FORMS_GRID_ACTION_PANEL_CONFIRM_APPLY_BUTTON'] = 'Подтвердить';
+$MESS['UP_FORMS_GRID_ACTION_PANEL_DELETE_BUTTON'] = 'Удалить';
+
+$MESS['UP_FORMS_GRID_FILTER_USER'] = 'Пользователь';
+
+$MESS['UP_FORMS_GRID_COLUMN_USER'] = 'Пользователь';
+$MESS['UP_FORMS_GRID_COLUMN_START_TIME'] = 'Попытка начата';
+$MESS['UP_FORMS_GRID_COLUMN_COMPLETED_TIME'] = 'Попытка закончена';
+$MESS['UP_FORMS_GRID_COLUMN_TRY_NUMBER'] = 'Номер попытки';
+$MESS['UP_FORMS_GRID_COLUMN_CORRECT_ANSWERS'] = 'Количество правильных ответов';
+
+$MESS['UP_FORMS_GRID_ACTION_DELETE'] = 'Удалить';

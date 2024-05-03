@@ -147,7 +147,7 @@ export class FormList
 
 	openSlider(url)
 	{
-		BX.SidePanel.Instance.open(url);
+		BX.SidePanel.Instance.open(url, {width: 2000});
 	}
 
 }

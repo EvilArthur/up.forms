@@ -1,35 +1,37 @@
 <?php
 
+use Bitrix\Main\Engine\Response\Redirect;
 use Bitrix\Main\Grid\Cell\Label\Color;
 use Bitrix\Main\Grid\Column\Type;
+use Bitrix\Main\Grid\Options as GridOptions;
+use Bitrix\Main\Grid\Panel\Actions;
 use Bitrix\Main\Grid\Panel\Snippet\Onchange;
 use Bitrix\Main\Loader;
-use Bitrix\Main\Grid\Panel\Actions;
-use Bitrix\Main\Grid\Options as GridOptions;
 use Bitrix\Main\UI\Filter\Options as FilterOptions;
 use Bitrix\Main\UI\PageNavigation;
 use Bitrix\Main\UserTable;
-use Bitrix\Main\Engine\Response\Redirect;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\QuestionRepository;
-use Up\Forms\NotFoundComponent;
 use Up\Forms\Repository\ResponseRepository;
 
+use \Bitrix\Main\Localization\Loc;
 
 class FormResultsComponent extends CBitrixComponent
 {
 	public function executeComponent()
 	{
+		Loc::loadLanguageFile(__FILE__);
 		global $USER, $APPLICATION;
-		if(Loader::includeModule('pull'))
+		if (Loader::includeModule('pull'))
 		{
 			\CPullWatch::Add($USER->GetID(), 'FORM-COMPLETED');
 		}
 
 		$this->fetchData();
-		if(!$this->arResult['QUESTIONS'])
+		if (!$this->arResult['QUESTIONS'])
 		{
 			$APPLICATION->includeComponent('up:not.found', '', []);
+
 			return;
 		}
 		$this->fetchActionPanel();
@@ -41,7 +43,7 @@ class FormResultsComponent extends CBitrixComponent
 
 	public function onPrepareComponentParams($arParams)
 	{
-		$arParams['ID'] = (int) $arParams['ID'];
+		$arParams['ID'] = (int)$arParams['ID'];
 		$arParams['GRID_ID'] = "RESPONSES_RESULTS_GRID_{$arParams['ID']}";
 		$arParams['FILTER_ID'] = "RESPONSES_RESULTS_GRID_FILTER_{$arParams['ID']}";
 		$arParams['NAVIGATION_ID'] = "RESPONSES_RESULTS_GRID_NAVIGATION_{$arParams['ID']}";
@@ -52,6 +54,7 @@ class FormResultsComponent extends CBitrixComponent
 			$response = new Redirect('404');
 			$response->setStatus('404');
 		}
+
 		return $arParams;
 	}
 
@@ -62,14 +65,16 @@ class FormResultsComponent extends CBitrixComponent
 		{
 			$this->arResult['USERS'][$user['ID']] = $user['NAME'];
 		}
-		$this->arResult['QUESTIONS'] = $this->prepareQuestions(QuestionRepository::getQuestionsByFormId($this->arParams['ID']));
+		$this->arResult['QUESTIONS'] = $this->prepareQuestions(
+			QuestionRepository::getQuestionsByFormId($this->arParams['ID'])
+		);
 		if ($this->arResult['QUESTIONS'])
 		{
 			$this->arResult['SETTINGS'] = FormRepository::getFormSettings($this->arParams['ID']);
 			$this->arResult['FORM_NAME'] = FormRepository::getFormName($this->arParams['ID']);
-			$this->arResult['IS_ANONYMOUS'] = $this->arResult['SETTINGS']
-				->getByPrimary(['SETTINGS_ID' => 4, 'FORM_ID' => $this->arParams['ID']])
-				->getValue();
+			$this->arResult['IS_ANONYMOUS'] = $this->arResult['SETTINGS']->getByPrimary(
+					['SETTINGS_ID' => 4, 'FORM_ID' => $this->arParams['ID']]
+				)->getValue();
 		}
 	}
 
@@ -80,7 +85,7 @@ class FormResultsComponent extends CBitrixComponent
 			[
 				'ACTION' => Actions::CALLBACK,
 				'CONFIRM' => true,
-				'CONFIRM_APPLY_BUTTON'  => 'Подтвердить',
+				'CONFIRM_APPLY_BUTTON' => Loc::getMessage('UP_FORMS_GRID_ACTION_PANEL_CONFIRM_APPLY_BUTTON'),
 				'DATA' => [
 					['JS' => 'window.FormResults.deleteResponses()'],
 				],
@@ -92,10 +97,10 @@ class FormResultsComponent extends CBitrixComponent
 				'TYPE' => [
 					'ITEMS' => [
 						[
-							'ID'       => 'delete',
-							'TYPE'     => 'BUTTON',
-							'TEXT'     => 'Удалить',
-							'CLASS'    => 'icon remove',
+							'ID' => 'delete',
+							'TYPE' => 'BUTTON',
+							'TEXT' => Loc::getMessage('UP_FORMS_GRID_ACTION_PANEL_DELETE_BUTTON'),
+							'CLASS' => 'icon remove',
 							'ONCHANGE' => $deleteOnchange->toArray(),
 						],
 					],
@@ -110,7 +115,7 @@ class FormResultsComponent extends CBitrixComponent
 		{
 			$this->arResult['FILTERS'][] = [
 				'id' => 'USER',
-				'name' => 'Пользователь',
+				'name' => Loc::getMessage('UP_FORMS_GRID_FILTER_USER'),
 				'type' => 'list',
 				'items' => $this->arResult['USERS'],
 				'params' => ['multiple' => 'Y'],
@@ -118,34 +123,62 @@ class FormResultsComponent extends CBitrixComponent
 			];
 		}
 
-		$this->arResult['FILTER_PARAMS'] =
-			[
-				'GRID_ID' => $this->arParams['GRID_ID'],
-				'FILTER_ID' => $this->arParams['FILTER_ID'],
-				'FILTER' => $this->arResult['FILTERS'],
-				'DISABLE_SEARCH' => true,
-				'ENABLE_LABEL' => true,
-			];
+		$this->arResult['FILTER_PARAMS'] = [
+			'GRID_ID' => $this->arParams['GRID_ID'],
+			'FILTER_ID' => $this->arParams['FILTER_ID'],
+			'FILTER' => $this->arResult['FILTERS'],
+			'DISABLE_SEARCH' => true,
+			'ENABLE_LABEL' => true,
+		];
 	}
 
 	protected function fetchGridColumns()
 	{
-		$columns[] = ($this->arResult['IS_ANONYMOUS'] === "true") ? [] : ['id' => 'USER', 'name' => 'Пользователь', 'default' => true, 'sort' => 'USER_ID'];
-		$columns[] = ['id' => 'START_TIME', 'name' => 'Попытка начата', 'default' => true, 'sort' => 'START_TIME'];
-		$columns[] = ['id' => 'COMPLETED_TIME', 'name' => 'Попытка Закончена', 'default' => true, 'sort' => 'COMPLETED_TIME'];
-		$columns[] = ['id' => 'TRY_NUMBER', 'name' => 'Номер попытки', 'default' => true, 'sort' => 'TRY_NUMBER'];
+		$columns[] = ($this->arResult['IS_ANONYMOUS'] === "true")
+			? []
+			: [
+				'id' => 'USER',
+				'name' => Loc::getMessage(
+					'UP_FORMS_GRID_COLUMN_USER'
+				),
+				'default' => true,
+				'sort' => 'USER_ID',
+			];
+		$columns[] = [
+			'id' => 'START_TIME',
+			'name' => Loc::getMessage('UP_FORMS_GRID_COLUMN_START_TIME'),
+			'default' => true,
+			'sort' => 'START_TIME',
+		];
+		$columns[] = [
+			'id' => 'COMPLETED_TIME',
+			'name' => Loc::getMessage('UP_FORMS_GRID_COLUMN_COMPLETED_TIME'),
+			'default' => true,
+			'sort' => 'COMPLETED_TIME',
+		];
+		$columns[] = [
+			'id' => 'TRY_NUMBER',
+			'name' => Loc::getMessage('UP_FORMS_GRID_COLUMN_TRY_NUMBER'),
+			'default' => true,
+			'sort' => 'TRY_NUMBER',
+		];
 		foreach ($this->arResult['QUESTIONS'] as $id => $question)
 		{
-			$columns[] =
-				[
-					'id' => $id,
-					'name' => htmlspecialcharsbx($question['TITLE']),
-					'default' => true,
-					'type' => Type::LABELS,
-				];
+			$columns[] = [
+				'id' => $id,
+				'name' => htmlspecialcharsbx($question['TITLE']),
+				'default' => true,
+				'type' => Type::LABELS,
+			];
 		}
 
-		$columns[] = ($this->arResult['NUM_OF_TEST_QUESTIONS'] === 0) ? [] : ['id' => 'NUM_RIGHT_ANSWERS', 'name' => 'Количество правильных ответов', 'default' => true];
+		$columns[] = ($this->arResult['NUM_OF_TEST_QUESTIONS'] === 0)
+			? []
+			: [
+				'id' => 'NUM_RIGHT_ANSWERS',
+				'name' => Loc::getMessage('UP_FORMS_GRID_COLUMN_CORRECT_ANSWERS'),
+				'default' => true,
+			];
 
 		$this->arResult['COLUMNS'] = $columns;
 	}
@@ -162,9 +195,7 @@ class FormResultsComponent extends CBitrixComponent
 	protected function fetchNavigation()
 	{
 		$nav = new PageNavigation($this->arParams['NAVIGATION_ID']);
-		$nav->allowAllRecords(false)
-			->setPageSize($this->arParams['NUM_OF_ITEMS_PER_PAGE'])
-			->initFromUri();
+		$nav->allowAllRecords(false)->setPageSize($this->arParams['NUM_OF_ITEMS_PER_PAGE'])->initFromUri();
 		$this->arResult['NAV_OBJECT'] = $nav;
 	}
 
@@ -199,39 +230,51 @@ class FormResultsComponent extends CBitrixComponent
 			$row['TRY_NUMBER'] = $response->getTryNumber();
 			foreach ($response->getAnswer() as $answer)
 			{
-				if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['FIELD_ID'] == 2 || $this->arResult["QUESTIONS"][$answer->getQuestionId()]['FIELD_ID'] == 3)
+				if (
+					$this->arResult["QUESTIONS"][$answer->getQuestionId()]['FIELD_ID'] === 2
+					|| $this->arResult["QUESTIONS"][$answer->getQuestionId()]['FIELD_ID'] === 3
+				)
 				{
 					$numOfRightOptions = 0;
 					foreach ($answer->getSubanswer() as $subAnswer)
 					{
-						$currentSubAnswer = htmlspecialcharsbx($this->arResult["QUESTIONS"][$answer->getQuestionId()]['OPTIONS'][$subAnswer->getValue()]);
+						$currentSubAnswer = htmlspecialcharsbx(
+							$this->arResult["QUESTIONS"][$answer->getQuestionId()]['OPTIONS'][$subAnswer->getValue()]
+						);
 						if (!$this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST'])
 						{
-							$row[$answer->getQuestionId()][] =
-								[
-									'text' => $currentSubAnswer,
-									'color' => Color::DEFAULT,
-								];
+							$row[$answer->getQuestionId()][] = [
+								'text' => $currentSubAnswer,
+								'color' => Color::DEFAULT,
+							];
 						}
-						elseif (isset($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS'][$subAnswer->getValue()]))
+						elseif (
+							isset(
+								$this->arResult["QUESTIONS"][$answer->getQuestionId(
+								)]['RIGHT_ANSWERS'][$subAnswer->getValue()]
+							)
+						)
 						{
-							$row[$answer->getQuestionId()][] =
-								[
-									'text' => $currentSubAnswer,
-									'color' => Color::SUCCESS,
-								];
+							$row[$answer->getQuestionId()][] = [
+								'text' => $currentSubAnswer,
+								'color' => Color::SUCCESS,
+							];
 							$numOfRightOptions += 1;
 						}
 						else
 						{
-							$row[$answer->getQuestionId()][] =
-								[
-									'text' => $currentSubAnswer,
-									'color' => Color::DANGER,
-								];
+							$row[$answer->getQuestionId()][] = [
+								'text' => $currentSubAnswer,
+								'color' => Color::DANGER,
+							];
 						}
 					}
-					if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST'] && $numOfRightOptions === count($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS']) && count($row[$answer->getQuestionId()]) === $numOfRightOptions)
+					if (
+						$this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST']
+						&& $numOfRightOptions
+						=== count($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS'])
+						&& count($row[$answer->getQuestionId()]) === $numOfRightOptions
+					)
 					{
 						$numOfRightAnswers += 1;
 					}
@@ -244,26 +287,27 @@ class FormResultsComponent extends CBitrixComponent
 					}
 					if ($this->arResult["QUESTIONS"][$answer->getQuestionId()]['IS_TEST'] === true)
 					{
-						if (array_shift($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS']) === $row[$answer->getQuestionId()])
+						if (
+							array_shift($this->arResult["QUESTIONS"][$answer->getQuestionId()]['RIGHT_ANSWERS'])
+							=== $row[$answer->getQuestionId()]
+						)
 						{
-							$row[$answer->getQuestionId()] =
+							$row[$answer->getQuestionId()] = [
 								[
-									[
-										'text' => $row[$answer->getQuestionId()],
-										'color' => Color::SUCCESS,
-									],
-								];
+									'text' => $row[$answer->getQuestionId()],
+									'color' => Color::SUCCESS,
+								],
+							];
 							$numOfRightAnswers += 1;
 						}
 						else
 						{
-							$row[$answer->getQuestionId()] =
+							$row[$answer->getQuestionId()] = [
 								[
-									[
-										'text' => $row[$answer->getQuestionId()],
-										'color' => Color::DANGER,
-									],
-								];
+									'text' => $row[$answer->getQuestionId()],
+									'color' => Color::DANGER,
+								],
+							];
 						}
 
 					}
@@ -272,7 +316,7 @@ class FormResultsComponent extends CBitrixComponent
 
 			if ($this->arResult['NUM_OF_TEST_QUESTIONS'] !== 0)
 			{
-				$row['NUM_RIGHT_ANSWERS'] = $numOfRightAnswers . ' из ' . $this->arResult["NUM_OF_TEST_QUESTIONS"];
+				$row['NUM_RIGHT_ANSWERS'] = $numOfRightAnswers . '/' . $this->arResult["NUM_OF_TEST_QUESTIONS"];
 			}
 
 			$rows[] = [
@@ -280,7 +324,7 @@ class FormResultsComponent extends CBitrixComponent
 				'columns' => $row,
 				'actions' => [
 					[
-						'text' => 'Delete',
+						'text' => Loc::getMessage('UP_FORMS_GRID_ACTION_DELETE'),
 						'onclick' => 'window.FormResults.deleteResponse(' . $response->getId() . ')',
 						'default' => true,
 					],
