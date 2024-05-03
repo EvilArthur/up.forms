@@ -14,7 +14,7 @@ export class ShortTextOption
 		let wrap
 		if (!this.isHaveRightAnswerObject.value)
 		{
-			wrap = Tag.render`<p class="text-decoration-underline mb-0">Короткий ответ</p>`;
+			wrap = Tag.render`<p class="mb-0">Здесь будет поле для ввода ответа</p>`;
 		}
 		else
 		{

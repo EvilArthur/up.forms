@@ -33,17 +33,22 @@ export default class Question
 				<div class="card-header">
 				<div class="container">
 					<div class="row">
-						<div class="col text-left">
-							${this.renderEditableTitle()}
+						<div class="header-question-title">
+							<div class="col text-left">
+								${this.renderEditableTitle()}
+							</div>
+							<div class="col text-end">
+								${this.renderRemoveQuestionButton()}
+							</div>
 						</div>
-						<div class="col">
-							${this.renderAutocheck()}
-						</div>
-						<div class="col text-end">
-							${this.renderTypes()}
-						</div>
-						<div class="col text-end">
-							${this.renderRemoveQuestionButton()}
+						
+						<div class="header-question-options">
+							<div class="col">
+								${this.renderAutocheck()}
+							</div>
+							<div class="col text-end">
+								${this.renderTypes()}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -63,7 +68,7 @@ export default class Question
 	renderRemoveQuestionButton(): HTMLElement
 	{
 		const wrap = Tag.render`
-			<button type="button" class="btn btn-danger">Удалить</button>
+			<button type="button" class="btn-close"></button>
 		`;
 		Event.bind(wrap, 'click', this.onRemoveQuestionButtonClickHandler.bind(this));
 		return wrap;
@@ -181,7 +186,7 @@ export default class Question
 
 	renderBody()
 	{
-		const wrap = Tag.render`<div class="container">
+		const wrap = Tag.render`<div class="container question-body-wrap">
 								${this.renderAddOptionButton()}
 								${this.renderOptions()}
 								${this.renderClearButton()}
@@ -193,7 +198,7 @@ export default class Question
 
 	renderOptions()
 	{
-		const wrap = Tag.render`<div class="container">
+		const wrap = Tag.render`<div class="container question-options-wrap">
 			${this.options.map((option) => option?.render())}
 		</div>`;
 		this.layout.options?.replaceWith(wrap);
@@ -221,7 +226,7 @@ export default class Question
 		{
 			return;
 		}
-		const wrap = Tag.render`<button class="btn btn-primary btn-sm">Очистить</button>`;
+		const wrap = Tag.render`<button class="btn clear-from-correct-answer">Очистить</button>`;
 		Event.bind(wrap, 'click', this.onClearRadioButtonClickHandler.bind(this));
 		return wrap;
 	}

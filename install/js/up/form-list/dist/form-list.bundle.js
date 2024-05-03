@@ -131,7 +131,9 @@ this.BX.Up = this.BX.Up || {};
 	  }, {
 	    key: "openSlider",
 	    value: function openSlider(url) {
-	      BX.SidePanel.Instance.open(url);
+	      BX.SidePanel.Instance.open(url, {
+	        width: 1000
+	      });
 	    }
 	  }]);
 	  return FormList;

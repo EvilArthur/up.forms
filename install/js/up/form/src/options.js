@@ -16,7 +16,7 @@ export class Options
 	render()
 	{
 		const wrap = Tag.render`
-		<div class="container">
+		<div class="test-question">
 			${this.options.map((option) => this.renderButton(option.ID, option.TITLE, this.type))}
 			${this.renderClearButton()}
 		</div>`;
@@ -59,7 +59,7 @@ export class Options
 	renderClearButton()
 	{
 		const wrap = Tag.render`
-		<button class="btn btn-primary btn-sm">Очистить</button>`;
+		<button class="btn clear-from-correct-answer">Очистить</button>`;
 		Event.bind(wrap, 'click', this.onClearRadioButtonClickHandler.bind(this));
 		return wrap;
 	}

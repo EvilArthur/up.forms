@@ -60,7 +60,7 @@ export class Question
 		{
 			return null;
 		}
-		const wrap = Tag.render`<lable>Это обязательный вопрос</lable>`
+		const wrap = Tag.render`<div class="recuired-question"><lable class="recuired-question">обязательный вопрос</lable></div>`
 		return wrap;
 	}
 

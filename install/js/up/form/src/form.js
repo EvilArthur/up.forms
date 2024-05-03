@@ -122,7 +122,7 @@ export class Form
 		{
 			wrap = Tag.render`
 				<div class="container">
-					<h1 class="text-center mt-5 mb-4">${this.formData.TITLE}</h1>
+					<h1 class="text-center mb-5">${this.formData.TITLE}</h1>
 					${this.renderTriesRemaining()}
 					<div class="d-flex justify-content-center">${this.renderStartButton()}</div>
 				</div>`;
@@ -131,7 +131,7 @@ export class Form
 		{
 			wrap = Tag.render`
 				<div class="container">
-					<h1 class="text-center mt-5 mb-4">${this.formData.TITLE}</h1>
+					<h1 class="text-center mb-5">${this.formData.TITLE}</h1>
 					<div class="d-flex justify-content-center"><h2 class ="text-center">Время вышло!</h2></div>
 				</div>`;
 		}
@@ -139,11 +139,11 @@ export class Form
 		{
 			wrap = Tag.render`
 			<div class="container">
-				<h1 class="text-center mt-5 mb-4">${this.formData.TITLE}</h1>
+				<h1 class="text-center mb-5">${this.formData.TITLE}</h1>
 				${this.renderTimer()}
 				${this.renderQuestionList()}
-				${this.renderSubmitButton()}
 				${this.renderPagination()}
+				${this.renderSubmitButton()}
 			</div>`;
 			this.isRenderedMainBody = true;
 		}
@@ -156,7 +156,7 @@ export class Form
 	{
 		return Tag.render
 			`
-				<nav aria-label="Page navigation example">
+				<nav class="d-flex justify-content-center mt-5">
 					<ul class="pagination">
 						${this.renderPreviousPageButton()}
 						${this.renderNextPageButton()}
@@ -173,7 +173,7 @@ export class Form
 				`
 				<li class="page-item">
 					
-						<button aria-hidden="true">&raquo;</button>
+						<button class="page-link" aria-hidden="true">&raquo;</button>
 					
 				</li>
 				`;
@@ -190,7 +190,7 @@ export class Form
 				`
 				<li class="page-item">
 					
-						<button aria-hidden="true">&laquo;</button>
+						<button class="page-link" aria-hidden="true">&laquo;</button>
 					
 				</li>
 				`;
@@ -246,7 +246,10 @@ export class Form
 	renderSubmitButton()
 	{
 		const wrap = Tag.render`
-			<button class="btn btn-primary">Подтвердить</button>
+			<div class="d-flex justify-content-center mt-5">
+				<button class="btn btn-primary submit-button">ОТПРАВИТЬ</button>
+			</div>
+			
 		`;
 		this.layout.submitButtonObject = {
 			isActive: true,

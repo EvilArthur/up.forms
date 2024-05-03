@@ -12,20 +12,27 @@ use Bitrix\Main\UI\PageNavigation;
 use Up\Forms\Model\FormSettingsTable;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\TaskRepository;
+use Up\Forms\Service\AccessManager;
 
 class FormMainComponent extends CBitrixComponent
 {
 	public function executeComponent()
 	{
-		global $USER;
+		global $USER, $APPLICATION;
 		$this->arResult['USER_ID'] = $USER->GetID();
+
+
+		// if (!AccessManager::checkAccessRights($USER->GetID()))
+		// {
+		// 	$APPLICATION->includeComponent('up:not.found', '', []);
+		// 	return;
+		// }
+
 
 		if(Loader::includeModule('pull'))
 		{
 			\CPullWatch::Add($USER->GetID(), 'FORMS-UPDATE');
 		}
-
-
 
 		$this->fetchData();
 		$this->fetchAddButton();
@@ -59,7 +66,7 @@ class FormMainComponent extends CBitrixComponent
 
 	protected function fetchAddButton()
 	{
-		// $addButton = new \Bitrix\UI\Buttons\CreateButton();
+
 		$addButton = AddButton::create(
 			[
 				'id' => 'createForm',
@@ -67,8 +74,7 @@ class FormMainComponent extends CBitrixComponent
 				'text' => 'Создать',
 			]
 		);
-		// $addButton->set
-		// $splitButton = new Bitrix\UI\Buttons\Split\CreateButton();
+
 
 		$this->arResult['ADD_BUTTON'] = $addButton;
 	}
@@ -184,7 +190,7 @@ class FormMainComponent extends CBitrixComponent
 	protected function prepareFormsForGrid( $forms)
 	{
 		$rows = [];
-
+		// FormatDate();
 		foreach ($forms as $form)
 		{
 			$columns = [
