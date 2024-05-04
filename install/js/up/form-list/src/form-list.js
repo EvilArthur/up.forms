@@ -1,4 +1,4 @@
-import { Event, Tag, Loc } from 'main.core';
+import { Event, Tag, Loc, Type } from 'main.core';
 export class FormList
 {
 	constructor(options = {})

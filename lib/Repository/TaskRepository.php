@@ -34,7 +34,7 @@ Class TaskRepository
 
 		if (!empty($task))
 		{
-			Task::completeTask($task[0]['TASK_ID'], $task[0]['CREATOR_ID']);
+			Task::completeTask($task[0]['TASK_ID'], $task[0]['USER_ID']);
 			self::deleteTask($task[0]['ID']);
 		}
 	}

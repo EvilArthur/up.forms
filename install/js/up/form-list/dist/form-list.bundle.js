@@ -52,7 +52,7 @@ this.BX.Up = this.BX.Up || {};
 	      BX.ready(function () {
 	        var _BX$Main$gridManager$;
 	        var grid = (_BX$Main$gridManager$ = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$ === void 0 ? void 0 : _BX$Main$gridManager$.instance;
-	        if (Type.isObject(grid)) {
+	        if (main_core.Type.isObject(grid)) {
 	          var rowsCollectionWrapper = grid.getRows();
 	          var selectedRowsIdsList = rowsCollectionWrapper.getSelectedIds();
 	          BX.ajax.runAction('up:forms.form.deleteForms', {
@@ -69,7 +69,7 @@ this.BX.Up = this.BX.Up || {};
 	      BX.ready(function () {
 	        var _BX$Main$gridManager$2;
 	        var grid = (_BX$Main$gridManager$2 = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$2 === void 0 ? void 0 : _BX$Main$gridManager$2.instance;
-	        if (Type.isObject(grid)) {
+	        if (main_core.Type.isObject(grid)) {
 	          BX.ajax.runAction('up:forms.form.deleteForm', {
 	            data: {
 	              id: formId
@@ -348,7 +348,7 @@ this.BX.Up = this.BX.Up || {};
 	      BX.ready(function () {
 	        var _BX$Main$gridManager$3;
 	        var grid = (_BX$Main$gridManager$3 = BX.Main.gridManager.getById('FORMS_LIST_GRID')) === null || _BX$Main$gridManager$3 === void 0 ? void 0 : _BX$Main$gridManager$3.instance;
-	        if (Type.isObject(grid)) {
+	        if (main_core.Type.isObject(grid)) {
 	          grid.reload();
 	        }
 	      });
