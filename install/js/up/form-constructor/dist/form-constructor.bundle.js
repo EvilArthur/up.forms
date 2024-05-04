@@ -786,6 +786,7 @@ this.BX.Up = this.BX.Up || {};
 	        'VALUE': false
 	      }], this.fieldData));
 	      this.renderQuestionList();
+	      this.renderPagination();
 	    }
 	  }, {
 	    key: "getData",

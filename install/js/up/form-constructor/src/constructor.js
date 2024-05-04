@@ -129,6 +129,7 @@ export class Constructor
 			[{ 'SETTINGS_ID': 1, 'VALUE': false }, { 'SETTINGS_ID': 2, 'VALUE': false }], this.fieldData,
 		));
 		this.renderQuestionList();
+		this.renderPagination();
 	}
 
 	getData()
