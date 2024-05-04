@@ -212,7 +212,6 @@ export class Constructor
 	async onNextPageButtonClickHandler()
 	{
 		this.loading.show();
-		this.layout.wrap.append(this.renderLoading());
 		const isSuccess = await this.saveForm();
 		if (isSuccess)
 		{
@@ -228,7 +227,6 @@ export class Constructor
 	async onPreviousPageButtonClickHandler()
 	{
 		this.loading.show();
-		this.layout.wrap.append(this.renderLoading());
 		const isSuccess = await this.saveForm();
 		if (isSuccess)
 		{
@@ -242,11 +240,12 @@ export class Constructor
 
 	reload()
 	{
-		this.loadPage(this.chapterId, this.limit, this.limit * (this.currentPage - 1)).then(() => {
+		this.loadPage(this.chapterId, this.limit, this.limit * (this.currentPage - 1))
+			.then(() => {
 			this.renderQuestionList();
 			this.renderPagination();
 			this.loading.hide();
-		});
+		})
 	}
 
 	reloadAfterDelete()
@@ -262,13 +261,13 @@ export class Constructor
 		else
 		{
 			this.renderQuestionList();
+			this.renderPagination();
 		}
 	}
 
-	async loadPage(id, limit = 0, offset = 0)
+	loadPage(id, limit = 0, offset = 0)
 	{
-		const questionData = await FormManager.getQuestionData(id, limit + 1, offset);
-		this.fillQuestionsByData(questionData);
+		return  FormManager.getQuestionData(id, limit + 1, offset).then((questionData) => this.fillQuestionsByData(questionData));
 
 	}
 

@@ -28,8 +28,6 @@ Class QuestionRepository
 		{
 			$selectFields = ['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION', 'OPTION', 'SETTINGS', 'ANSWER', 'ANSWER.SUBANSWER'];
 			$selectedFilter = [['=CHAPTER_ID' => $chapterId], ['=ANSWER.RESPONSE_ID' => $filter['RESPONSE_ID']]];
-			// $selectFields = ['ID', 'CHAPTER_ID', 'FIELD_ID', 'POSITION', 'TITLE', 'DESCRIPTION', 'OPTION', 'SETTINGS'];
-			// $selectedFilter = [['=CHAPTER_ID' => $chapterId]];
 		}
 		else
 		{

@@ -22,6 +22,7 @@ use Up\Forms\Model\QuestionTable;
 
 class FormRepository
 {
+	const MAX_NUMBER_OF_TRY_SETTING_ID = 5;
 	public static function createForm($formData, $userId)
 	{
 		Application::getConnection()->startTransaction();
@@ -128,7 +129,7 @@ class FormRepository
 
 	public static function getMaxNumberOfTry(int $id): ?int
 	{
-		$setting = FormFormSettingsTable::getByPrimary(['FORM_ID' => $id, 'SETTINGS_ID' => 5])->fetchObject();
+		$setting = FormFormSettingsTable::getByPrimary(['FORM_ID' => $id, 'SETTINGS_ID' => self::MAX_NUMBER_OF_TRY_SETTING_ID])->fetchObject();
 		$maxTry = $setting->getValue();
 
 		return $maxTry ? (int)$maxTry : null;
