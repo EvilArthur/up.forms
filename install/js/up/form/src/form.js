@@ -198,7 +198,7 @@ export class Form
 	{
 		this.submitIntermediateResponse()
 			.then((responseId) => {
-				this.limit += 10;
+				// this.limit += 10;
 				this.offset += 10;
 				this.currentPage += 1;
 				this.responseId = responseId;
@@ -215,7 +215,7 @@ export class Form
 		this.submitIntermediateResponse()
 			.then((responseId) => {
 				this.nextPageIsPassed = true;
-				this.limit -= 10;
+				// this.limit -= 10;
 				this.offset -= 10;
 				this.currentPage -= 1;
 				this.responseId = responseId;

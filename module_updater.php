@@ -306,3 +306,15 @@ __formsMigrate(21, function($updater, $DB)
 		");
 	}
 });
+
+__formsMigrate(22, function($updater, $DB)
+{
+	if ($updater->CanUpdateDatabase() && $updater->TableExists('up_accepted_user'))
+	{
+		$DB->query
+		("
+			INSERT INTO up_accepted_user VALUE
+				(1);
+		");
+	}
+});

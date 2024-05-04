@@ -10,16 +10,10 @@ use Up\Forms\Controller\Validator\FormValidator;
 use Up\Forms\Repository\ResponseRepository;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\TaskRepository;
+use Up\Forms\Service\AccessManager;
 
 class Form extends Controller
 {
-	public function getListAction(): array
-	{
-		return [
-			'formList' => FormRepository::getForms(),
-		];
-	}
-
 	public function deleteFormAction(int $id): void
 	{
 		if(Loader::includeModule('pull'))
@@ -30,7 +24,10 @@ class Form extends Controller
 				'params' => []
 			]);
 		}
-		FormRepository::deleteForm($id);
+		if (AccessManager::checkAccessRights($this->getCurrentUser()->getId()))
+		{
+			FormRepository::deleteForm($id);
+		}
 	}
 
 	public function deleteFormsAction(array $ids): void
@@ -43,7 +40,10 @@ class Form extends Controller
 				'params' => []
 			]);
 		}
-		FormRepository::deleteForms($ids);
+		if (AccessManager::checkAccessRights($this->getCurrentUser()->getId()))
+		{
+			FormRepository::deleteForms($ids);
+		}
 	}
 
 	public function saveAnswersAction(array $answers): ?array
@@ -56,7 +56,11 @@ class Form extends Controller
 			}
 			return null;
 		}
-		TaskRepository::closeTask($this->getCurrentUser()->getId(), $answers['FORM_ID']);
+
+		if (\CUtil::JsObjectToPhp($answers['IS_COMPLETED']))
+		{
+			TaskRepository::closeTask($this->getCurrentUser()->getId(), $answers['FORM_ID']);
+		}
 		$result = ResponseRepository::saveResponse($this->getCurrentUser()->getId(), $answers);
 		if (Loader::includeModule('pull'))
 		{

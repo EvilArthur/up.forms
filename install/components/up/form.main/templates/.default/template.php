@@ -16,6 +16,10 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
 Toolbar::addButton($arResult['ADD_BUTTON'], ButtonLocation::AFTER_TITLE);
 Toolbar::addFilter($arResult['FILTER_PARAMS']);
+if ($arResult['IS_ADMIN'])
+{
+	Toolbar::addButton($arResult['ACCESS_BUTTON']);
+}
 
 $APPLICATION->IncludeComponent(
 	'bitrix:main.ui.grid',

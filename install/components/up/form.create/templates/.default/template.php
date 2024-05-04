@@ -4,8 +4,10 @@
  * @var array $arParams
  */
 
+use Bitrix\Main\UI\Extension;
+
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
-\Bitrix\Main\UI\Extension::load('up.form-constructor');
+Extension::load('up.form-constructor');
 ?>
 
 <div class="container" id="main-container">

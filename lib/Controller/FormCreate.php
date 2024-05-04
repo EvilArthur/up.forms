@@ -9,11 +9,16 @@ use Up\Forms\Repository\FieldRepository;
 use Up\Forms\Repository\FormRepository;
 use Up\Forms\Repository\FormSettingsRepository;
 use Up\Forms\Repository\QuestionRepository;
+use Up\Forms\Service\AccessManager;
 
 class FormCreate extends Controller
 {
 	public function saveFormDataAction($formData)
 	{
+		if (!AccessManager::checkAccessRights($this->getCurrentUser()->getId()))
+		{
+			return null;
+		}
 		if ($errors = FormCreateValidator::validateFormData($formData))
 		{
 			foreach ($errors as $error)
@@ -106,6 +111,10 @@ class FormCreate extends Controller
 
 	public function deleteQuestionAction(int $id)
 	{
+		if (!AccessManager::checkAccessRights($this->getCurrentUser()->getId()))
+		{
+			return false;
+		}
 		return ['result' => QuestionRepository::deleteQuestion($id)];
 	}
 
