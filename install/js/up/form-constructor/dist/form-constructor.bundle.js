@@ -851,10 +851,9 @@ this.BX.Up = this.BX.Up || {};
 	          while (1) switch (_context.prev = _context.next) {
 	            case 0:
 	              this.loading.show();
-	              this.layout.wrap.append(this.renderLoading());
-	              _context.next = 4;
+	              _context.next = 3;
 	              return this.saveForm();
-	            case 4:
+	            case 3:
 	              isSuccess = _context.sent;
 	              if (isSuccess) {
 	                this.currentPage += 1;
@@ -862,7 +861,7 @@ this.BX.Up = this.BX.Up || {};
 	              } else {
 	                this.loading.hide();
 	              }
-	            case 6:
+	            case 5:
 	            case "end":
 	              return _context.stop();
 	          }
@@ -882,17 +881,16 @@ this.BX.Up = this.BX.Up || {};
 	          while (1) switch (_context2.prev = _context2.next) {
 	            case 0:
 	              this.loading.show();
-	              this.layout.wrap.append(this.renderLoading());
-	              _context2.next = 4;
+	              _context2.next = 3;
 	              return this.saveForm();
-	            case 4:
+	            case 3:
 	              isSuccess = _context2.sent;
 	              if (isSuccess) {
 	                this.currentPage -= 1;
 	                this.reload();
 	              }
 	              this.loading.hide();
-	            case 7:
+	            case 6:
 	            case "end":
 	              return _context2.stop();
 	          }
@@ -927,45 +925,27 @@ this.BX.Up = this.BX.Up || {};
 	        });
 	      } else {
 	        this.renderQuestionList();
+	        this.renderPagination();
 	      }
 	    }
 	  }, {
 	    key: "loadPage",
-	    value: function () {
-	      var _loadPage = babelHelpers.asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(id) {
-	        var limit,
-	          offset,
-	          questionData,
-	          _args3 = arguments;
-	        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-	          while (1) switch (_context3.prev = _context3.next) {
-	            case 0:
-	              limit = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : 0;
-	              offset = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : 0;
-	              _context3.next = 4;
-	              return FormManager.getQuestionData(id, limit + 1, offset);
-	            case 4:
-	              questionData = _context3.sent;
-	              this.fillQuestionsByData(questionData);
-	            case 6:
-	            case "end":
-	              return _context3.stop();
-	          }
-	        }, _callee3, this);
-	      }));
-	      function loadPage(_x) {
-	        return _loadPage.apply(this, arguments);
-	      }
-	      return loadPage;
-	    }()
+	    value: function loadPage(id) {
+	      var _this5 = this;
+	      var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+	      var offset = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+	      return FormManager.getQuestionData(id, limit + 1, offset).then(function (questionData) {
+	        return _this5.fillQuestionsByData(questionData);
+	      });
+	    }
 	  }, {
 	    key: "fillQuestionsByData",
 	    value: function fillQuestionsByData(data) {
-	      var _this5 = this;
+	      var _this6 = this;
 	      this.questions = [];
 	      data.map(function (questionData) {
-	        var question = questionFactory.createQuestion(_this5.reloadAfterDelete.bind(_this5), questionData.FIELD_ID, questionData.CHAPTER_ID, questionData.ID, ++_this5.questionNumber, questionData.TITLE, questionData.OPTION, questionData.SETTINGS, _this5.fieldData);
-	        _this5.questions.push(question);
+	        var question = questionFactory.createQuestion(_this6.reloadAfterDelete.bind(_this6), questionData.FIELD_ID, questionData.CHAPTER_ID, questionData.ID, ++_this6.questionNumber, questionData.TITLE, questionData.OPTION, questionData.SETTINGS, _this6.fieldData);
+	        _this6.questions.push(question);
 	      });
 	      this.isLastPage = this.questions.length <= this.limit;
 	      if (!this.isLastPage) {
