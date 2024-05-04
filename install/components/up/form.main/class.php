@@ -24,11 +24,11 @@ class FormMainComponent extends CBitrixComponent
 		$this->arResult['USER_ID'] = $USER->GetID();
 
 
-		// if (!AccessManager::checkAccessRights($USER->GetID()))
-		// {
-		// 	$APPLICATION->includeComponent('up:not.found', '', []);
-		// 	return;
-		// }
+		if (!AccessManager::checkAccessRights($USER->GetID()))
+		{
+			$APPLICATION->includeComponent('up:not.found', '', []);
+			return;
+		}
 
 
 		if(Loader::includeModule('pull'))
@@ -69,16 +69,27 @@ class FormMainComponent extends CBitrixComponent
 	protected function fetchAddButton()
 	{
 
-		$addButton = AddButton::create(
+		$this->arResult['ADD_BUTTON'] = AddButton::create(
 			[
 				'id' => 'createForm',
 				'click' => new JsCode("FormList.createForm()"),
 				'text' => Loc::getMessage('UP_FORMS_GRID_CREATE_FORM_BUTTON'),
+				'dataset' => [
+					'toolbar-collapsed-icon' => Bitrix\UI\Buttons\Icon::ADD
+				]
 			]
 		);
 
-
-		$this->arResult['ADD_BUTTON'] = $addButton;
+		$this->arResult['ACCESS_BUTTON'] = new Bitrix\UI\Buttons\SettingsButton(
+			[
+				'text' => 'Права доступа',
+				'click' => new JsCode("FormList.openAccess()"),
+				'dataset' =>
+					[
+						'toolbar-collapsed-icon' => Bitrix\UI\Buttons\Icon::SETTINGS
+					]
+			]
+		);
 	}
 
 	protected function fetchActionPanel()
