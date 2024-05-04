@@ -29,6 +29,10 @@ class FormMainComponent extends CBitrixComponent
 			$APPLICATION->includeComponent('up:not.found', '', []);
 			return;
 		}
+		if ($this->arResult['IS_ADMIN'] = AccessManager::isAdmin($USER->GetID()))
+		{
+			$this->fetchAccessButton();
+		}
 
 
 		if(Loader::includeModule('pull'))
@@ -75,19 +79,24 @@ class FormMainComponent extends CBitrixComponent
 				'click' => new JsCode("FormList.createForm()"),
 				'text' => Loc::getMessage('UP_FORMS_GRID_CREATE_FORM_BUTTON'),
 				'dataset' => [
-					'toolbar-collapsed-icon' => Bitrix\UI\Buttons\Icon::ADD
-				]
+					'toolbar-collapsed-icon' => Bitrix\UI\Buttons\Icon::ADD,
+				],
 			]
 		);
 
+
+	}
+
+	protected function fetchAccessButton()
+	{
 		$this->arResult['ACCESS_BUTTON'] = new Bitrix\UI\Buttons\SettingsButton(
 			[
 				'text' => 'Права доступа',
 				'click' => new JsCode("FormList.openAccess()"),
 				'dataset' =>
 					[
-						'toolbar-collapsed-icon' => Bitrix\UI\Buttons\Icon::SETTINGS
-					]
+						'toolbar-collapsed-icon' => Bitrix\UI\Buttons\Icon::SETTINGS,
+					],
 			]
 		);
 	}
@@ -165,7 +174,7 @@ class FormMainComponent extends CBitrixComponent
 			$this->arResult['COLUMNS'][] = [
 				'id' => $setting['ID'],
 				'name' => Loc::getMessage($setting['TITLE']),
-				'default' => true
+				'default' => true,
 			];
 		}
 	}
@@ -200,7 +209,7 @@ class FormMainComponent extends CBitrixComponent
 			'OFFSET' => $this->arResult['NAV_OBJECT']->getOffset(),
 			'TITLE' => $filterFields['TITLE'],
 			'USERS' => $filterFields['USER'],
-			'SORT' => $gridFields['sort']
+			'SORT' => $gridFields['sort'],
 		];
 	}
 
