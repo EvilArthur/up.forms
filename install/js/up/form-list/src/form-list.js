@@ -17,13 +17,13 @@ export class FormList
 				case 'edit':
 					if (options.formId)
 					{
-						this.openSlider('/form/edit/' . concat(options.formId, '/', 1000));
+						this.openSlider('/form/edit/' . concat(options.formId, '/'), 1000);
 					}
 					break
 				case 'result':
 					if (options.formId)
 					{
-						this.openSlider('/form/results/' . concat(options.formId, '/', false));
+						this.openSlider('/form/results/' . concat(options.formId, '/'), false);
 					}
 					break
 			}
