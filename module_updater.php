@@ -313,7 +313,7 @@ __formsMigrate(22, function($updater, $DB)
 	{
 		$DB->query
 		("
-			INSERT INTO up_accepted_user VALUE 
+			INSERT INTO up_accepted_user VALUE
 				(1);
 		");
 	}

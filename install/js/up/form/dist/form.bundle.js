@@ -445,7 +445,7 @@ this.BX.Up = this.BX.Up || {};
 	    value: function onNextPageButtonClickHandler() {
 	      var _this2 = this;
 	      this.submitIntermediateResponse().then(function (responseId) {
-	        _this2.limit += 10;
+	        // this.limit += 10;
 	        _this2.offset += 10;
 	        _this2.currentPage += 1;
 	        _this2.responseId = responseId;
@@ -461,7 +461,7 @@ this.BX.Up = this.BX.Up || {};
 	      var _this3 = this;
 	      this.submitIntermediateResponse().then(function (responseId) {
 	        _this3.nextPageIsPassed = true;
-	        _this3.limit -= 10;
+	        // this.limit -= 10;
 	        _this3.offset -= 10;
 	        _this3.currentPage -= 1;
 	        _this3.responseId = responseId;
